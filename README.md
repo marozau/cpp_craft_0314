@@ -5,7 +5,7 @@ C++ Craft March 14 education channel main repo.
 
 Dear Students,
 Please fork this git repo and clone it to your computer.
-Please create you own directory (<GIT>/solutions/<USER_NAME>) at 'solutions' folder. For example: '<GIT>/solutions/ihar_marozau'.
+Please create you own directory (< GIT >/solutions/< USER_NAME >) at 'solutions' folder. For example: '< GIT >/solutions/ihar_marozau'.
 Please add file readme.txt (<GIT>/solutions/<USER_NAME>/readme.txt) with next information:
  * 1st line: Name Surname.
  * 2nd line: E-mail
