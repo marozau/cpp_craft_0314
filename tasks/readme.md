@@ -23,13 +23,18 @@
 
 5. Добавить исходные файлы в папку с подпроектом. 
 
-6. В файле CMakeLists.txt добавить свой подпроект(ы) в спискок binaries. Например,  binaries( 1_1 1_2 1_3 ).
+6. В файле CMakeLists.txt добавить свой(и) подпроект(ы) в список binaries. Например,  binaries( 1_1 1_2 1_3 ).
 
-7. Создать CMake файл-генератор для соответствующей среды разработки. За основу можно взять _msvc_gen_2005_64.bat или _gcc_gen.sh. 
+7. Создать CMake файл-генератор для соответствующей среды разработки. За основу можно взять _msvc_gen_2005_64.bat или _gcc_gen.sh.
+ 
    В строчке запуска cmake генератора заменить имя среды разработки. Информацию по именам можно найти на сайте cmake.org или погуглить.
+
    Например, для Visual Studio 2010 переименовываем файл _msvc_gen_2005_64.bat в _msvc_gen_2010_64.bat и заменяем строчку  
+
    cmake -DVERBOSE=OFF -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DSOLUTION_NAME=%SOLUTION_NAME%  -G "Visual Studio 8 2005 Win64" ../    
+
    на
+
    cmake -DVERBOSE=OFF -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DSOLUTION_NAME=%SOLUTION_NAME%  -G "Visual Studio 10 Win64" ../   
 
 8. Запустить файл-генератор по умолчанию создает Debug проект. Если вы хотите сгенерировать Release проект, 
