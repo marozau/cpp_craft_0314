@@ -24,3 +24,4 @@ _start_msvc.bat
 
 #vim tmp files
 *~
+*.swp
