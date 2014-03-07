@@ -48,25 +48,22 @@ bool isValidKeyForText(const string& _key, const string& _text)
 
     string::const_reverse_iterator key_it = _key.crbegin();
     size_t count_identical_simbols = 0;
-    size_t text_counter = -1;
+    size_t text_counter = 0;
 
-    string::const_iterator text_it = _text.cbegin();
-
-    //for (string::const_iterator text_it = _text.begin(); /*text_it != _text.end()*/; ++text_it)
-    while(true)
+    for (string::const_iterator text_it = _text.begin(); /*text_it != _text.end()*/; ++text_it)
     {
-        if (_text.cend() == text_it)
+        if (_text.end() == text_it)
         {
             ++text_counter;
-            text_it = _text.cbegin() + text_counter;
+            count_identical_simbols = 0;
+            text_it = _text.begin() + text_counter;
 
-            if (_text.cend() == text_it)
+            key_it = _key.crbegin();
+
+            if (_text.end() == text_it)
             {
                 break;
             }
-
-            count_identical_simbols = 0;
-            key_it = _key.crbegin();
         }
 
         if (key_it != _key.crend() && (*key_it) == (*text_it))
@@ -84,6 +81,8 @@ bool isValidKeyForText(const string& _key, const string& _text)
         {
             count_identical_simbols = 0;
         }
+
+
     }
 
     return false;
