@@ -47,8 +47,9 @@ class task
 
 public:
 	task()
-	{   const std::string inp="Input.txt",
-	    outp="Output.txt";
+	{   
+		const std::string inp=SOURCE_DIR"/Input.txt",
+		outp=BINARY_DIR"/Output.txt";
 		in.open(inp);
 		if (!in.is_open()) throw(std::logic_error("Can't open file"+inp));
 		out.open(outp);
@@ -69,8 +70,8 @@ public:
 			out<<0;
 			return;
 		}
-		rows_cnt=field.size();
-		collums_cnt=field[0].size();
+		rows_cnt=(int)field.size();
+		collums_cnt=(int)field[0].size();
 		for(int i=0;i<rows_cnt;++i)
 			for(int j=0;j<collums_cnt;++j)
 			{

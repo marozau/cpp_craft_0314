@@ -14,8 +14,9 @@ class task
 
 public:
 	task()
-	{   const std::string inp=SOURCE_DIR"/Input.txt",
-	    outp=BINARY_DIR"/Output.txt";
+	{   
+		const std::string inp=SOURCE_DIR"/Input.txt",
+		outp=BINARY_DIR"/Output.txt";
 		in.open(inp);
 		if (!in.is_open()) throw(std::logic_error("Can't open file "+inp));
 		out.open(outp);
