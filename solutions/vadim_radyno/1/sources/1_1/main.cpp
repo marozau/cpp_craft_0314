@@ -2,8 +2,11 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <xutility>
+#include <xlocale>
 
 using namespace std;
+
 namespace Constants
 {
     namespace Paths
@@ -11,6 +14,7 @@ namespace Constants
         const string input_file = SOURCE_DIR "/sources/1_1/input.txt";
         const string output_file = SOURCE_DIR "/sources/1_1/output.txt";
     }
+
     const string ignore_simbols = " -\\";
 
     namespace Results
@@ -19,7 +23,6 @@ namespace Constants
         const string bad  = "NO";
     }
 }
-
 
 
 bool isIgnoreSimbol(const string& _simbol)
@@ -32,57 +35,33 @@ void removeIgnoreSimbols(string& _str)
 {
     for (string::const_iterator it = Constants::ignore_simbols.cbegin(); it != Constants::ignore_simbols.cend(); ++it)
     {
-        _str.erase(std::remove(_str.begin(), _str.end(), (*it)), _str.end());
+        _str.erase(remove(_str.begin(), _str.end(), (*it)), _str.end());
     }
+}
+
+
+string revertString(const string& _str)
+{
+    string revert_str;
+    revert_str.reserve(_str.size());
+
+    for (auto it = _str.crbegin(); it != _str.crend(); ++it)
+    {
+        revert_str.push_back(*it);
+    }
+
+    return move(revert_str);
 }
 
 
 bool isValidKeyForText(const string& _key, const string& _text)
 {
-    if (_key.empty() || _text.empty())
+    const string& revert_key = revertString(_key);
+
+    const size_t pos_revert_key = _text.find(revert_key);
+    if (pos_revert_key != _text.npos)
     {
         return true;
-    }
-
-    int count_rounds = 0;
-
-    string::const_reverse_iterator key_it = _key.crbegin();
-    size_t count_identical_simbols = 0;
-    size_t text_counter = 0;
-
-    for (string::const_iterator text_it = _text.begin(); /*text_it != _text.end()*/; ++text_it)
-    {
-        if (_text.end() == text_it)
-        {
-            ++text_counter;
-            count_identical_simbols = 0;
-            text_it = _text.begin() + text_counter;
-
-            key_it = _key.crbegin();
-
-            if (_text.end() == text_it)
-            {
-                break;
-            }
-        }
-
-        if (key_it != _key.crend() && (*key_it) == (*text_it))
-        {
-            ++count_identical_simbols;
-
-            if (count_identical_simbols == _key.size() - 1)
-            {
-                return true;
-            }
-            
-            ++key_it;
-        }
-        else
-        {
-            count_identical_simbols = 0;
-        }
-
-
     }
 
     return false;
@@ -92,13 +71,15 @@ bool isValidKeyForText(const string& _key, const string& _text)
 void upperCase(string& _text) {
     for(string::iterator it = _text.begin(); it != _text.end(); ++it)
     {
-        (*it) = toupper((*it));
+        (*it) = toupper(*it);
     }
 }
 
 
 int main( int argc, char* argv[] )
 {
+    locale loc("Russian_Russia");
+
     ifstream input_file( Constants::Paths::input_file );
 
     if ( !input_file.eof() )
@@ -109,7 +90,9 @@ int main( int argc, char* argv[] )
         removeIgnoreSimbols(first_line);
         upperCase(first_line);
 
-        while ( !input_file.eof() )
+        ofstream output_file(Constants::Paths::output_file);
+
+        while (!input_file.eof())
         {
             string key_value;
             std::getline( input_file, key_value );
@@ -117,14 +100,13 @@ int main( int argc, char* argv[] )
             removeIgnoreSimbols(key_value);
             upperCase(key_value);
 
-            const string& valid_key = isValidKeyForText(key_value, first_line)  ? Constants::Results::good 
+            const string& valid_key = isValidKeyForText(key_value, first_line)  ? Constants::Results::good
                                                                                 : Constants::Results::bad;
-
-            std::cout << valid_key << std::endl;
+            output_file << valid_key << endl;
+            cout << valid_key << endl;
         }
-
+        output_file.close();
     }
-
 
     input_file.close();
 }
