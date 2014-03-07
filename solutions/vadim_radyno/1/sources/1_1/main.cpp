@@ -32,30 +32,49 @@ void removeIgnoreSimbols(string& _str)
 {
     for (string::const_iterator it = Constants::ignore_simbols.cbegin(); it != Constants::ignore_simbols.cend(); ++it)
     {
-        _str.erase(std::remove(_str.begin(), _str.end(), (*it)));
+        _str.erase(std::remove(_str.begin(), _str.end(), (*it)), _str.end());
     }
 }
 
 
 bool isValidKeyForText(const string& _key, const string& _text)
 {
-    int count_rounds = 0;
-
-    for (string::const_iterator key_it = _key.begin(); key_it != _key.end(); ++key_it)
+    if (_key.empty() || _text.empty())
     {
-        for (string::const_iterator text_it = _text.begin(); text_it != _text.end(); ++text_it)
-        {
-            size_t count_identical_simbols = 0;
-            if ((*key_it) == (*text_it))
-            {
-                ++count_identical_simbols;
+        return true;
+    }
 
-                if (count_identical_simbols == _key.size())
-                {
-                    return true;
-                }
+    int count_rounds = 0;
+    
+    string::const_reverse_iterator key_it = _key.crbegin() + 1;
+    size_t count_identical_simbols = 0;
+    size_t text_counter = 0;
+    
+    for (string::const_iterator text_it = _text.begin(); text_it != _text.end(); ++text_it)
+    {
+        if ((*key_it) == (*text_it))
+        {
+            ++count_identical_simbols;
+
+            if (count_identical_simbols == _key.size() - 1)
+            {
+                return true;
             }
+            
+            ++key_it;
         }
+
+//         if (_text.end() == text_it)
+//         {
+//             ++text_counter;
+//             count_identical_simbols = 0;
+//             text_it = _text.begin() + text_counter;
+// 
+//             if (_text.end() == text_it)
+//             {
+//                 break;
+//             }
+//         }
     }
 
     return false;
