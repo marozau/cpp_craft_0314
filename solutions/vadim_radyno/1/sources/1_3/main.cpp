@@ -1,73 +1,146 @@
 #include <iostream>
+#include <string>
+#include <deque>
+#include <iosfwd>
+#include <fstream>
 
-void f1() 
+
+using namespace std;
+
+namespace Constants
 {
-	std::cout << "Empty function" << std::endl;
+	namespace Paths
+	{
+		const string input_file = SOURCE_DIR "/sources/1_3/input.txt";
+		const string output_file = SOURCE_DIR "/sources/1_3/output.txt";
+	}
 }
-void f2( int i ) 
+
+class cEath final
 {
-	i = 2;
-	std::cout << i << std::endl;
-}
-void f3( const int i ) 
-{
-	// i = 3;
-}
-void f4( int& i ) 
-{
-	i = 4;
-	std::cout << i << std::endl;
-}
-void f5( const int& i ) 
-{
-	//i = 5;
-}
-void f6( int* i ) 
-{
-	*i = 6;
-	delete i;
-	i = new int ( 66 );
-	std::cout << *i << std::endl;
-}
-void f7( const int* i ) 
-{
-	// *i = 7; error
-	delete i;
-	i = new int ( 77 );
-	std::cout << *i << std::endl;
-}
-void f8( int * const i ) 
-{
-	*i = 8;
-	/*delete i; error
-	i = new int ( 88 ); */
-	std::cout << *i << std::endl;
-}
-void f9( const int* const i ) 
-{
-	/**i = 9;
-	delete i; error
-	i = new int ( 99 ); */
-	
-}
+public:
+	static const char ms_water;
+	static const char ms_island;
+
+public:
+	cEath()
+	{
+
+	}
+
+	explicit cEath(const deque<string>& _map_eath)
+		: m_earths_map(_map_eath)
+	{}
+
+	~cEath()
+	{}
+
+	size_t getCountRows() const { return m_earths_map.size(); }
+	size_t getCountColumns() const { return m_earths_map.empty() ? 0 : m_earths_map[0].size(); }
+
+	char getObject(const size_t _row, const size_t _column) const 
+	{
+		if (_row >= m_earths_map.size())
+		{
+			cout << "_row >= m_earths_map.size()" << endl;
+			exit(-1);
+		}
+
+		if (_column >= m_earths_map[_row].size())
+		{
+			cout << "_column >= m_earths_map[_row].size()" << endl;
+			exit(-1);
+		}
+		
+		return m_earths_map[_row][_column];
+	}
+
+	void sinkObject(const size_t _row, const size_t _column)
+	{
+		if (_row >= m_earths_map.size() || _row < 0)
+		{
+			return;
+		}
+
+		if (_column >= m_earths_map[_row].size() || _column < 0)
+		{
+			return;
+		}
+
+		if (m_earths_map[_row][_column] == ms_island)
+		{
+			m_earths_map[_row][_column] = ms_water;
+
+			sinkObject(_row - 1, _column);
+			sinkObject(_row + 1, _column);
+			sinkObject(_row, _column - 1);
+			sinkObject(_row, _column + 1);
+		}
+	}
+
+	void printMap() const
+	{
+		for (const string& row : m_earths_map)
+		{
+			cout << row << endl;
+		}
+		cout << endl;
+	}
+
+	void addRow(const string& _row)
+	{
+		m_earths_map.push_back(_row);
+	}
+
+private:
+	cEath(const cEath&);
+	cEath& operator=(const cEath&);
+
+private:
+	deque<string> m_earths_map;
+};
+
+const char cEath::ms_water = '~';
+const char cEath::ms_island= 'o';
+
 
 int main( void )
 {
-	f1();	
-	f2( 1 );
-	f3( 1 );
-	
+	cEath eath;
 
-	// f4( 1 );
-	int i = 1;
-	f4( i );
+	ifstream input_file( Constants::Paths::input_file );
 
-	int* i_ptr = new int( 3 );
-	f6( i_ptr );
-	f7( i_ptr );
-	f8( i_ptr );
+	while (!input_file.eof())
+	{
+		string row;
+		std::getline(input_file, row);
+		eath.addRow(row);
+	}
+	input_file.close();
 
-	delete i_ptr;
+	eath.printMap();
 
-	return 0;
+	int count_island = 0;
+	for (size_t row = 0; row < eath.getCountRows(); ++row)
+	{
+		for (size_t column = 0; column < eath.getCountColumns(); ++column)
+		{
+			const char object = eath.getObject(row, column);
+			if (object == cEath::ms_island)
+			{
+				eath.sinkObject(row, column);
+				++count_island;
+			}
+		}
+	}
+
+	cout << endl << count_island << endl;
+
+	eath.printMap();
+
+	ofstream output_file(Constants::Paths::output_file);
+	output_file << count_island << endl;
+	output_file.close();
+
+	return 0;  
 }
