@@ -68,7 +68,8 @@ bool isValidKeyForText(const string& _key, const string& _text)
 }
 
 
-void upperCase(string& _text) {
+void upperCase(string& _text) 
+{
     for(string::iterator it = _text.begin(); it != _text.end(); ++it)
     {
         (*it) = toupper(*it);
