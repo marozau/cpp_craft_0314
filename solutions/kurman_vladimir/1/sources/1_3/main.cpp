@@ -52,7 +52,7 @@ vector<pair<size_t, size_t>> getNeighbours(size_t i, size_t j)
 
 int main(int argc, char* argv[])
 {
-	ifstream fin(SOURCE_DIR "/input.txt");
+	ifstream fin(BINARY_DIR "/input.txt");
 	ofstream fout(BINARY_DIR "/output.txt");
 	if (!fin.is_open())
 	{

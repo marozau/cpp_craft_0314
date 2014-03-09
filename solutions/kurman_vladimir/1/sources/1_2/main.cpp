@@ -11,7 +11,7 @@ bool equalDouble(double l, double r)
 
 int main(int argc, char* argv[])
 {
-	ifstream fin(SOURCE_DIR "/input.txt");
+	ifstream fin(BINARY_DIR "/input.txt");
 	ofstream fout(BINARY_DIR "/output.txt");
 	if (!fin.is_open())
 	{

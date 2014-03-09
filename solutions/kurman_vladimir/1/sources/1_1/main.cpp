@@ -23,7 +23,7 @@ void getlineFromFile(wifstream & is, wstring & str)
 int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "");
-	wifstream fin(SOURCE_DIR "/input.txt");
+	wifstream fin(BINARY_DIR "/input.txt");
 	ofstream fout(BINARY_DIR "/output.txt");
 	if (!fin.is_open())
 	{
