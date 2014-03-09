@@ -40,8 +40,8 @@ int main()
 	n = map.size();
 	size_t result = 0;
 
-	for ( size_t i = 0; i < n; ++i)
-		for ( size_t j = 0; j < m; ++j)
+	for ( int i = 0; i < n; ++i)
+		for ( int j = 0; j < m; ++j)
 			if ( map[i][j] == 'o' ) 
 			{
 				dfs( map, i, j );
