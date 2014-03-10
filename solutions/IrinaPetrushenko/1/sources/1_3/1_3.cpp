@@ -5,7 +5,13 @@
 
 using namespace std;
 
-void dfs (int i,int j,bool ** was,bool ** matrix, int n, size_t m){
+namespace task3{
+	const static size_t N=1000;
+	const static char water='~';
+	const static char ground='o';
+}
+
+void dfs (int i,size_t j,bool ** was,bool ** matrix, int n, size_t m){
 	was[i][j]=true; 
 	if (i+1<n && matrix[i+1][j] && !was[i+1][j]) dfs  (i+1,j,was,matrix,n,m);
 	if (i-1>=0 && matrix[i-1][j] && !was[i-1][j]) dfs  (i-1,j,was,matrix,n,m);
@@ -18,16 +24,16 @@ int main(){
  
     if (in.is_open()){
 		string str;
-		bool ** matrix = new bool * [1000];
-		bool ** was = new bool * [1000];
+		bool ** matrix = new bool * [task3::N];
+		bool ** was = new bool * [task3::N];
 		queue<pair<int,int> > myqueue;
 		int n;
 		size_t m;
-		
-		for (int i=0;i<1000;i++) {
-			matrix[i]=new bool [1000];
-			was[i]=new bool[1000];
-			for (int j=0;j<1000;j++){
+
+		for (int i=0;i<task3::N;i++) {
+			matrix[i]=new bool [task3::N];
+			was[i]=new bool[task3::N];
+			for (int j=0;j<task3::N;j++){
 				matrix[i][j]=false;
 				was[i][j]=false;
 			}
@@ -35,22 +41,22 @@ int main(){
 		int k=0;
 		while (getline (in,str)){
 			m=str.size();
-			for (size_t j=0;j<m;j++) matrix[k][j]=(str[j]=='o');
+			for (size_t j=0;j<m;j++) matrix[k][j]=(str[j]==task3::ground);
 			k++;
 		}
 
 		n=k;
 		int ans=0;
-		
+
 		for (int i=0;i<n;i++)
-			for (int j=0;j<m;j++)
+			for (size_t j=0;j<m;j++)
 				if (!was[i][j] && matrix[i][j]){
 					dfs (i,j,was,matrix,n,m);
 					ans++;
 				}
-		
+
 		out<<ans<<endl;
-		for (int i=0;i<1000;i++){
+		for (int i=0;i<task3::N;i++){
 			delete was[i];
 			delete matrix[i];
 		}

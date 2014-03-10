@@ -9,13 +9,19 @@
 #include <hash_set>
 using namespace std;
 
+namespace task2{
+	const static int precision=4;
+	const static char precision_point='.';
+	
+}
+
 void modify (string & str){ 
-	if (str.find(".")==string::npos) return;
+	if (str.find(task2::precision_point)==string::npos) return;
 	string::iterator it=str.end()-1;
 	int num=0;
 	while (it!=str.begin()){
-		if (*it=='.'){
-			if (num>4) str.erase(it+5,str.end());
+		if (*it==task2::precision_point){
+			if (num>task2::precision) str.erase(it+task2::precision+1,str.end());
 			return;
 		}
 		num++;
@@ -32,8 +38,8 @@ int main(){
         int n;
         int m=0;
 		string str;
-        double temp;
-        hash_set<double> my_set;
+        float temp;
+        hash_set<float> my_set;
         in>>n;
         for (int i=0;i<n;i++){
             in>>str;

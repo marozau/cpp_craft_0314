@@ -6,14 +6,16 @@
 #include <stdlib.h>
 using namespace std ;
 
-bool is_should_delete (char c){
+bool is_should_delete (const char c){
 	return (c==' ' || c=='-' ||c=='\\' );
 }
 
 void my_tolower (string& s){
 	for (std::string::iterator it=s.begin(); it!=s.end(); ++it)
-		if (int(*it)<=int('ß') && int(*it)>=int('À')) *it='à'+(int(*it)-int('À')); 
-		else if (int(*it)<=int('Z') && int(*it)>=int('A')) *it='a'+(int(*it)-int('A')); 
+		if (static_cast< int >(*it)<=static_cast< int >('ß') && static_cast< int >(*it)>=static_cast< int >('À')) 
+								*it='à'+(static_cast< int >(*it)-static_cast< int >('À')); 
+		else if (static_cast< int >(*it)<=static_cast< int >('Z') && static_cast< int >(*it)>=static_cast< int >('A')) 
+								*it='a'+(static_cast< int >(*it)-static_cast< int >('A')); 
 }
 
 
