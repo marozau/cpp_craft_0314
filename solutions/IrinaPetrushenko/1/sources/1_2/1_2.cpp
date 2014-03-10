@@ -36,23 +36,20 @@ int main(){
 
     if (in.is_open()){
         int n;
-        int m=0;
+        int m=0; 
 		string str;
-        float temp;
-        hash_set<float> my_set;
+
+        hash_set<string> my_set;
         in>>n;
         for (int i=0;i<n;i++){
             in>>str;
-			
 			modify(str);
-			temp=stof(str);
-			my_set.insert (temp);
+			my_set.insert (str);
         }
 
 		while (in>>str){
 			modify(str);
-			temp=stof(str);
-			if (my_set.find(temp)!=my_set.end()) out<<"YES"<<endl; else out<<"NO"<<endl;
+			out << ( my_set.find(str) != my_set.end() ? "YES" : "NO" ) << endl;
 		}
     }
 	else{
