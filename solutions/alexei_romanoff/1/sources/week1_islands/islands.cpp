@@ -114,9 +114,9 @@ int main(int argc, char **argv) {
     int ground_counter = MAP_START_GROUND;
 
     for(size_t i = 0; i < islands_map.size(); ++i) {
-        std::string & map_row = islands_map[i];
+        const std::string & map_row = islands_map[i];
         for(size_t j=0; j < map_row.size(); ++j) {
-           char c = map_row[j];
+           const char c = map_row[j];
            if (c == 'o') {
                 union_array(i, j) = ground_counter;
                 ++ground_counter;
