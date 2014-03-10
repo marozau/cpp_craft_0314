@@ -4,6 +4,6 @@ set( CMAKE_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE} CACHE STRING "Configurations"
 project( ${SOLUTION_NAME} )
 include( environment.cmake required )
 
-binaries( hello week1_reverse_strings week1_rational_numbers week1_islands)
+binaries( week1_reverse_strings week1_rational_numbers week1_islands)
 
 compile()
