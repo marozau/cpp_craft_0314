@@ -14,8 +14,8 @@
 #include <boost/numeric/ublas/io.hpp>
 
 
-const int MAP_WATER = -1;
-const int MAP_START_GROUND = 0;
+static const int MAP_WATER = -1;
+static const int MAP_START_GROUND = 0;
 
 typedef boost::numeric::ublas::matrix<int> islands_union_array;
 
