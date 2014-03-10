@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
     //std::cerr << "DEBUG: SOURCE_DIR is " << SOURCE_DIR << "\n";
     //std::cerr << "DEBUG: BINARY_DIR is " << BINARY_DIR << "\n";
 
-    input.open(SOURCE_DIR "/sources/week1_islands/input.txt");
+    input.open(BINARY_DIR "/input.txt");
     output.open(BINARY_DIR "/output.txt");
     if (not input.is_open()) {
         std::cerr << "Unable to open the input file. Reason: " << 
