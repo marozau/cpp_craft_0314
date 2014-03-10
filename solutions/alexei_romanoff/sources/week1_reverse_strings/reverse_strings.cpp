@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     //but in other case you need to encode input.txt into some other
     //encoding, e.g. CP1251. 
     //Yeah, yeah, windows user, this comment is for you:)
-    input.open(SOURCE_DIR "/sources/week1_reverse_strings/input.txt", std::ios::binary);
+    input.open(BINARY_DIR "/input.txt", std::ios::binary);
     output.open(BINARY_DIR "/output.txt", std::ios::binary);
     if (not input.is_open()) {
         std::cerr << "Unable to open the input file. Reason: " << 
