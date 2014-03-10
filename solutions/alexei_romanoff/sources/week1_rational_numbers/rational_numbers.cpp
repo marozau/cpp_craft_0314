@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     while ( std::getline(input, line) ) {
         next_value = ::strtod(line.c_str(), 0);
         std::ostringstream ss;
-        ss  << std::setprecision(5) << ::trunc(next_value * 10000) / 10000;
+        ss  << std::fixed << std::setprecision(5) << ::trunc(next_value * 10000) / 10000;
         next_str_value = ss.str();
 
         //some scaffolds
