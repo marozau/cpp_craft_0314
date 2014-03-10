@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>20137492-4E25-47D9-8956-F6377EAE0B1A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>CPPCraft_1</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1ACF1A72-9142-40BC-8131-88F45B753FEB</key>
+		<string>ssh://github.com/ninjaproger/cpp_craft_0314.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>solutions/ninjaproger/1/sources/CPPCraft_1/CPPCraft_1.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1ACF1A72-9142-40BC-8131-88F45B753FEB</key>
+		<string>../../../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/ninjaproger/cpp_craft_0314.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1ACF1A72-9142-40BC-8131-88F45B753FEB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1ACF1A72-9142-40BC-8131-88F45B753FEB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>cpp_craft_0314</string>
+		</dict>
+	</array>
+</dict>
+</plist>
