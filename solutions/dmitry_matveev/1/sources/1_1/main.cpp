@@ -8,7 +8,7 @@ int main( int argc, char* argv[] )
 {
 	setlocale(LC_ALL, ".1251");
 
-	std::ifstream input_file( SOURCE_DIR "/input1.txt" );
+	std::ifstream input_file( BINARY_DIR "/input1.txt" );
 	std::vector<std::string> strings;
 	std::string chars(" -\\");
 

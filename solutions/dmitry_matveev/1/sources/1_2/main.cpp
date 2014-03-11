@@ -5,7 +5,7 @@
 
 int main( int argc, char* argv[] )
 {
-	std::ifstream input_file( SOURCE_DIR "/input2.txt" );
+	std::ifstream input_file( BINARY_DIR "/input2.txt" );
 
 	int n(0);
 	input_file >> n;
@@ -17,7 +17,7 @@ int main( int argc, char* argv[] )
 		{
 			double code(0.0);
 			input_file >> code;
-			codes.push_back(double(int(code * 10000))/10000);
+			codes.push_back(double(long long(code * 10000))/10000);
 		}
 
 		std::vector<double> passwords;
@@ -26,7 +26,7 @@ int main( int argc, char* argv[] )
 		{
 			double pass(0.0);
 			input_file >> pass;
-			passwords.push_back(double(int(pass * 10000))/10000);
+			passwords.push_back(double(long long(pass * 10000))/10000);
 		}
 		input_file.close();
 

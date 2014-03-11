@@ -25,7 +25,7 @@ public:
 
 int main( int argc, char* argv[] )
 {
-	std::ifstream input_file( SOURCE_DIR "/input3.txt" );
+	std::ifstream input_file( BINARY_DIR "/input3.txt" );
 	std::vector<std::string> lines;
 
 	if(input_file)
