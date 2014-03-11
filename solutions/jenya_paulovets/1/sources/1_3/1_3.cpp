@@ -71,6 +71,9 @@ int main(int argc, char **argv) {
 
 	fileOut<<searchIslands(map, sizeR, sizeC)<<std::endl;
 
+	for (size_t i = 0; i < sizeR; i++) delete map[i];
+	delete []map;
+
 	fileIn.close();
 	fileOut.close();
 
