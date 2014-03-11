@@ -7,12 +7,12 @@ using namespace std;
 
 namespace Constants_1_1
 {
-	const char* input_file = SOURCE_DIR "/tests/1_1Input.txt";
-	const char* output_file = SOURCE_DIR "/tests/1_1Output.txt";
-	const string good = "YES";
-	const string bad  = "NO";
-	const char* Locale = "Russian";
-	const size_t maxInputLen = 100000;
+	static const char* input_file = SOURCE_DIR "/tests/1_1Input.txt";
+	static const char* output_file = SOURCE_DIR "/tests/1_1Output.txt";
+	static const string good = "YES";
+	static const string bad  = "NO";
+	static const char* Locale = "Russian";
+	static const size_t maxInputLen = 100000;
 }
 
 bool formatting_line(ifstream& stream, string& line)
