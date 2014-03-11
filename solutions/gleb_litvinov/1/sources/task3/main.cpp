@@ -71,7 +71,7 @@ public:
 			out<<0;
 			return;
 		}
-		rows_cnt=(int)field.size();
+		rows_cnt=static_cast<int>field.size();
 		collums_cnt=(int)field[0].size();
 		for(int i=0;i<rows_cnt;++i)
 			for(int j=0;j<collums_cnt;++j)
