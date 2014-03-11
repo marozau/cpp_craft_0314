@@ -7,16 +7,30 @@
 
 using namespace std;
 
-void bfs( vector < string > &maps, int x, int y)
+void check(queue < pair <int,int> > & q, vector < string > &maps, int x, int y)
 {
-	if(x<0 || y<0 || x==maps.size() || y==maps[0].size() ) return;
+	if(x<0 || y<0 || x==maps.size() || y==maps[0].size() ) return ;
 	if( maps[x][y]=='~' || maps[x][y]=='&') return;
 	maps[x][y]='&';
-	bfs( maps,x+1, y);
-	bfs( maps,x-1, y);
-	bfs( maps, x, y+1);
-	bfs( maps, x, y-1);
+	q.push(make_pair(x,y));
+}
 
+void bfs(vector < string > &maps, int xs, int ys)
+{
+	queue< pair <int,int> > q;
+	q.push( make_pair(xs,ys) );
+	while (!q.empty())
+	{
+		int x,y;
+		pair <int,int> temp = q.front();
+		q.pop();
+		x = temp.first;
+		y = temp.second;
+		check(q, maps,x+1, y);
+		check(q, maps,x-1, y);
+		check(q, maps, x, y+1);
+		check(q, maps, x, y-1);
+	}	
 }
 
 int main(int argc, char* argv[]) 
@@ -26,16 +40,18 @@ int main(int argc, char* argv[])
 	if( !fin.is_open() )
 	{
 		cout<<"Can't open file!";
+		return 1;
 	} 
 	
 	string s;
 	vector <string> maps;
-	int number=0;
 	while ( getline( fin, s ) )
 	{
 		maps.push_back(s);
 	}
+	fin.close();
 
+	int number=0;
 	for(int i=0; i<maps.size(); i++)
 		for(int j=0; j<maps[0].size(); j++)
 		{
@@ -45,13 +61,12 @@ int main(int argc, char* argv[])
 				++number;
 			}
 		}
-	ofstream fout( SOURCE_DIR "/output.txt" );
+	ofstream fout( BINARY_DIR "/output.txt" );
 	if( !fout.is_open() )
-		return 0;
+		return 1;
 
 	fout<<number<<endl;
 	
-	fin.close();
 	fout.close();
 	return 0;
 }

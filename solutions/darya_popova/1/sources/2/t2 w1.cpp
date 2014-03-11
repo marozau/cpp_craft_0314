@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 	if( !fin.is_open() )
 	{
 		cout<<"Can't open file!";
+		return 1;
 	} 
 	
 	int N;
@@ -40,19 +41,21 @@ int main(int argc, char* argv[])
 		pswd.push_back(s);
 		
 	}
+	fin.close();
 
-	ofstream fout( SOURCE_DIR "/output.txt" );
+	ofstream fout( BINARY_DIR "/output.txt" );
 	if( !fout.is_open() )
-		return 0;
+		return 1;
 		
 
 	for( vector < double > :: const_iterator it=pswd.cbegin(); it!=pswd.cend(); it++ )
 		{
 			if( find( codes.begin(), codes.end(), *it ) != codes.end()) 
 				fout<<"YES"<<endl;
-			else fout<<"NO"<<endl;
+			else 
+				fout<<"NO"<<endl;
 		}
-	fin.close();
+	
 	fout.close();
 	return 0;
 }

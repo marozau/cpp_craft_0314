@@ -9,16 +9,16 @@ using namespace std;
 
 void remove_unused( string& a)
 {
-
+	string res;
 	for( string :: iterator it = a.begin(); it != a.end(); it++)
 	{
-		if ( (*it)==' ' || (*it)=='-' || (*it)=='\\' ) 
+		if ( (*it)!=' ' && (*it)!='-' && (*it)!='\\' ) 
 		{
-			a.erase(it);
-			it--;
+			res+=tolower(*it);
 		}
-		else *it=tolower(*it);
 	}
+
+	a=res;
    
 }
 
@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
 	if( !fin.is_open() )
 	{
 		cout<<"Can't open file!";
+		return 1;
 	} 
 
 	getline( fin, smain );
@@ -45,20 +46,20 @@ int main(int argc, char* argv[])
 		remove_unused(s);
 		keys.push_back( s );
 	}
+	fin.close();
 
-	ofstream fout( SOURCE_DIR "/output.txt" );
+	ofstream fout( BINARY_DIR "/output.txt" );
 	if( !fout.is_open() )
-		return 0;
+		return 1;
 		
 	for( vector < string > :: const_iterator it=keys.cbegin(); it!=keys.cend(); it++ )
 	{
 			if( smain.find( *it ) != string::npos ) 
 				fout<<"YES"<<endl;
-			else fout<<"NO"<<endl;
+			else 
+				fout<<"NO"<<endl;
 	}
 
-	
-	fin.close();
 	fout.close();
 	return 0;
 }
