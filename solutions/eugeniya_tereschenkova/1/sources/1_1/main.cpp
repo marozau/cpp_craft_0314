@@ -5,7 +5,6 @@
 #include <algorithm>
 using namespace std;
 
-
 namespace Constants_1_1
 {
 	const char* input_file = SOURCE_DIR "/tests/1_1Input.txt";
@@ -16,30 +15,19 @@ namespace Constants_1_1
 	const size_t maxInputLen = 100000;
 }
 
-bool isSpaceSymb(const char& symb)
-{
-	switch(symb)
-	{
-	case ' ':
-	case '-':
-	case '\\':
-		return 1;
-	default:
-		return 0;
-	}
-}
-
 bool formatting_line(ifstream& stream, string& line)
 {
-	bool bReturn = true;
 	getline(stream, line);
 	if(line.empty())
-		return bReturn;
+		return false;
 	if(line.size() > Constants_1_1::maxInputLen)
-		cout << "Could not open input file" << endl;
-	line.erase(remove_if(line.begin(), line.end(), isSpaceSymb), line.end());
+	{
+		cout << "Incorrect string" << endl;
+		return false;
+	}
+	line.erase(remove_if(line.begin(), line.end(), [](const char symb){ return (symb == ' ') || (symb == '\\') || (symb == '-'); }), line.end());
 	transform(line.begin(), line.end(), line.begin(), tolower);
-	return bReturn;
+	return true;
 }
 
 int main()
