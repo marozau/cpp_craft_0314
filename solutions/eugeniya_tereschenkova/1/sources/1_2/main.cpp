@@ -8,12 +8,13 @@ using namespace std;
 
 namespace Constants_1_2
 {
-	const char* input_file = SOURCE_DIR "/tests/1_2Input.txt";
-	const char* output_file = SOURCE_DIR "/tests/1_2Output.txt";
-	const string good = "YES";
-	const string bad  = "NO";
-	const char* Locale = "Russian";
-	const int nPrecisionNumbers = 10000;
+	static const char* input_file = SOURCE_DIR "/tests/1_2Input.txt";
+	static const char* output_file = SOURCE_DIR "/tests/1_2Output.txt";
+	static const string good = "YES";
+	static const string bad  = "NO";
+	static const char* Locale = "Russian";
+	static const int nPrecisionNumbers = 10000;
+	static const int nMaxCodesCount = 1000000;
 }
 
 void get_Codes(ifstream& stream, vector<long long int>& vectCodes)
@@ -25,7 +26,7 @@ void get_Codes(ifstream& stream, vector<long long int>& vectCodes)
 	if(stream.eof())
 		return;
 
-	if(nCodesCount <= 0 || nCodesCount > 1000000)
+	if(nCodesCount <= 0 || nCodesCount > Constants_1_2::nMaxCodesCount)
 		return;
 	else
 		vectCodes.reserve(nCodesCount);
@@ -41,12 +42,11 @@ void get_Codes(ifstream& stream, vector<long long int>& vectCodes)
 bool compare_CodesAndPasswords(ifstream& stream, const vector<long long int>& vectCodes) 
 {
 	ofstream output_file( Constants_1_2::output_file );
-	bool bReturn = true;
 	double Passw;
 	if(!output_file.is_open())
 	{
 		cout << "Could not open output file" << endl;
-		return 1;
+		return false;
 	}
 	while(!stream.eof())
 	{
@@ -58,7 +58,7 @@ bool compare_CodesAndPasswords(ifstream& stream, const vector<long long int>& ve
 			output_file << Constants_1_2::bad << endl;
 	}
 	output_file.close();
-	return bReturn;
+	return true;
 }
 
 int main()
@@ -75,7 +75,10 @@ int main()
 	get_Codes(input_file, vectCodes);
 
 	if(!compare_CodesAndPasswords(input_file, vectCodes))
+	{
+		input_file.close();
 		return 1;
+	}
 	input_file.close();
 
 	return 0;
