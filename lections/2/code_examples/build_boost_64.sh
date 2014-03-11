@@ -1,0 +1,1 @@
+./bjam link=static stage --with-filesystem --with-date_time --with-thread --with-test --with-regex --with-system --with-program_options --with-chrono --with-serialization --stagedir=./stage_64
