@@ -11,8 +11,8 @@ namespace Constants
 {
     namespace Paths
     {
-        const string input_file = SOURCE_DIR "/sources/1_1/input.txt";
-        const string output_file = SOURCE_DIR "/sources/1_1/output.txt";
+        const string input_file = BINARY_DIR "/input.txt";
+        const string output_file = BINARY_DIR "/output.txt";
     }
 
     const string ignore_simbols = " -\\";
@@ -25,12 +25,6 @@ namespace Constants
 }
 
 
-bool isIgnoreSimbol(const string& _simbol)
-{
-    return (Constants::ignore_simbols.npos != Constants::ignore_simbols.find(_simbol));
-}
-
-
 void removeIgnoreSimbols(string& _str)
 {
     for (string::const_iterator it = Constants::ignore_simbols.cbegin(); it != Constants::ignore_simbols.cend(); ++it)
@@ -40,23 +34,11 @@ void removeIgnoreSimbols(string& _str)
 }
 
 
-string revertString(const string& _str)
-{
-    string revert_str;
-    revert_str.reserve(_str.size());
-
-    for (auto it = _str.crbegin(); it != _str.crend(); ++it)
-    {
-        revert_str.push_back(*it);
-    }
-
-    return move(revert_str);
-}
-
-
 bool isValidKeyForText(const string& _key, const string& _text)
 {
-    const string& revert_key = revertString(_key);
+    string revert_key(_key);
+
+	std::reverse(revert_key.begin(), revert_key.end());
 
     const size_t pos_revert_key = _text.find(revert_key);
     if (pos_revert_key != _text.npos)

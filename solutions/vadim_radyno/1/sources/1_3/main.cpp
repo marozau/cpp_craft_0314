@@ -11,8 +11,8 @@ namespace Constants
 {
 	namespace Paths
 	{
-		const string input_file = SOURCE_DIR "/sources/1_3/input.txt";
-		const string output_file = SOURCE_DIR "/sources/1_3/output.txt";
+		const string input_file = BINARY_DIR "/input.txt";
+		const string output_file = BINARY_DIR "/output.txt";
 	}
 }
 
