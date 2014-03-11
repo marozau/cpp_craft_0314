@@ -40,8 +40,7 @@ public:
 			std::stringstream stream;
 			std::getline( in, temp );
 			temp.erase(remove_if(temp.begin(),temp.end(),pred()),temp.end());
-			for(unsigned i=0;i<temp.size();++i)
-				temp[i]=tolower(temp[i]);
+			std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
 			if (first.size()==0)
 				first=temp;
 			else
