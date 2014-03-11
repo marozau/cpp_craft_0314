@@ -8,8 +8,8 @@ using namespace std;
 
 namespace Constants_1_2
 {
-	static const char* input_file = SOURCE_DIR "/tests/1_2Input.txt";
-	static const char* output_file = SOURCE_DIR "/tests/1_2Output.txt";
+	static const char* input_file = BINARY_DIR "/Input.txt";
+	static const char* output_file = BINARY_DIR "/Output.txt";
 	static const string good = "YES";
 	static const string bad  = "NO";
 	static const char* Locale = "Russian";
