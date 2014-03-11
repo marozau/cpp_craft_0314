@@ -14,7 +14,7 @@ class task
 public:
 	task()
 	{   
-		const std::string inp=SOURCE_DIR"/Input.txt",
+		const std::string inp=BINARY_DIR"/Input.txt",
 		outp=BINARY_DIR"/Output.txt";
 		in.open(inp);
 		if (!in.is_open()) throw(std::logic_error("Can't open file"+inp));
@@ -41,7 +41,7 @@ public:
 		{   
 			check=false;
 			in>>temp;
-			std::vector<double>::iterator it=std::lower_bound(numbers.begin(),numbers.end(),temp);
+			std::vector<double>::const_iterator it=std::lower_bound(numbers.begin(),numbers.end(),temp);
 			if (it!=numbers.end())
 			{
 				if (fabs(temp-*it)<=eps)

@@ -15,7 +15,7 @@ class task
 public:
 	task()
 	{   
-		const std::string inp=SOURCE_DIR"/Input.txt",
+		const std::string inp=BINARY_DIR"/Input.txt",
 		outp=BINARY_DIR"/Output.txt";
 		in.open(inp);
 		if (!in.is_open()) throw(std::logic_error("Can't open file "+inp));
@@ -25,7 +25,7 @@ public:
 
 	struct pred : std::unary_function<char,bool>
 	{
-		bool operator() (char c) const
+		bool operator() (const char c) const
 		{
 			return (c==' '||c=='\\'||c=='-');
 		}
@@ -39,11 +39,7 @@ public:
 		{   
 			std::stringstream stream;
 			std::getline( in, temp );
-			
-			for(unsigned i=0;i<temp.size();i++)
-				if (!pred()(temp[i]))
-					stream<<temp[i];
-			stream>>temp;
+			temp.erase(remove_if(temp.begin(),temp.end(),pred()),temp.end());
 			for(unsigned i=0;i<temp.size();++i)
 				temp[i]=tolower(temp[i]);
 			if (first.size()==0)

@@ -9,6 +9,7 @@ class task
 	std::ifstream in;
 	std::ofstream out;
 	std::vector<std::string> field;
+	const char earth='o',water='~';
 	struct point
 	{
 		int x,y;
@@ -23,16 +24,16 @@ class task
 
 	void add(const point& node)
 	{
-		if (node.x>=0&&node.x<rows_cnt&&node.y>=0&&node.y<collums_cnt&&field[node.x][node.y]=='o') 
+		if (node.x>=0&&node.x<rows_cnt&&node.y>=0&&node.y<collums_cnt&&field[node.x][node.y]==earth) 
 		{
-			field[node.x][node.y]='~';
+			field[node.x][node.y]=water;
 			points.push(node);
 		}
 	}
 	void bfs(const point& start)
 	{   
 		points.push(start);
-		field[start.x][start.y]='~';
+		field[start.x][start.y]=water;
 		while (!points.empty())
 		{   
 			point& current=points.front();
@@ -48,7 +49,7 @@ class task
 public:
 	task()
 	{   
-		const std::string inp=SOURCE_DIR"/Input.txt",
+		const std::string inp=BINARY_DIR"/Input.txt",
 		outp=BINARY_DIR"/Output.txt";
 		in.open(inp);
 		if (!in.is_open()) throw(std::logic_error("Can't open file"+inp));
@@ -75,7 +76,7 @@ public:
 		for(int i=0;i<rows_cnt;++i)
 			for(int j=0;j<collums_cnt;++j)
 			{
-				if (field[i][j]=='o')
+				if (field[i][j]==earth)
 				{
 					++answer;
 					bfs(point(i,j));
