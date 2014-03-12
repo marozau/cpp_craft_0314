@@ -7,15 +7,15 @@
 
 using namespace std;
 
-void check(queue < pair <int,int> > & q, vector < string > &maps, int x, int y)
+void check(queue < pair <int,int> > & q, vector < string > &maps, const int x, const int y)
 {
 	if(x<0 || y<0 || x==maps.size() || y==maps[0].size() ) return ;
-	if( maps[x][y]=='~' || maps[x][y]=='&') return;
-	maps[x][y]='&';
+	if( maps[x][y]=='~' ) return;
+	maps[x][y]='~';
 	q.push(make_pair(x,y));
 }
 
-void bfs(vector < string > &maps, int xs, int ys)
+void bfs(vector < string > &maps, const int xs, const int ys)
 {
 	queue< pair <int,int> > q;
 	q.push( make_pair(xs,ys) );
@@ -52,8 +52,8 @@ int main(int argc, char* argv[])
 	fin.close();
 
 	int number=0;
-	for(int i=0; i<maps.size(); i++)
-		for(int j=0; j<maps[0].size(); j++)
+	for(size_t i=0; i<maps.size(); i++)
+		for(size_t j=0; j<maps[0].size(); j++)
 		{
 			if ( maps[i][j] == 'o' ) 
 			{
