@@ -1,7 +1,6 @@
 
-export SOLUTION_NAME=solutions_s_example_with_test_data_generating
-
-export BOOST_ROOT=/Users/rilley_elf/_dev/cpp_objc/boost_1_47_0
+export SOLUTION_NAME=puzzle_2_solution
+export BOOST_ROOT=~/usr/boost_1_47_0
 
 export BUILD_TYPE=Debug
 if [ "$1" == 'Release' ];
