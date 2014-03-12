@@ -20,9 +20,9 @@ int main()
 	string str;
 	vector < string > keys;
 
-	ifstream in( SOURCE_DIR "/input.txt" );
+	ifstream in( BINARY_DIR "/input.txt" );
 	if ( !in.is_open() )
-		return 0;
+		return 1;
 	getline( in, str );
 	modification( str );
 	while( !in.eof() )
@@ -35,9 +35,9 @@ int main()
 	}
 	in.close();
 
-	ofstream out( SOURCE_DIR "/output.txt" );
+	ofstream out( BINARY_DIR "/output.txt" );
 	if( !out.is_open() )
-		return 0;
+		return 1;
 	for( vector < string > :: const_iterator it = keys.cbegin(); it != keys.cend(); it++ )
 	{
 		if( str.find( *it ) != string::npos )

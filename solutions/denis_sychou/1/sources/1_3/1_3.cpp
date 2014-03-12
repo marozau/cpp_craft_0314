@@ -5,27 +5,28 @@
 
 using namespace std;
 
-void dfs( vector < string > &map, int i, int j )
+void bfs( vector < string > &map, const int i, const int j )
 {
 	if ( i < 0 || i == map.size() || j < 0 || j == map[0].size() )
 		return;
-	if( map[i][j] == '~' )
+	const char water = '~';
+	if( map[i][j] == water )
 		return;
-	map[i][j] = '~';
-	dfs( map, i + 1, j );
-	dfs( map, i - 1, j );
-	dfs( map, i, j + 1 );
-	dfs( map, i, j - 1 );
+	map[i][j] = water;
+	bfs( map, i + 1, j );
+	bfs( map, i - 1, j );
+	bfs( map, i, j + 1 );
+	bfs( map, i, j - 1 );
 
 }
 
 int main()
 {
 	vector < string > map;
-	ifstream in( SOURCE_DIR "/input.txt" );
-	ofstream out( SOURCE_DIR "/output.txt" );
+	ifstream in( BINARY_DIR "/input.txt" );
+	ofstream out( BINARY_DIR "/output.txt" );
 	if( !in.is_open() )
-		return 0;
+		return 1;
 
 	while( !in.eof() )
 	{
@@ -35,16 +36,16 @@ int main()
 	}
 	in.close();
 
-	size_t n, m;
-	m = map.at(0).size();
-	n = map.size();
+	const size_t n = map.size();
+	const size_t m = map.at(0).size();
 	size_t result = 0;
+	const char land = 'o';
 
 	for ( int i = 0; i < n; ++i)
 		for ( int j = 0; j < m; ++j)
-			if ( map[i][j] == 'o' ) 
+			if ( map[i][j] == land ) 
 			{
-				dfs( map, i, j );
+				bfs( map, i, j );
 				++result;
 			}
 			

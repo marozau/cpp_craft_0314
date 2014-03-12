@@ -15,10 +15,10 @@ int main()
 	vector < double > code, password;
 	size_t number;
 
-	ifstream in( SOURCE_DIR "/input.txt" );
+	ifstream in( BINARY_DIR "/input.txt" );
 
 	if ( !in.is_open() )
-		return 0;
+		return 1;
 
 	in >> number;
 	for( size_t i = 0; i < number; i++ )
@@ -38,9 +38,9 @@ int main()
 	}
 	in.close();
 	
-	ofstream out( SOURCE_DIR "/output.txt" );
+	ofstream out( BINARY_DIR "/output.txt" );
 	if( !out.is_open() )
-		return 0;
+		return 1;
 
 	for( vector < double > :: const_iterator it = password.cbegin(); it != password.cend(); it++ )
 	{
