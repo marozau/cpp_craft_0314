@@ -1,5 +1,4 @@
 #include <iostream>
-#include <sstream>
 #include <fstream>
 #include <string>
 #include <stdexcept>
@@ -37,7 +36,7 @@ public:
 		std::string first,temp;			
 		while( !in.eof() )
 		{   
-			std::stringstream stream;
+		
 			std::getline( in, temp );
 			temp.erase(remove_if(temp.begin(),temp.end(),pred()),temp.end());
 			std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);

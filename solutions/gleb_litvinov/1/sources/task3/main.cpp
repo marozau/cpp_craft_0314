@@ -4,12 +4,13 @@
 #include <vector>
 #include <stdexcept>
 #include <queue>
+const char earth='o',water='~';
 class task
 {
 	std::ifstream in;
 	std::ofstream out;
 	std::vector<std::string> field;
-	const char earth='o',water='~';
+	
 	struct point
 	{
 		int x,y;
@@ -71,8 +72,8 @@ public:
 			out<<0;
 			return;
 		}
-		rows_cnt=static_cast<int>field.size();
-		collums_cnt=(int)field[0].size();
+		rows_cnt=static_cast<int>(field.size());
+		collums_cnt=static_cast<int>(field[0].size());
 		for(int i=0;i<rows_cnt;++i)
 			for(int j=0;j<collums_cnt;++j)
 			{
