@@ -35,6 +35,7 @@ char ** createArrey(std::fstream &fileIn, size_t &sizeR, size_t &sizeC){
 	char **map;
 
 	getline(fileIn, buf);
+	if(!fileIn) {std::cout<<"There is no data in input file"<<std::endl; exit(1);}
 
 	bufMap.push_back(buf);
 	while(fileIn){
@@ -61,13 +62,13 @@ int main(int argc, char **argv) {
 
 	std::fstream fileIn;
 	fileIn.open( BINARY_DIR "/input.txt", std::ios::in);
-	if(!fileIn) {std::cout<<"Opening error"<<std::endl; return(1);}
+	if(!fileIn) {std::cout<<"Error path for input.txt"<<std::endl; exit(1);}
 
 	map=createArrey(fileIn, sizeR, sizeC);
 
 	std::fstream fileOut;
 	fileOut.open( BINARY_DIR "/output.txt", std::ios::out);
-	if(!fileOut) {std::cout<<"Opening error"<<std::endl; return(1);}
+	if(!fileOut) {std::cout<<"Error path for output.txt"<<std::endl; exit(1);}
 
 	fileOut<<searchIslands(map, sizeR, sizeC)<<std::endl;
 

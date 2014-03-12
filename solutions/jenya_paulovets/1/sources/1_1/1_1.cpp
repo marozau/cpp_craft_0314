@@ -21,6 +21,8 @@ void createFirstLine(std::fstream &fileIn, std::string &firstLine){
 		size_t i=0;
 
 	    getline(fileIn, firstLine);
+	    if(!fileIn){std::cout<<"There is no data in input file"<<std::endl; exit(1);}
+
 	    firstLine.append("1");
 
 		std::string::iterator begin=firstLine.begin();
@@ -42,19 +44,22 @@ void searchReverseKeys(std::fstream &fileIn, std::fstream &fileOut, std::string 
 	std::string::iterator beginOfLine=firstLine.begin();
     std::string::iterator endOfLine=firstLine.end();
 
-	while(fileIn){
-		fileIn>>key;
+    fileIn>>key;
+    if(!fileIn){std::cout<<"There is no keys in input file"<<std::endl; exit(1);}
 
+	do{
 		for(size_t j=0; j<key.size(); j++) key.at(j)=tolower(key.at(j));
 
 		std::string::iterator beginOfKey=key.begin();
 		std::string::iterator endOfKey=key.end();
 
 		std::reverse(beginOfKey, endOfKey);
-		std::cout<<key<<std::endl;
+
 		if(std::search(beginOfLine, endOfLine, beginOfKey, endOfKey)==endOfLine) fileOut<<"NO"<<std::endl;
 		else fileOut<<"YES"<<std::endl;
+		fileIn>>key;
 	}
+	while(fileIn);
 }
 
 
@@ -63,13 +68,13 @@ int main(int argc, char **argv) {
 
 	std::fstream fileIn;
 	fileIn.open( BINARY_DIR "/input.txt", std::ios::in);
-	if(!fileIn) {std::cout<<"Opening error"<<std::endl; return(1);}
+	if(!fileIn) {std::cout<<"Error path for input file"<<std::endl; return(1);}
 
 	createFirstLine(fileIn, firstLine);
 
 	std::fstream fileOut;
 	fileOut.open( BINARY_DIR "/output.txt", std::ios::out);
-	if(!fileOut) {std::cout<<"Opening error"<<std::endl; return(1);}
+	if(!fileOut) {std::cout<<"Error path for output file"<<std::endl; return(1);}
 
 	searchReverseKeys(fileIn, fileOut, firstLine);
 
