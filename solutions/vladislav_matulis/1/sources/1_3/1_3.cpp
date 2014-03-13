@@ -6,17 +6,17 @@ using namespace std;
 
 namespace my
 {
-	static int len;
-	static int high;
+	const char land = 'o';
+	const char water = '~';
 }
 
-void dfs( vector <string> &, int, int );
+void dfs( vector <string> &, const int, const int, const int, const int);
 
 int main()
 {
-	ifstream in( SOURCE_DIR "/input.txt" );
+	ifstream in( BINARY_DIR "/input.txt" );
 	if ( !in.is_open() )
-		return 0;
+		return 1;
 	int count = 0;
 	vector<string> isles;
 	while ( !in.eof() )
@@ -26,34 +26,34 @@ int main()
 		isles.push_back(buf);
 	}
 	in.close();
-	my::len = isles[0].size();
-	my::high = isles.size();
-	for ( int i = 0; i < my::high; ++i )
-		for ( int j = 0; j < my::len; ++j )
+	const int len = isles[0].size();
+	const int high = isles.size();
+	for ( int i = 0; i < high; ++i )
+		for ( int j = 0; j < len; ++j )
 		{
-			if (isles[i][j] == 'o')
+			if ( isles[i][j] == my::land )
 			{
-				dfs( isles, i, j );
+				dfs( isles, i, j, high, len );
 				count++;
 			}
 		}
-	ofstream out( SOURCE_DIR "output.txt" );
+	ofstream out( BINARY_DIR "/output.txt" );
 	if ( !out.is_open() )
-		return 0;
+		return 1;
 	out << count;
 	out.close();
 	return 0;
 }
 
-void dfs( vector<string> &vs, int x, int y )
+void dfs( vector<string> &vs, const int x, const int y, const int high, const int len )
 {
-	if ( x < 0 || x == my::high || y < 0 || y == my::len )
+	if ( x < 0 || x == high || y < 0 || y == len )
 		return;
-	if ( vs[ x ][ y ] != 'o' ) 
+	if ( vs[ x ][ y ] != my::land ) 
 		return;
-	vs[ x ][ y ] = '~';
-	dfs( vs, x + 1, y );
-	dfs( vs, x - 1, y );
-	dfs( vs, x, y + 1 );
-	dfs( vs, x, y - 1 );
+	vs[ x ][ y ] = my::water;
+	dfs( vs, x + 1, y, high, len );
+	dfs( vs, x - 1, y, high, len );
+	dfs( vs, x, y + 1, high, len );
+	dfs( vs, x, y - 1, high, len );
 }
