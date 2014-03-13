@@ -41,7 +41,7 @@ int main(){
         set<string> my_set;
 		in>>n;
         for (int i=0;i<n;i++){
-            in>>str;
+        		in>>str;
 			modify(str);
 			my_set.insert (str);
         }
