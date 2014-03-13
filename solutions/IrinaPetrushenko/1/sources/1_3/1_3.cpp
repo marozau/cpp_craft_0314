@@ -19,7 +19,7 @@ void dfs (int i,size_t j,vector<string> & matrix, const int n, const size_t m){
 }
 int main(){
 	ifstream in(BINARY_DIR"/input.txt");
-    ofstream out(BINARY_DIR"/output.txt");
+	ofstream out(BINARY_DIR"/output.txt");
 
  
     if (in.is_open()){
