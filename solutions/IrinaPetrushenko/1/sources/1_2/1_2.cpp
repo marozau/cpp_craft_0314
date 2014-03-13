@@ -32,7 +32,7 @@ void modify (string & str){
 
 int main(){
 	ifstream in(BINARY_DIR"/input.txt");
-    ofstream out(BINARY_DIR"/output.txt");
+	ofstream out(BINARY_DIR"/output.txt");
 	
     if (in.is_open()){
 		int n;
