@@ -10,16 +10,16 @@ bool pred( const char );
 int main()
 {
 	setlocale( LC_ALL, "rus" );
-	ifstream in( SOURCE_DIR  "/input.txt" );
+	ifstream in( BINARY_DIR  "/input.txt" );
 	if ( !in.is_open() )
-		return 0;
+		return 1;
 	string home;
 	getline( in, home );
 	reverse( home.begin(), home.end() );
 	merger( home );
-	ofstream out( SOURCE_DIR "/output.txt" );
+	ofstream out( BINARY_DIR "/output.txt" );
 	if ( !out.is_open() )
-		return 0;
+		return 1;
 	while ( !in.eof() )
 	{
 		string buf;
