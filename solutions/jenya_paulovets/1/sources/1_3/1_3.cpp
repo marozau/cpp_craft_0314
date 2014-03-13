@@ -1,79 +1,61 @@
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <fstream>
 #include <algorithm>
 #include <vector>
 
 //Рекурсивный спуск при условии присутствия смежного острова:справа || слева || снизу || сверху
-void recursion(char **map, int i, int j, const int sizeR, const int sizeC){
-	map[i][j]='~';
-	if(j+1<sizeC && map[i][j+1]=='o') recursion(map, i, j+1, sizeR, sizeC);
-	if(j-1>=0 && map[i][j-1]=='o') recursion(map, i, j-1, sizeR, sizeC);
-	if(i+1<sizeR && map[i+1][j]=='o') recursion(map, i+1, j, sizeR, sizeC);
-	if(i-1>=0 && map[i-1][j]=='o') recursion(map, i-1, j, sizeR, sizeC);
+void recursion(std::vector<std::string> &map, const int i, const int j, const char land, const char water){
+	map[i][j]=water;
+	if(j+1<(int)map[i].size() && map[i][j+1]==land) recursion(map, i, j+1, land, water);
+	if(j-1>=0 && map[i][j-1]==land) recursion(map, i, j-1, land, water);
+	if(i+1<(int)map.size() && map[i+1][j]==land) recursion(map, i+1, j, land, water);
+	if(i-1>=0 && map[i-1][j]==land) recursion(map, i-1, j, land, water);
 	return;
 }
 
-//Поиск островов использую рекурсивную функцию
-int searchIslands(char **map, const size_t sizeR, const size_t sizeC){
-
+//Поиск островов используя рекурсивную функцию
+int searchIslands(std::vector<std::string> &map){
+	const char land='o';
+	const char water='~';
 	int count=0;
 
-	for (size_t i = 0; i < sizeR; ++i) {
-			for (size_t j = 0; j < sizeC; ++j) {
-				if(map[i][j]=='o') {count++; recursion(map, i, j, sizeR, sizeC);}
+	for (size_t i = 0; i < map.size(); ++i) {
+			for (size_t j = 0; j < map[i].size(); ++j) {
+				if(map[i][j]==land) {count++; recursion(map, i, j, land, water);}
 			}
 		}
 
 	return count;
 }
 
-//Создается карта в виде двумерного массива
-char ** createArrey(std::fstream &fileIn, size_t &sizeR, size_t &sizeC){
-	std::vector<std::string> bufMap;
+//Создание карты
+void createMap(std::fstream &fileIn, std::vector<std::string> &map){
 	std::string buf;
-	char **map;
 
 	getline(fileIn, buf);
-	if(!fileIn) {std::cout<<"There is no data in input file"<<std::endl; exit(1);}
+	if(!fileIn) {std::cout<<"There is no data in input file"<<std::endl; fileIn.close(); exit(1);}
 
-	bufMap.push_back(buf);
 	while(fileIn){
+	map.push_back(buf);
 	getline(fileIn, buf);
-	bufMap.push_back(buf);
 	}
-
-	sizeR=bufMap.size();
-	sizeC=buf.size();
-
-	map=new char*[sizeR];
-	for(size_t i=0; i<bufMap.size(); i++){
-		map[i]=new char[sizeC+1];
-		(bufMap.at(i)).copy(map[i], sizeC, 0);
-		map[i][sizeC]='\0';
-	}
-
-	return map;
 }
 
 int main(int argc, char **argv) {
-	char **map;
-	size_t sizeC, sizeR;
+	std::vector<std::string> map;
 
 	std::fstream fileIn;
-	fileIn.open( BINARY_DIR "/input.txt", std::ios::in);
-	if(!fileIn) {std::cout<<"Error path for input.txt"<<std::endl; exit(1);}
+	fileIn.open("input.txt", std::ios::in);
+	if(!fileIn) {std::cout<<"Error path for input.txt"<<std::endl; fileIn.close(); exit(1);}
 
-	map=createArrey(fileIn, sizeR, sizeC);
+	createMap(fileIn, map);
 
 	std::fstream fileOut;
-	fileOut.open( BINARY_DIR "/output.txt", std::ios::out);
-	if(!fileOut) {std::cout<<"Error path for output.txt"<<std::endl; exit(1);}
+	fileOut.open("output.txt", std::ios::out);
+	if(!fileOut) {std::cout<<"Error path for output.txt"<<std::endl; fileIn.close(); fileOut.close(); exit(1);}
 
-	fileOut<<searchIslands(map, sizeR, sizeC)<<std::endl;
-
-	for (size_t i = 0; i < sizeR; i++) delete map[i];
-	delete []map;
+	fileOut<<searchIslands(map)<<std::endl;
 
 	fileIn.close();
 	fileOut.close();

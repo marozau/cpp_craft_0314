@@ -1,11 +1,5 @@
-/*
- * 11.cpp
- *
- *  Created on: Mar 8, 2014
- *      Author: dell
- */
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <fstream>
 #include <algorithm>
 #include <vector>
@@ -20,7 +14,7 @@ double changePrecision(const double number){
 }
 
 //Поиск кодов в паролях
-void searchCodesInPass(const size_t sizeCodes, std::fstream &fileIn, std::fstream &fileOut){
+void searchPassInCodes(const size_t sizeCodes, std::fstream &fileIn, std::fstream &fileOut){
 
 	std::vector<double> codes;
 	std::vector<double> pass;
@@ -29,8 +23,8 @@ void searchCodesInPass(const size_t sizeCodes, std::fstream &fileIn, std::fstrea
 
 	while(fileIn){
 		fileIn>>tmp;
-		if(i==0 && !fileIn) {std::cout<<"There is no 'code' data in input file"<<std::endl; exit(1);}
-		else if(i==sizeCodes && !fileIn) {std::cout<<"There is no 'pass' data in input file"<<std::endl; exit(1);}
+		if(i==0 && !fileIn) {std::cout<<"There is no 'code' data in input file"<<std::endl; fileIn.close(); fileOut.close(); exit(1);}
+		else if(i<=sizeCodes && !fileIn) {std::cout<<"There is no 'pass' data in input file"<<std::endl; fileIn.close(); fileOut.close(); exit(1);}
 		tmp=changePrecision(tmp);
 		if(i<sizeCodes) codes.push_back(tmp);
 		else pass.push_back(tmp);
@@ -39,8 +33,8 @@ void searchCodesInPass(const size_t sizeCodes, std::fstream &fileIn, std::fstrea
 
 	std::vector<double>::iterator it;
 
-	for(it=codes.begin(); it!=codes.end(); it++){
-		if(std::find(pass.begin(), pass.end(), *it)==pass.end()) fileOut<<"NO"<<std::endl;
+	for(it=pass.begin(); it+1!=pass.end(); it++){
+		if(std::find(codes.begin(), codes.end(), *it)==codes.end()) fileOut<<"NO"<<std::endl;
 		else fileOut<<"YES"<<std::endl;
 	}
 }
@@ -49,17 +43,18 @@ int main(int argc, char **argv) {
 	size_t sizeCodes;
 
 	std::fstream fileIn;
-	fileIn.open( BINARY_DIR "/input.txt", std::ios::in);
-	if(!fileIn) {std::cout<<"Error path for input.txt"<<std::endl; exit(1);}
+	fileIn.open("input.txt", std::ios::in);
+	if(!fileIn) {std::cout<<"Error path for input.txt"<<std::endl; fileIn.close(); exit(1);}
 
 	fileIn>>sizeCodes;
-	if(!fileIn){std::cout<<"There is no data in input file"<<std::endl; exit(1);}
+	if(!fileIn){std::cout<<"There is no data in input file"<<std::endl; fileIn.close(); exit(1);}
+	else if(sizeCodes==0) {std::cout<<"There is no codes data in input file"<<std::endl; fileIn.close(); exit(1);}
 
 	std::fstream fileOut;
-	fileOut.open( BINARY_DIR "/output.txt", std::ios::out);
-	if(!fileOut) {std::cout<<"Error path for output.txt"<<std::endl; exit(1);}
+	fileOut.open("output.txt", std::ios::out);
+	if(!fileOut) {std::cout<<"Error path for output.txt"<<std::endl; fileIn.close(); fileOut.close(); exit(1);}
 
-	searchCodesInPass(sizeCodes, fileIn, fileOut);
+	searchPassInCodes(sizeCodes, fileIn, fileOut);
 
 	fileIn.close();
 	fileOut.close();
