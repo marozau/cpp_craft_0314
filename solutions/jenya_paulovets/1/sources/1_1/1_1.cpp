@@ -1,13 +1,5 @@
-//============================================================================
-// Name        : 10.cpp
-// Author      : 
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <fstream>
 #include <algorithm>
 
@@ -18,22 +10,12 @@ bool isDon(char ch){
 //Создается строка без разделителей в нижнем регистре
 void createFirstLine(std::fstream &fileIn, std::string &firstLine){
 
-		size_t i=0;
-
 	    getline(fileIn, firstLine);
-	    if(!fileIn){std::cout<<"There is no data in input file"<<std::endl; exit(1);}
+	    if(!fileIn){std::cout<<"There is no data in input file"<<std::endl; fileIn.close(); exit(1);}
 
-	    firstLine.append("1");
+		firstLine.erase(std::remove_if(firstLine.begin(), firstLine.end(), isDon), firstLine.end());
 
-		std::string::iterator begin=firstLine.begin();
-		std::string::iterator end=firstLine.end();
-
-		std::remove_if(begin, end, isDon);
-
-		while(firstLine.at(i)!=49) i++;
-		firstLine.erase(i);
-
-		for(size_t j=0; j<firstLine.size(); j++) firstLine.at(j)=tolower(firstLine.at(j));
+		std::transform(firstLine.begin(), firstLine.end(), firstLine.begin(), tolower);
 }
 
 //Поиск инвертированных ключей в ранее созданной строке
@@ -44,20 +26,18 @@ void searchReverseKeys(std::fstream &fileIn, std::fstream &fileOut, std::string 
 	std::string::iterator beginOfLine=firstLine.begin();
     std::string::iterator endOfLine=firstLine.end();
 
-    fileIn>>key;
-    if(!fileIn){std::cout<<"There is no keys in input file"<<std::endl; exit(1);}
+    getline(fileIn, key);
+    if(!fileIn){std::cout<<"There is no keys in input file"<<std::endl; fileIn.close(); fileOut.close(); exit(1);}
 
 	do{
-		for(size_t j=0; j<key.size(); j++) key.at(j)=tolower(key.at(j));
+		key.erase(std::remove_if(key.begin(), key.end(), isDon), key.end());
+		std::transform(key.begin(), key.end(), key.begin(), tolower);
 
-		std::string::iterator beginOfKey=key.begin();
-		std::string::iterator endOfKey=key.end();
+		std::reverse(key.begin(), key.end());
 
-		std::reverse(beginOfKey, endOfKey);
-
-		if(std::search(beginOfLine, endOfLine, beginOfKey, endOfKey)==endOfLine) fileOut<<"NO"<<std::endl;
+		if(std::search(beginOfLine, endOfLine, key.begin(), key.end())==endOfLine) fileOut<<"NO"<<std::endl;
 		else fileOut<<"YES"<<std::endl;
-		fileIn>>key;
+		getline(fileIn, key);
 	}
 	while(fileIn);
 }
@@ -67,14 +47,14 @@ int main(int argc, char **argv) {
 	std::string firstLine;
 
 	std::fstream fileIn;
-	fileIn.open( BINARY_DIR "/input.txt", std::ios::in);
-	if(!fileIn) {std::cout<<"Error path for input file"<<std::endl; return(1);}
+	fileIn.open("input.txt", std::ios::in);
+	if(!fileIn) {std::cout<<"Error path for input file"<<std::endl; fileIn.close(); exit(1);}
 
 	createFirstLine(fileIn, firstLine);
 
 	std::fstream fileOut;
-	fileOut.open( BINARY_DIR "/output.txt", std::ios::out);
-	if(!fileOut) {std::cout<<"Error path for output file"<<std::endl; return(1);}
+	fileOut.open("output.txt", std::ios::out);
+	if(!fileOut) {std::cout<<"Error path for output file"<<std::endl; fileIn.close(); fileOut.close(); exit(1);}
 
 	searchReverseKeys(fileIn, fileOut, firstLine);
 
