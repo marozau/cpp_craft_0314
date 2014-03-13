@@ -31,16 +31,15 @@ void modify (string & str){
 
 
 int main(){
-    ifstream in(BINARY_DIR"/input.txt");
+	ifstream in(BINARY_DIR"/input.txt");
     ofstream out(BINARY_DIR"/output.txt");
-
+	
     if (in.is_open()){
-        int n;
-        int m=0; 
+		int n;
 		string str;
 
-        hash_set<string> my_set;
-        in>>n;
+        set<string> my_set;
+		in>>n;
         for (int i=0;i<n;i++){
             in>>str;
 			modify(str);
