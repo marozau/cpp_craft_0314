@@ -3,10 +3,10 @@
 #include <string>
 #include <algorithm>
 
-void str_remove_chars(std::string *str,const std::string str_to_rem)
+void str_remove_chars(std::string &str,const std::string str_to_rem)
 {
     for(int i = 0; i < str_to_rem.length(); i++)
-        str->erase(std::remove(str->begin(),str->end(),str_to_rem[i]), str->end());
+        str.erase(std::remove(str.begin(),str.end(),str_to_rem[i]), str.end());
 }
 
 int main()
@@ -30,7 +30,7 @@ int main()
     }
     
     std::transform(text.begin(), text.end(),text.begin(),::tolower);
-    str_remove_chars(&text, std::string(" \\-"));
+    str_remove_chars(text, std::string(" \\-"));
     
     std::string keys;
     char delimeters[] = " ";
