@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <algorithm> 
 #include <stdlib.h>
+
 using namespace std ;
 
 bool is_should_delete (const char c){
@@ -12,8 +13,8 @@ bool is_should_delete (const char c){
 
 void my_tolower (string& s){
 	for (std::string::iterator it=s.begin(); it!=s.end(); ++it)
-		if (static_cast< int >(*it)<=static_cast< int >('ﬂ') && static_cast< int >(*it)>=static_cast< int >('¿')) 
-								*it='‡'+(static_cast< int >(*it)-static_cast< int >('¿')); 
+		if (static_cast< int >(*it)<=static_cast< int >('–Ø') && static_cast< int >(*it)>=static_cast< int >('–ê')) 
+								*it='–∞'+(static_cast< int >(*it)-static_cast< int >('–ê')); 
 		else if (static_cast< int >(*it)<=static_cast< int >('Z') && static_cast< int >(*it)>=static_cast< int >('A')) 
 								*it='a'+(static_cast< int >(*it)-static_cast< int >('A')); 
 }
@@ -39,7 +40,7 @@ int main(){
 		while (getline(in,str_to_find)){
 			str_to_find.erase(remove_if(str_to_find.begin(), str_to_find.end(),is_should_delete),str_to_find.end());
 			my_tolower(str_to_find);
-			size_t found = word.find(str_to_find);
+			const size_t found = word.find(str_to_find);
 			if (found!=std::string::npos) out<<"YES"<<endl; else out<<"NO"<<endl;
 		}
 	}
