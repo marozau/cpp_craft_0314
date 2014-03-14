@@ -35,11 +35,9 @@ int main()
     std::string keys;
     char delimeters[] = " ";
     
-    while(!in_file.eof())
+    while(!std::getline(in_file, keys).eof())
     {
-        std::getline(in_file, keys);
-        std::transform(keys.begin(), keys.end(),keys.begin(), ::tolower);
-        
+        std::transform(keys.begin(), keys.end(),keys.begin(),::tolower);
         std::size_t key_start_pos = 0;
         std::size_t next_key_start_pos = keys.find_first_of(delimeters);
         
