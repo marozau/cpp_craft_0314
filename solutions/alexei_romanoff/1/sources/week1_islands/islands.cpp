@@ -22,6 +22,7 @@ typedef boost::numeric::ublas::matrix<int> islands_union_array;
 
 void union_cells(islands_union_array &islands_map, const size_t i1, const size_t j1,
                  const size_t i2, const size_t j2) {
+    //piece of useful debug print
     /*std::cerr << "DEBUG: i1=" << i1 << ", j1=" << j1 << ", i2=" << i2 
               << ", j2=" << j2 << "\n";*/
 
@@ -76,9 +77,6 @@ int main(int argc, char **argv) {
     std::ifstream input;
     std::ofstream output;
 
-    //some scaffolds
-    //std::cerr << "DEBUG: SOURCE_DIR is " << SOURCE_DIR << "\n";
-    //std::cerr << "DEBUG: BINARY_DIR is " << BINARY_DIR << "\n";
 
     input.open(BINARY_DIR "/input.txt");
     output.open(BINARY_DIR "/output.txt");
@@ -97,6 +95,7 @@ int main(int argc, char **argv) {
     std::string line;
 
     while ( std::getline(input, line) ) {
+        //piece of useful debug print
         //std::cerr << "DEBUG: line is " << line << "\n";
         islands_map.push_back(line);
     }
@@ -108,7 +107,6 @@ int main(int argc, char **argv) {
     //std::cerr << "column_count is " << column_count << ", row_count is " 
     //          << row_count << "\n";
 
-    //int *union_array = new int[row_count];
     islands_union_array union_array(row_count, column_count);
 
     int ground_counter = MAP_START_GROUND;

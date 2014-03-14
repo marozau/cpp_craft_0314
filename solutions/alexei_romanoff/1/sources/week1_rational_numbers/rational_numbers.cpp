@@ -14,10 +14,6 @@ int main(int argc, char **argv) {
     std::ifstream input;
     std::ofstream output;
 
-    //some scaffolds
-    //std::cerr << "DEBUG: SOURCE_DIR is " << SOURCE_DIR << "\n";
-    //std::cerr << "DEBUG: BINARY_DIR is " << BINARY_DIR << "\n";
-
     input.open(BINARY_DIR "/input.txt");
     output.open(BINARY_DIR "/output.txt");
     if (not input.is_open()) {
@@ -37,6 +33,7 @@ int main(int argc, char **argv) {
 
     std::getline(input, line);
     std::istringstream(line) >> N;
+    //piece of useful debug print
     //std::cerr << "DEBUG: N is " << N << "\n";
     
     unsigned int line_count = 0;
@@ -50,7 +47,7 @@ int main(int argc, char **argv) {
         ss  << std::fixed << std::setprecision(5) << ::trunc(next_value * 10000) / 10000;
         next_str_value = ss.str();
 
-        //some scaffolds
+        //piece of useful debug print
         //std::cerr << "DEBUG: next_str_value is " << next_str_value << "\n";
         //std::cerr << "DEBUG: line_count is " << line_count << "\n";
         if (line_count < N) {
