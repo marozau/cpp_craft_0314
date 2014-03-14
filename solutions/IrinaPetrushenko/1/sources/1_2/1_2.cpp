@@ -16,11 +16,6 @@ struct comparator {
     }
 };
 
-
-
-
-
-
 int main(){
 	ifstream in(BINARY_DIR"/input.txt");
     ofstream out(BINARY_DIR"/output.txt");

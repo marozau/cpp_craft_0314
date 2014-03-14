@@ -17,6 +17,7 @@ void dfs (const int i,const size_t j,vector<string> & matrix, const int n, const
 	if (j>=1 && matrix[i][j-1]==task3::ground) dfs  (i,j-1,matrix,n,m,out);
 	if (j+1<m && matrix[i][j+1]==task3::ground) dfs  (i,j+1,matrix,n,m,out);
 }
+
 int main(){
 	ifstream in(BINARY_DIR"/input.txt");
     ofstream out(BINARY_DIR"/output.txt");
