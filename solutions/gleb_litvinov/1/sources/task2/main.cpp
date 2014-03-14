@@ -44,14 +44,14 @@ public:
 			std::vector<double>::const_iterator it=std::lower_bound(numbers.begin(),numbers.end(),temp);
 			if (it!=numbers.end())
 			{
-				if (fabs(temp-*it)<=eps)
+				if (fabs(temp-*it)<eps)
 					check=true;
 				
 			}
 			if (it!=numbers.begin())
 			{
 				--it;
-				if (fabs(temp-*it)<=eps)
+				if (fabs(temp-*it)<eps)
 					check=true;
 				
 			}
