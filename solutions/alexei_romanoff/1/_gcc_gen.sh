@@ -1,5 +1,8 @@
 
 export SOLUTION_NAME=cmake_example
+#if you have custom boost installed, please uncomment
+#this line with proper boost path
+#export BOOST_ROOT=~/usr/boost_1_47_0
 
 export BUILD_TYPE=Debug
 if [ "$1" == 'Release' ];
