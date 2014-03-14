@@ -39,7 +39,7 @@ int main(){
 		while (getline(in,str_to_find)){
 			str_to_find.erase(remove_if(str_to_find.begin(), str_to_find.end(),is_should_delete),str_to_find.end());
 			my_tolower(str_to_find);
-			size_t found = word.find(str_to_find);
+			const size_t found = word.find(str_to_find);
 			if (found!=std::string::npos) out<<"YES"<<endl; else out<<"NO"<<endl;
 		}
 	}
