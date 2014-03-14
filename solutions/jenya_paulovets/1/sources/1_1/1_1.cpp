@@ -3,8 +3,8 @@
 #include <fstream>
 #include <algorithm>
 
-bool isDon(char ch){
-	return ch==32 || ch==45 || ch==92;
+bool isDon(const char ch){
+	return ch==' ' || ch=='-' || ch=='\\';
 }
 
 //Создается строка без разделителей в нижнем регистре
@@ -20,12 +20,10 @@ void createFirstLine(std::fstream &fileIn, std::string &firstLine){
 
 //Поиск инвертированных ключей в ранее созданной строке
 void searchReverseKeys(std::fstream &fileIn, std::fstream &fileOut, std::string &firstLine){
+	const std::string::iterator beginOfLine=firstLine.begin();
+    const std::string::iterator endOfLine=firstLine.end();
 
-	std::string key;
-
-	std::string::iterator beginOfLine=firstLine.begin();
-    std::string::iterator endOfLine=firstLine.end();
-
+    std::string key;
     getline(fileIn, key);
     if(!fileIn){std::cout<<"There is no keys in input file"<<std::endl; fileIn.close(); fileOut.close(); exit(1);}
 
@@ -44,12 +42,11 @@ void searchReverseKeys(std::fstream &fileIn, std::fstream &fileOut, std::string 
 
 
 int main(int argc, char **argv) {
-	std::string firstLine;
-
 	std::fstream fileIn;
 	fileIn.open("input.txt", std::ios::in);
 	if(!fileIn) {std::cout<<"Error path for input file"<<std::endl; fileIn.close(); exit(1);}
 
+	std::string firstLine;
 	createFirstLine(fileIn, firstLine);
 
 	std::fstream fileOut;

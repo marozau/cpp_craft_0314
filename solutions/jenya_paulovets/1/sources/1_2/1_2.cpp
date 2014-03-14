@@ -7,10 +7,10 @@
 
 //Задается точность числа
 double changePrecision(const double number){
-	int tmp=floor(number);
+	int tmp=static_cast<int>(number);
 	int tmp1=10000*(number-tmp);
 
-	return tmp+(double)tmp1/10000;
+	return tmp+static_cast<double>(tmp1)/10000;
 }
 
 //Поиск кодов в паролях
@@ -31,21 +31,18 @@ void searchPassInCodes(const size_t sizeCodes, std::fstream &fileIn, std::fstrea
 		i++;
 	}
 
-	std::vector<double>::iterator it;
-
-	for(it=pass.begin(); it+1!=pass.end(); it++){
+	for(std::vector<double>::iterator it=pass.begin(); it+1!=pass.end(); it++){
 		if(std::find(codes.begin(), codes.end(), *it)==codes.end()) fileOut<<"NO"<<std::endl;
 		else fileOut<<"YES"<<std::endl;
 	}
 }
 
 int main(int argc, char **argv) {
-	size_t sizeCodes;
-
 	std::fstream fileIn;
 	fileIn.open("input.txt", std::ios::in);
 	if(!fileIn) {std::cout<<"Error path for input.txt"<<std::endl; fileIn.close(); exit(1);}
 
+	size_t sizeCodes;
 	fileIn>>sizeCodes;
 	if(!fileIn){std::cout<<"There is no data in input file"<<std::endl; fileIn.close(); exit(1);}
 	else if(sizeCodes==0) {std::cout<<"There is no codes data in input file"<<std::endl; fileIn.close(); exit(1);}
