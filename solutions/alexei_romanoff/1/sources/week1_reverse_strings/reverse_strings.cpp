@@ -14,7 +14,7 @@
 static const wchar_t bad_chars_array[] = {L' ', L'-', L'\\', L'/'};
 static const std::set<wchar_t> bad_chars_set(bad_chars_array, bad_chars_array + sizeof(bad_chars_array)/sizeof(wchar_t));
 
-bool is_bad_char(wchar_t c) {
+bool is_bad_char(const wchar_t c) {
     bool is_bad_not_found = bad_chars_set.find(c) == bad_chars_set.end();
     return !is_bad_not_found;
 }

@@ -20,8 +20,8 @@ static const int MAP_START_GROUND = 0;
 typedef boost::numeric::ublas::matrix<int> islands_union_array;
 
 
-void union_cells(islands_union_array &islands_map, size_t i1, size_t j1,
-                 size_t i2, size_t j2) {
+void union_cells(islands_union_array &islands_map, const size_t i1, const size_t j1,
+                 const size_t i2, const size_t j2) {
     /*std::cerr << "DEBUG: i1=" << i1 << ", j1=" << j1 << ", i2=" << i2 
               << ", j2=" << j2 << "\n";*/
 
@@ -46,26 +46,26 @@ void union_cells(islands_union_array &islands_map, size_t i1, size_t j1,
 }
 
 
-void process_cell(islands_union_array &islands_map, size_t i, size_t j) {
-    size_t top_i = i - 1;
-    size_t top_j = j;
+void process_cell(islands_union_array &islands_map, const size_t i, const size_t j) {
+    const size_t top_i = i - 1;
+    const size_t top_j = j;
     if (i > 0) {
         union_cells(islands_map, i, j, top_i, top_j);
     }
-    size_t down_i = i + 1;
-    size_t down_j = j;
+    const size_t down_i = i + 1;
+    const size_t down_j = j;
     if (down_i < islands_map.size1()) {
         union_cells(islands_map, i, j, down_i, down_j);
     }
 
-    size_t left_i = i;
-    size_t left_j = j - 1;
+    const size_t left_i = i;
+    const size_t left_j = j - 1;
     if (j > 0) {
         union_cells(islands_map, i, j, left_i, left_j);
     }
     
-    size_t right_i = i;
-    size_t right_j = j + 1;
+    const size_t right_i = i;
+    const size_t right_j = j + 1;
     if (right_j < islands_map.size2()) {
         union_cells(islands_map, i, j, right_i, right_j);
     }
@@ -102,8 +102,8 @@ int main(int argc, char **argv) {
     }
     input.close();
 
-    size_t column_count = islands_map[0].size();
-    size_t row_count = islands_map.size();
+    const size_t column_count = islands_map[0].size();
+    const size_t row_count = islands_map.size();
     //piece of useful debug print
     //std::cerr << "column_count is " << column_count << ", row_count is " 
     //          << row_count << "\n";
