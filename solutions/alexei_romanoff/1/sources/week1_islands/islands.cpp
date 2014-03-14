@@ -127,7 +127,28 @@ int main(int argc, char **argv) {
            }
         }
     }
-
+    //overall complexity of this solution is O(N^2), not O(N^4). 
+    //Please not that N=size1*size2, and if we have double loop(in double loop),
+    //it doens't automatically means that complexity is O(N^4).
+    //Algorithm performs linear scans every entry on map once and for each entry it
+    //performs again linear scan for each entry(in the worst case).
+    //The matrix could easily replaced by single array with complex addressing 
+    //schema and we would have just one cycle + one internal cycle.
+    //
+    //I could rewrite the solution for using weighted quick-union with path compression
+    //and would get O((amortized const)*N) complexity, but who will pay me for this work?:)
+    //Implementing simple quick find it the simplest way to solve this problem, it 
+    //takes just ten minutes. As an real engineerr and programmer I am lazy and dont' 
+    //want to perform optimization before it's really needed.
+    //
+    //See Bob's Sedgewick explanation for additional information:
+    //http://algs4.cs.princeton.edu/15uf/
+    //
+    //Y.a. good thing about this approach is it's dynamical nature. If we want to 
+    //add data in real time on our map, complexity of solving this problem again will 
+    //be just O(1).
+    //
+    //Y.a. approach is to use graphs, I see. 
     for (size_t i = 0; i < union_array.size1(); ++i)
         for (size_t j = 0; j < union_array.size2(); ++j) {
             process_cell(union_array, i, j);
