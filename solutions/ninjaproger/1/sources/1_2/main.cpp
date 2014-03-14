@@ -1,5 +1,5 @@
 #include <iostream>
-#include <stack>
+#include <queue>
 #include <fstream>
 #include <vector>
 #include <math.h>
@@ -8,70 +8,57 @@
 int main()
 {
     
-    std::ifstream input_file(SOURCE_DIR "/input.txt");
-    std::ofstream output_file(SOURCE_DIR "/output.txt");
+    std::ifstream in_file(BINARY_DIR "/input.txt");
+    std::ofstream out_file(BINARY_DIR "/output.txt");
     
-    if(!input_file.is_open())
+    if(!in_file.is_open()||!out_file.is_open())
+    {
+        std::cout << "Couldn't open files!\n";
         return 1;
+    }
+    size_t n = 0;
+    in_file >> n;
+    std::vector<double> codes_vector(1000000);
     
-    std::string n_str;
-    std::getline(input_file, n_str);
-    
-    unsigned long n = 0;
-    
-    if(n_str.length())
-        n = std::stoul(n_str);
-    
-    std::vector<double> codes_vector;
-    std::string code_str;
+    double code = 0.0;
     
     for (unsigned long i = 0; i < n; i++)
     {
-        std::getline(input_file, code_str);
-        if(code_str.length())
-            codes_vector.push_back(std::stod(code_str));
+        in_file >> code;
+        codes_vector.push_back(code);
     }
     
-    std::stack<double> passwords_vector;
-    std::string password_str;
+    std::queue<double> passwords_queue;
     
-    while (!input_file.eof())
+    double pass = 0.0;
+    
+    while (!in_file.eof())
     {
-        std::getline(input_file, password_str);
-        if(password_str.length())
-            passwords_vector.push(std::stod(password_str));
+        in_file >> pass;
+        passwords_queue.push(pass);
     }
     
-    while (!passwords_vector.empty())
+    while (!passwords_queue.empty())
     {
-        double password = passwords_vector.top();
-        
         for(size_t i = 0; i < codes_vector.size(); i++)
         {
-            double code = codes_vector.at(i);
-            
-            if(fabs(password - code) <= 0.0001)
+            if(fabs(passwords_queue.front() - codes_vector.at(i)) <= 0.0001)
             {
-                output_file << "YES\n";
-                //std::cout << "YES\n";
+                out_file << "YES\n";
                 break;
             }
             else if(i == (codes_vector.size()-1))
             {
-                output_file << "NO\n";
-                //std::cout << "NO\n";
+                out_file << "NO\n";
             }
-            
-            
         }
         
-        output_file.flush();
-        
-        passwords_vector.pop();
+        out_file.flush();
+        passwords_queue.pop();
     }
     
-    input_file.close();
-    output_file.close();
+    in_file.close();
+    out_file.close();
     
 	return 0;
 }
