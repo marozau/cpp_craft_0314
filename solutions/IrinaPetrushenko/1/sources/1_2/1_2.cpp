@@ -1,34 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <vector>
-#include <string>
-#include <math.h>   
 #include <set>
-#include <stdlib.h>
-#include <hash_set>
+
 using namespace std;
 
+
 namespace task2{
-	const static int precision=4;
-	const static char precision_point='.';
+	const static double EPS=0.0001;
 	
 }
-
-void modify (string & str){ 
-	if (str.find(task2::precision_point)==string::npos) return;
-	string::iterator it=str.end()-1;
-	int num=0;
-	while (it!=str.begin()){
-		if (*it==task2::precision_point){
-			if (num>task2::precision) str.erase(it+task2::precision+1,str.end());
-			return;
-		}
-		num++;
-		it--;
-	}
-}
-
+struct comparator {
+	bool operator()(const double a, const double b){
+		return (a-b>=task2::EPS);
+    }
+};
 
 int main(){
 	ifstream in(BINARY_DIR"/input.txt");
@@ -36,19 +22,18 @@ int main(){
 	
     if (in.is_open()){
 		int n;
-		string str;
-
-        set<string> my_set;
 		in>>n;
-        for (int i=0;i<n;i++){
-        		in>>str;
-			modify(str);
-			my_set.insert (str);
-        }
+		
+		double temp;
+		set<double,comparator> my_set;
+		
+        	for (int i=0;i<n;i++){
+            		in>>temp;
+	            	my_set.insert (temp);
+        	}
 
-		while (in>>str){
-			modify(str);
-			out << ( my_set.find(str) != my_set.end() ? "YES" : "NO" ) << endl;
+		while (in>>temp){
+			out << ( my_set.find(temp) != my_set.end() ? "YES" : "NO" ) << endl;
 		}
     }
 	else{
