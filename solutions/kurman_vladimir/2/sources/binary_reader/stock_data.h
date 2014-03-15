@@ -2,7 +2,6 @@
 #define _BINARY_READER_STOCK_DATA_H_
 
 #include <fstream>
-
 #include <boost/noncopyable.hpp>
 #include <boost/cstdint.hpp>
 
@@ -10,6 +9,7 @@ namespace binary_reader
 {
 	class stock_data : virtual protected boost::noncopyable
 	{
+	public:
 		char stock_name_[8];
 		char date_time_[8];
 		double price_;
@@ -23,22 +23,11 @@ namespace binary_reader
 
 	public:
 		explicit stock_data( std::ifstream& in );
-		explicit stock_data( const char* stock_name,
-							const char* date_time,
-							const double price,
-							const double vwap,
-							const boost::uint32_t volume,
-							const double f1,
-							const double t1,
-							const double f2,
-							const double f3,
-							const double f4 );		
-		~stock_data();
-		//
-		void write( std::ofstream& out );
-		void write_raw( std::ofstream& out );
+		explicit stock_data( const char* stock_name, const char* date_time, const double price, const double vwap,
+			const boost::uint32_t volume, const double f1, const double t1, const double f2, const double f3, const double f4 );
+		void write(std::ofstream& out) const;
+		size_t size() const;
 	};
 }
 
 #endif // _BINARY_READER_STOCK_DATA_H_
-
