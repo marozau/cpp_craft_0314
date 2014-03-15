@@ -1,10 +1,11 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
-typedef vector<int> Vector;
+typedef vector<double> Vector;
 
 bool compare( const Vector &, const double );
 
@@ -20,7 +21,7 @@ int main()
 	{
 		double buf;
 		in >> buf;
-		arr.push_back( int( buf*10000 ) );
+		arr.push_back( buf*10000 );
 	}
 	ofstream out( BINARY_DIR "/output.txt" );
 	if ( !out.is_open() )
@@ -29,7 +30,7 @@ int main()
 	{
 		double buf;
 		in >> buf;
-		out << ( ( compare( arr, int(buf*10000) ) ) ? "YES" : "NO" ) << endl;
+		out << ( ( compare( arr, floor( buf * 10000 ) ) ) ? "YES" : "NO" ) << endl;
 	}
 	in.close();
 	out.close();
