@@ -17,7 +17,6 @@ int main()
 	ifstream in( BINARY_DIR "/input.txt" );
 	if ( !in.is_open() )
 		return 1;
-	int count = 0;
 	vector<string> isles;
 	while ( !in.eof() )
 	{
@@ -28,6 +27,7 @@ int main()
 	in.close();
 	const int len = isles[0].size();
 	const int high = isles.size();
+	int count = 0;
 	for ( int i = 0; i < high; ++i )
 		for ( int j = 0; j < len; ++j )
 		{
