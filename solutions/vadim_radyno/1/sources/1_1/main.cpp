@@ -27,21 +27,22 @@ namespace Constants
 
 void removeIgnoreSimbols(string& _str)
 {
-    for (string::const_iterator it = Constants::ignore_simbols.cbegin(); it != Constants::ignore_simbols.cend(); ++it)
+    for (string::const_iterator it = Constants::ignore_simbols.begin(); it != Constants::ignore_simbols.end(); ++it)
     {
         _str.erase(remove(_str.begin(), _str.end(), (*it)), _str.end());
     }
 }
 
 
-bool isValidKeyForText(const string& _key, const string& _text)
+bool isValidKeyForRevertText(const string& _key, const string& _revert_text)
 {
-    string revert_key(_key);
+    if (_key.empty())
+    {
+        return false;
+    }
 
-	std::reverse(revert_key.begin(), revert_key.end());
-
-    const size_t pos_revert_key = _text.find(revert_key);
-    if (pos_revert_key != _text.npos)
+    const size_t pos_revert_key = _revert_text.find(_key);
+    if (pos_revert_key != _revert_text.npos)
     {
         return true;
     }
@@ -73,6 +74,8 @@ int main( int argc, char* argv[] )
         removeIgnoreSimbols(first_line);
         upperCase(first_line);
 
+        std::reverse(first_line.begin(), first_line.end());
+
         ofstream output_file(Constants::Paths::output_file);
 
         while (!input_file.eof())
@@ -83,10 +86,9 @@ int main( int argc, char* argv[] )
             removeIgnoreSimbols(key_value);
             upperCase(key_value);
 
-            const string& valid_key = isValidKeyForText(key_value, first_line)  ? Constants::Results::good
-                                                                                : Constants::Results::bad;
+            const string& valid_key = isValidKeyForRevertText(key_value, first_line)? Constants::Results::good
+                                                                                    : Constants::Results::bad;
             output_file << valid_key << endl;
-            cout << valid_key << endl;
         }
         output_file.close();
     }
