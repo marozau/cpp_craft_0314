@@ -13,8 +13,8 @@ bool is_should_delete (const char c){
 
 void my_tolower (string& s){
 	for (std::string::iterator it=s.begin(); it!=s.end(); ++it)
-		if (static_cast< int >(*it)<=static_cast< int >('ﬂ') && static_cast< int >(*it)>=static_cast< int >('¿')) 
-								*it='‡'+(static_cast< int >(*it)-static_cast< int >('¿')); 
+		if (static_cast< int >(*it)<=static_cast< int >('–Ø') && static_cast< int >(*it)>=static_cast< int >('–ê')) 
+								*it='–∞'+(static_cast< int >(*it)-static_cast< int >('–ê')); 
 		else if (static_cast< int >(*it)<=static_cast< int >('Z') && static_cast< int >(*it)>=static_cast< int >('A')) 
 								*it='a'+(static_cast< int >(*it)-static_cast< int >('A')); 
 }

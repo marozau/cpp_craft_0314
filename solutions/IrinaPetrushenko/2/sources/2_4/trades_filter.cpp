@@ -13,7 +13,7 @@ namespace task4{
 }
 bool is_good_type (boost::uint32_t t){
 	return (t>=task4::type_min && t<=task4::type_max) ;
-}
+} 
 
 int main()
 {

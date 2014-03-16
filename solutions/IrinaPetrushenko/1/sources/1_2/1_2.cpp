@@ -18,7 +18,7 @@ struct comparator {
 
 int main(){
 	ifstream in(BINARY_DIR"/input.txt");
-    ofstream out(BINARY_DIR"/output.txt");
+	ofstream out(BINARY_DIR"/output.txt");
 	
     if (in.is_open()){
 		int n;
@@ -27,10 +27,10 @@ int main(){
 		double temp;
 		set<double,comparator> my_set;
 		
-        for (int i=0;i<n;i++){
-            in>>temp;
-			my_set.insert (temp);
-        }
+        	for (int i=0;i<n;i++){
+            		in>>temp;
+	            	my_set.insert (temp);
+        	}
 
 		while (in>>temp){
 			out << ( my_set.find(temp) != my_set.end() ? "YES" : "NO" ) << endl;
