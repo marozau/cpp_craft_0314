@@ -5,41 +5,29 @@
 #include <algorithm>
 using namespace std;
 
-
 namespace Constants_1_1
 {
-	const char* input_file = SOURCE_DIR "/tests/1_1Input.txt";
-	const char* output_file = SOURCE_DIR "/tests/1_1Output.txt";
-	const string good = "YES";
-	const string bad  = "NO";
-	const char* Locale = "Russian";
-	const size_t maxInputLen = 100000;
-}
-
-bool isSpaceSymb(const char& symb)
-{
-	switch(symb)
-	{
-	case ' ':
-	case '-':
-	case '\\':
-		return 1;
-	default:
-		return 0;
-	}
+	static const char* input_file = BINARY_DIR "/Input.txt";
+	static const char* output_file = BINARY_DIR "/Output.txt";
+	static const string good = "YES";
+	static const string bad  = "NO";
+	static const char* Locale = "Russian";
+	static const size_t maxInputLen = 100000;
 }
 
 bool formatting_line(ifstream& stream, string& line)
 {
-	bool bReturn = true;
 	getline(stream, line);
 	if(line.empty())
-		return bReturn;
+		return false;
 	if(line.size() > Constants_1_1::maxInputLen)
-		cout << "Could not open input file" << endl;
-	line.erase(remove_if(line.begin(), line.end(), isSpaceSymb), line.end());
+	{
+		cout << "Incorrect string" << endl;
+		return false;
+	}
+	line.erase(remove_if(line.begin(), line.end(), [](const char symb){ return (symb == ' ') || (symb == '\\') || (symb == '-'); }), line.end());
 	transform(line.begin(), line.end(), line.begin(), tolower);
-	return bReturn;
+	return true;
 }
 
 int main()
