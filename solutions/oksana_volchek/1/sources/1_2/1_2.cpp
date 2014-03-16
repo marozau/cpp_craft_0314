@@ -4,9 +4,9 @@
 
 using namespace std;
 
-void truncate(double& x)
+double truncate(double& x)
 {
-	x = floor(x * 10000) / 10000; 
+	return floor(x * 10000) / 10000; 
 }
 
 int main()
@@ -23,15 +23,13 @@ int main()
 		while (i < countKeys){
 			filein >> elem;
 			++i;
-			truncate(elem);
-			keys.insert(elem);
+			keys.insert(truncate(elem));
 		}
 
 		ofstream fileout;
 		fileout.open(BINARY_DIR "/output.txt");
 		while (filein >> elem){
-			truncate(elem);
-			if (keys.count(elem)){
+			if (keys.count(truncate(elem))){
 				fileout << "YES" << endl;
 			}
 			else {
@@ -45,7 +43,6 @@ int main()
 		cout << "Unable to open file input.txt!" << endl;
 		return 1;
 	}
-	
+
 	return 0;
 }
-
