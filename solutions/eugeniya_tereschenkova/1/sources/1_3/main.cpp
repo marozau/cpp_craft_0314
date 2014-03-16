@@ -9,15 +9,14 @@ using namespace std;
 
 namespace Constants_1_3
 {
-	static const char* input_file = BINARY_DIR "/Input.txt";
-	static const char* output_file = BINARY_DIR "/Output.txt";
+	static const char tilde = '~';
 }
 
-void findAndMarkCurrentLand(vector<string>& str, size_t nI, size_t nJ)
+void findAndMarkCurrentLand(vector<string>& str, const size_t nI, const size_t nJ)
 {
-	if(str[nI].at(nJ) == '~')
+	if(str[nI].at(nJ) == Constants_1_3::tilde)
 		return;
-	str[nI].at(nJ) = '~';
+	str[nI].at(nJ) = Constants_1_3::tilde;
 
 	findAndMarkCurrentLand(str, nI + 1, nJ);
 	findAndMarkCurrentLand(str, nI - 1, nJ);
@@ -26,76 +25,76 @@ void findAndMarkCurrentLand(vector<string>& str, size_t nI, size_t nJ)
 }
 
 void readFile(ifstream& stream, vector<string>& str)
-{
-  string line, lineFill;
-  size_t lineLength = 0;
-  size_t nI = 0;
-  
-  if(stream.eof())
-    return;
-  
-  getline(stream, line);
+{  
+	if(stream.eof())
+		return;
 	
-  lineLength = line.length();
-  for(nI = 0; nI < lineLength + 2; nI++)
-    lineFill.append("~");
+	string line;
+	getline(stream, line);
 
-  str.push_back(lineFill);
-  while(true)
-  {
-	line.append("~");
-        str.push_back(static_cast<string>("~")+line);
-	if (stream.eof())
-		break;
-    	getline(stream, line);
-  }
-  str.push_back(lineFill);
+	const size_t lineLength = line.length();
+	
+	string lineFill;
+	for(size_t nI = 0; nI < lineLength + 2; nI++)
+		lineFill.append(1, Constants_1_3::tilde);
+	
+	str.push_back(lineFill);
+	
+	while(true)
+	{
+		line.append(1, Constants_1_3::tilde);
+		str.push_back(Constants_1_3::tilde+line);
+		if (stream.eof())
+			break;
+		getline(stream, line);
+	}
+	str.push_back(lineFill);
 }
 
 void findLand(vector<string>& str)
 {
-  ofstream output_file(Constants_1_3::output_file);
-  size_t nI = 0, nJ = 0, count = 0;
-	
-  if(!output_file.is_open())
-  {
+	static const char* outp_file = BINARY_DIR "/Output.txt";
+	ofstream output_file(outp_file);
+	if(!output_file.is_open())
+	{
 		cout << "Could not open output file" << endl;
 		return;
-  }
-
-  static const size_t columnCount = str.size();
-  static const size_t rowCount = str[0].length();
-
-  for(nI = 1; nI < columnCount-1; nI++)
-  {
-    for(nJ = 1; nJ < rowCount-1; nJ++)
+	}
+	
+	static const size_t columnCount = str.size();
+	static const size_t rowCount = str[0].length();
+	size_t count = 0;
+	static const char o = 'o';
+	
+	for(size_t nI = 1; nI < columnCount-1; nI++)
+	{
+		for(size_t nJ = 1; nJ < rowCount-1; nJ++)
 		{
-      if(str[nI][nJ] == 'o')
-      {
-        findAndMarkCurrentLand(str, nI, nJ);
-        count++;
-      }
-    }
-  }
-  output_file << count;
-  output_file.close();
+			if(str[nI][nJ] == o)
+			{
+				findAndMarkCurrentLand(str, nI, nJ);
+				count++;
+			}
+		}
+	}
+	output_file << count;
+	output_file.close();
 }
 
 int main()
 {
-  ifstream input_file(Constants_1_3::input_file);
-  vector<string> str;
-	
-  if(!input_file.is_open())
-  {
+	static const char* inp_file = BINARY_DIR "/Input.txt";
+	ifstream input_file(inp_file);
+	if(!input_file.is_open())
+	{
 		cout << "Could not open input file" << endl;
 		return 1;
-  }
-
-  readFile(input_file, str);
-  input_file.close();
+	}
 	
-  findLand(str);
-  
-  return 0;
+	vector<string> str;
+	readFile(input_file, str);
+	input_file.close();
+	
+	findLand(str);
+	return 0;
 }
