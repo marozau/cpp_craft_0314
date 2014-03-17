@@ -50,7 +50,7 @@ void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const int32 siz
 
 	do {
 		dateShell = new date(boost::gregorian::from_undelimited_string(request->date_time));
-		days = dateShell->year() * 372 + dateShell->month() * 31 + dateShell->day();
+		days = dateShell->year() * 372 + (dateShell->month()-1) * 31 + dateShell->day();
 
 		fileOut.write(reinterpret_cast<char*>(request->stock_name), sizeStr * sizeof(char));
 		if (!fileOut) {
