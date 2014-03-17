@@ -45,12 +45,14 @@ void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const int32 siz
 	fileIn.read(reinterpret_cast<char*>(&request->f3), sizeof(double));
 	fileIn.read(reinterpret_cast<char*>(&request->f4), sizeof(double));
 
+	int32 daysOfYear = 372;
+	int32 daysOfMonth = 31;
 	int32 days = 0;
 	date *dateShell = NULL;
 
 	do {
 		dateShell = new date(boost::gregorian::from_undelimited_string(request->date_time));
-		days = dateShell->year() * 372 + (dateShell->month()-1) * 31 + dateShell->day();
+		days = dateShell->year() * daysOfYear + (dateShell->month()-1) * daysOfMonth + dateShell->day();
 
 		fileOut.write(reinterpret_cast<char*>(request->stock_name), sizeStr * sizeof(char));
 		if (!fileOut) {
