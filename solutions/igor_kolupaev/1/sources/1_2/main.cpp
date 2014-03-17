@@ -11,7 +11,7 @@ using namespace std;
 typedef unsigned long long key_t;
 typedef set<key_t> keyset;
 
-key_t double_2_key(double d)
+key_t double_2_key(const double d)
 {
 	return static_cast<key_t> (d * 10000);
 }

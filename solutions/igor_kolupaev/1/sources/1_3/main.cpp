@@ -12,12 +12,12 @@ public:
 
 	int X()
 	{
-		return static_cast<size_t>( _x );
+		return _x;
 	}
 
 	int Y()
 	{
-		return static_cast<size_t>( _y );
+		return _y;
 	}
 
 	map_point_t(): _x( 0 ), _y( 0 )
