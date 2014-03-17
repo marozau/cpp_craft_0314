@@ -22,6 +22,7 @@ binary_reader::market_message::market_message( std::ifstream& in )
 	}
 	msg_ = new char[len_];
 	memset(msg_, 0, len_ );
+	
 	if(!in.read(reinterpret_cast<char *>(msg_), len_)) {
 		cerr<<"Input is incorrect"<<endl;
 		return;
