@@ -28,7 +28,8 @@ int main(int argc, char* argv[])
 
 	string text;
 
-	instream >> text;
+	getline( instream, text );
+
 	normalize(text);
 	reverse(text.begin(), text.end());
 
@@ -38,7 +39,8 @@ int main(int argc, char* argv[])
 
 	while (!instream.eof())
 	{
-		getline(instream, text);
+		getline(instream, key);
+
 		normalize(key);
 
 		const size_t i = text.find(key);

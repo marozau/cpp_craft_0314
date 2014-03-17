@@ -13,7 +13,7 @@ typedef set<key_t> keyset;
 
 key_t double_2_key(double d)
 {
-	return static_cast<key_t> (d * 1000);
+	return static_cast<key_t> (d * 10000);
 }
 
 void load_codes(istream& is, keyset& codes)
