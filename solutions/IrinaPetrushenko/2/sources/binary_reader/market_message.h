@@ -2,7 +2,6 @@
 #define _BINARY_READER_MARKET_MESSAGE_H_
 
 #include <fstream>
-
 #include <boost/cstdint.hpp>
 
 namespace binary_reader
