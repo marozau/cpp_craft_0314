@@ -19,12 +19,12 @@ public:
 
 
 
-void check_left_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
-void check_bottom_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
-void check_right_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
-void check_top_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
+void check_left_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width);
+void check_bottom_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width);
+void check_right_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width);
+void check_top_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width);
 
-void check_neighbors(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
+void check_neighbors(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width)
 {
     check_left_neighbor(map,tile_idx,map_width);
     check_right_neighbor(map,tile_idx,map_width);
@@ -32,7 +32,7 @@ void check_neighbors(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
     check_bottom_neighbor(map,tile_idx,map_width);
 }
 
-void check_left_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
+void check_left_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width)
 {
     
     if(tile_idx == 0)
@@ -50,7 +50,7 @@ void check_left_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_widt
     }
 }
 
-void check_right_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
+void check_right_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width)
 {
     size_t height = map.size()/map_width;
     size_t right_idx = tile_idx + 1;
@@ -69,7 +69,7 @@ void check_right_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_wid
     }
 }
 
-void check_top_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
+void check_top_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width)
 {
     if(tile_idx < map_width)
         return;
@@ -86,7 +86,7 @@ void check_top_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width
     }
 }
 
-void check_bottom_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
+void check_bottom_neighbor(std::vector<Tile*> &map,const size_t tile_idx,const size_t map_width)
 {
     size_t bottom_idx = tile_idx + map_width;
     if(bottom_idx >= map.size())
@@ -151,6 +151,10 @@ int main(int argc, const char * argv[])
     }
 
     out_file << islands;
+    
+    
+    for(size_t i = 0; i < map_vector.size();i++)
+        delete map_vector[i];
     
     
     in_file.close();
