@@ -19,17 +19,18 @@ int main()
 {
 	ifstream inn (BINARY_DIR "/input.txt" , std::ios::binary);
 	ofstream out (BINARY_DIR "/output.txt", std::ios::binary);
-
+	
 	if (inn.is_open()){
 
 		boost::uint32_t cur_time=task4::diff;
-
+		
 		while (!inn.eof()){
 			market_message m(inn);
 			if (inn.eof()) break;
 			if (is_good_type(m.type()) && m.time()>cur_time-task4::diff)		m.write(out);
 			if (m.time()>cur_time) cur_time=m.time();
 		}
+		
 
 	}
 	else{

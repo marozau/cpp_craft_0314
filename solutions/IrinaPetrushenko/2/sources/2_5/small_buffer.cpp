@@ -58,12 +58,12 @@ int main()
 		double temp;
 		for (size_t i=0;i<=types;i++)
 			if (ans[i].num!=0){
-				if(!out.write((char *)&i, sizeof(i))) {
+				if(!out.write(reinterpret_cast<char *>(&i), sizeof(i))) {
 					cerr<<"I can not write data"<<endl;
 					return 1;
 				}
 				temp=double(ans[i].num)/ans[i].time;
-				if(!out.write((char *)&temp, sizeof(temp))) {
+				if(!out.write(reinterpret_cast<char *>(&temp), sizeof(temp))) {
 					cerr<<"I can not write data"<<endl;
 					return 1;
 				}

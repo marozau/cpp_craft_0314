@@ -6,23 +6,23 @@ using namespace std;
 
 binary_reader::market_message::market_message( std::ifstream& in )
 {
-	if(!in.read((char *)&type_, sizeof(type_))) {
+	if(!in.read(reinterpret_cast<char *>(&type_), sizeof(type_))) {
 		cerr<<"Input is incorrect"<<endl;
 		return;
 	}
 
-    if(!in.read((char *)&time_, sizeof(time_))) {
+    if(!in.read(reinterpret_cast<char *>(&time_), sizeof(time_))) {
 		cerr<<"Input is incorrect"<<endl;
 		return;
 	}
 
-    if(!in.read((char *)&len_, sizeof(len_))) {
+    if(!in.read(reinterpret_cast<char *>(&len_), sizeof(len_))) {
 		cerr<<"Input is incorrect"<<endl;
 		return;
 	}
 	msg_ = new char[len_];
 	memset(msg_, 0, len_ );
-	if(!in.read((char *)msg_, len_)) {
+	if(!in.read(reinterpret_cast<char *>(msg_), len_)) {
 		cerr<<"Input is incorrect"<<endl;
 		return;
 	}
@@ -38,15 +38,15 @@ binary_reader::market_message::market_message( const boost::uint32_t type, const
 }
 void binary_reader::market_message::write( std::ofstream& out )
 {
-	if(!out.write((char *)&type_, sizeof(type_))) {
+	if(!out.write(reinterpret_cast<char *>(&type_), sizeof(type_))) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}
-	if(!out.write((char *)&time_, sizeof(time_))) {
+	if(!out.write(reinterpret_cast<char *>(&time_), sizeof(time_))) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}
-	if(!out.write((char *)&len_, sizeof(len_))) {
+	if(!out.write(reinterpret_cast<char *>(&len_), sizeof(len_))) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}
