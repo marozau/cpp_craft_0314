@@ -5,18 +5,26 @@
 
 class Tile
 {
-public:
-    bool checked;
-    bool earth;
+    bool _checked;
+    bool _earth;
     
+public:
+    Tile(bool earth = false){_checked = false; _earth = earth;}
+    
+    void setChecked(bool checked){_checked = checked;}
+    bool isChecked(){return _checked;}
+    void setEarth(bool earth){_earth = earth;}
+    bool isEarth(){return _earth;}
 };
 
-void check_left_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width);
-void check_bottom_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width);
-void check_right_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width);
-void check_top_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width);
 
-void check_neighbors(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width)
+
+void check_left_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
+void check_bottom_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
+void check_right_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
+void check_top_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width);
+
+void check_neighbors(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
 {
     check_left_neighbor(map,tile_idx,map_width);
     check_right_neighbor(map,tile_idx,map_width);
@@ -24,165 +32,129 @@ void check_neighbors(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width)
     check_bottom_neighbor(map,tile_idx,map_width);
 }
 
-
-void dump_map(std::vector<Tile*> *map,int64_t map_width)
+void check_left_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
 {
-//    std::cout << std::endl;
-//    
-//    for(int i = 0; i < map->size(); i++)
-//    {
-//        if(i > 0 && i%map_width==0)
-//            std::cout << std::endl;
-//        
-//        Tile * t = map->at(i);
-//        if(t->earth)
-//        {
-//            if(t->checked)
-//                std::cout << "X";
-//            else
-//                std::cout << "0";
-//        }else
-//        {
-//            if(t->checked)
-//                std::cout << "-";
-//            else
-//                std::cout << "~";
-//        }
-//        
-//        
-//    }
-//    
-//    std::cout << std::endl;
-}
-
-
-void check_left_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width)
-{
-    int64_t height = map->size()/map_width;
-    int64_t left_idx = tile_idx - 1;
-    if(left_idx % height < 0)
+    
+    if(tile_idx == 0)
         return;
     
-    Tile *left_tile = map->at(left_idx);
+    size_t left_idx = tile_idx - 1;
+
+    Tile *left_tile = map.at(left_idx);
     
-    if(!left_tile->checked)
+    if(!left_tile->isChecked())
     {
-        left_tile->checked = true;
-        if(left_tile->earth)
+        left_tile->setChecked(true);
+        if(left_tile->isEarth())
             check_neighbors(map, left_idx, map_width);
     }
 }
 
-void check_right_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width)
+void check_right_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
 {
-    int64_t height = map->size()/map_width;
-    
-    
-    
-    int64_t right_idx = tile_idx + 1;
+    size_t height = map.size()/map_width;
+    size_t right_idx = tile_idx + 1;
 
     if(right_idx % height >= map_width ||
-       right_idx >= map->size())
+       right_idx >= map.size())
         return;
     
-    Tile *right_tile = map->at(right_idx);
+    Tile *right_tile = map.at(right_idx);
     
-    if(!right_tile->checked)
+    if(!right_tile->isChecked())
     {
-        right_tile->checked = true;
-        if(right_tile->earth)
+        right_tile->setChecked(true);
+        if(right_tile->isEarth())
             check_neighbors(map, right_idx, map_width);
     }
 }
 
-void check_top_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width)
+void check_top_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
 {
-    int64_t top_idx = tile_idx - map_width;
-    if(top_idx < 0)
+    if(tile_idx < map_width)
         return;
     
-    Tile *top_tile = map->at(top_idx);
+    size_t top_idx = tile_idx - map_width;
+
+    Tile *top_tile = map.at(top_idx);
     
-    if(!top_tile->checked)
+    if(!top_tile->isChecked())
     {
-        top_tile->checked = true;
-        if(top_tile->earth)
+        top_tile->setChecked(true);
+        if(top_tile->isEarth())
             check_neighbors(map, top_idx, map_width);
     }
 }
 
-void check_bottom_neighbor(std::vector<Tile*> *map,int64_t tile_idx,int64_t map_width)
+void check_bottom_neighbor(std::vector<Tile*> &map,size_t tile_idx,size_t map_width)
 {
-    int64_t bottom_idx = tile_idx + map_width;
-    if(bottom_idx >= map->size())
+    size_t bottom_idx = tile_idx + map_width;
+    if(bottom_idx >= map.size())
         return;
     
-    Tile *bottom_tile = map->at(bottom_idx);
+    Tile *bottom_tile = map.at(bottom_idx);
     
-    if(!bottom_tile->checked)
+    if(!bottom_tile->isChecked())
     {
-        bottom_tile->checked = true;
-        if(bottom_tile->earth)
+        bottom_tile->setChecked(true);
+        if(bottom_tile->isEarth())
             check_neighbors(map, bottom_idx, map_width);
     }
 }
 
 int main(int argc, const char * argv[])
 {
-    std::ifstream input_file(SOURCE_DIR "/input.txt");
-    std::ofstream output_file(SOURCE_DIR "/output.txt");
+    std::ifstream in_file(BINARY_DIR "/input.txt");
+    std::ofstream out_file(BINARY_DIR "/output.txt");
     
-    if(!input_file.is_open())
+    if(!in_file.is_open()||!out_file.is_open())
+    {
+        std::cout << "Couldn't open files!\n";
         return 1;
+    }
     
     std::string line;
-    int64_t map_width;
+    size_t map_width;
     std::vector<Tile*> map_vector;
     
-    while (!input_file.eof())
+    while (!in_file.eof())
     {
-        std::getline(input_file, line);
+        std::getline(in_file, line);
         
         if(line.length())
             map_width = line.length();
         
         for(size_t i = 0; i < line.length(); i++)
         {
-            Tile *tile = new Tile();
-            tile->earth = (line[i]!='~');
-            tile->checked = false;
+            Tile *tile = new Tile((line[i]!='~'));
             map_vector.push_back(tile);
         }
     }
-    
-    dump_map(&map_vector, map_width);
-    
-    
-    int64_t islands = 0;
+
+
+    size_t islands = 0;
     
     for(size_t i = 0; i < map_vector.size(); i++)
     {
         Tile *tile = map_vector[i];
         
-        if(tile->checked)
+        if(tile->isChecked())
             continue;
         
-        tile->checked = true;
+        tile->setChecked(true);
         
-        if(tile->earth)
+        if(tile->isEarth())
         {
             islands++;
-            check_neighbors(&map_vector, i, map_width);
+            check_neighbors(map_vector, i, map_width);
         }
-        
-        dump_map(&map_vector, map_width);
     }
 
-    output_file << islands << std::endl;
+    out_file << islands;
     
     
-    input_file.close();
-    output_file.close();
+    in_file.close();
+    out_file.close();
     
 	return 0;
 }
