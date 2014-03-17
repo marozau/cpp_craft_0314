@@ -21,32 +21,15 @@ int islandCount = 0;
 
 vector<pair<size_t, size_t>> getNeighbours(size_t i, size_t j)
 {
-	vector<pair<size_t, size_t>> ans(4);
-	ans[0] = make_pair(i - 1, j);
-	ans[1] = make_pair(i + 1, j);
-	ans[2] = make_pair(i, j - 1);
-	ans[3] = make_pair(i, j + 1);
-	size_t erasedCount = 0;
-	if (i == 0)
-	{
-		ans.erase(ans.cbegin() - erasedCount);
-		++erasedCount;
-	}
-	if (i == n - 1)
-	{
-		ans.erase(ans.cbegin() + 1 - erasedCount);
-		++erasedCount;
-	}
-	if (j == 0)
-	{
-		ans.erase(ans.cbegin() + 2 - erasedCount);
-		++erasedCount;
-	}
-	if (j == m - 1)
-	{
-		ans.erase(ans.cbegin() + 3 - erasedCount);
-		++erasedCount;
-	}
+	vector<pair<size_t, size_t>> ans;
+	if (i != 0)
+		ans.emplace_back(i - 1, j);
+	if (i != n - 1)
+		ans.emplace_back(i + 1, j);
+	if (j != 0)
+		ans.emplace_back(i, j - 1);
+	if (j != m - 1)
+		ans.emplace_back(i, j + 1);
 	return ans;
 }
 

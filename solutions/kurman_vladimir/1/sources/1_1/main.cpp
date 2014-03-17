@@ -6,7 +6,7 @@ using namespace std;
 
 void prepareString(wstring & str)
 {
-	str.erase(remove_if(str.begin(), str.end(), [](wchar_t ch)
+	str.erase(remove_if(str.begin(), str.end(), [](wchar_t const ch)
 	{
 		return ch == ' ' || ch == '\\' || ch == '-';
 	}), str.end());
@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
 	}
 	wstring mainStr;
 	getlineFromFile(fin, mainStr);
+	reverse(mainStr.begin(), mainStr.end());
 	while (!fin.eof())
 	{
 		wstring str;

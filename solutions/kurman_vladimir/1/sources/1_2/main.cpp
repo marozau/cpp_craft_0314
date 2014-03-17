@@ -4,7 +4,7 @@
 #include <algorithm>
 using namespace std;
 
-bool equalDouble(double l, double r)
+bool equalDouble(double const l, double const r)
 {
 	return abs(l - r) < 0.0001;
 }
