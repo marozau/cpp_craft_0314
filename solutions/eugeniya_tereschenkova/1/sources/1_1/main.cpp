@@ -5,22 +5,13 @@
 #include <algorithm>
 using namespace std;
 
-namespace Constants_1_1
-{
-	static const char* input_file = BINARY_DIR "/Input.txt";
-	static const char* output_file = BINARY_DIR "/Output.txt";
-	static const string good = "YES";
-	static const string bad  = "NO";
-	static const char* Locale = "Russian";
-	static const size_t maxInputLen = 100000;
-}
-
 bool formatting_line(ifstream& stream, string& line)
 {
 	getline(stream, line);
 	if(line.empty())
 		return false;
-	if(line.size() > Constants_1_1::maxInputLen)
+	static const size_t maxInputLen = 100000;
+	if(line.size() > maxInputLen)
 	{
 		cout << "Incorrect string" << endl;
 		return false;
@@ -32,14 +23,16 @@ bool formatting_line(ifstream& stream, string& line)
 
 int main()
 {
-	setlocale(LC_ALL, Constants_1_1::Locale);
-	ifstream input_file( Constants_1_1::input_file );
-	string line, key;
+	static const char* Locale = "Russian";
+	setlocale(LC_ALL, Locale);
+	static const char* inp_file = BINARY_DIR "/Input.txt";
+	ifstream input_file( inp_file );
 	if(!input_file.is_open())
 	{
 		cout << "Could not open input file" << endl;
 		return 1;
 	}
+	string line;
 	if(!input_file.eof())
 	{
 		if(!formatting_line(input_file, line))
@@ -47,14 +40,17 @@ int main()
 			input_file.close();
 			return 1;
 		}
-		ofstream output_file( Constants_1_1::output_file );
+		static const char* outp_file = BINARY_DIR "/Output.txt";
+		ofstream output_file( outp_file );
 		if(!output_file.is_open())
 		{
 			cout << "Could not open output file" << endl;
 			input_file.close();
 			return 1;
 		}
-
+    
+		static const string good = "YES", bad  = "NO";
+		string key;
 		while(!input_file.eof())
 		{
 			formatting_line(input_file, key);
@@ -63,8 +59,8 @@ int main()
 			reverse(key.begin(), key.end());
 			
 			(line.find(key) != string::npos) ? 
-				output_file << Constants_1_1::good << endl	:
-				output_file << Constants_1_1::bad << endl;
+				output_file << good << endl	:
+				output_file << bad << endl;
 		}
 
 		input_file.close();
