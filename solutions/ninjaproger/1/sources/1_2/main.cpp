@@ -18,8 +18,8 @@ int main()
     }
     size_t n = 0;
     in_file >> n;
-    std::vector<double> codes_vector(1000000);
-    
+    std::vector<double> codes_vector;
+
     double code = 0.0;
     
     for (unsigned long i = 0; i < n; i++)
