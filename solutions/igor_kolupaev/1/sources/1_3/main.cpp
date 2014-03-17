@@ -24,7 +24,7 @@ public:
 	{
 	}
 
-	map_point_t( int x, int y ): _x( x ), _y( y )
+	map_point_t( const int x, const int y ): _x( x ), _y( y )
 	{
 	}
 
