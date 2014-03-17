@@ -28,6 +28,7 @@ void binary_reader::stock_data::write(std::ofstream& out) const
 {
 	using namespace std;
 	read_write_impl::write(out, stock_name_, 8);
+	read_write_impl::write(out, '\0');
 	string yearS;
 	yearS += date_time_[0];
 	yearS += date_time_[1];
