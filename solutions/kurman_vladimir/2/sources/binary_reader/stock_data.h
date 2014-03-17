@@ -9,7 +9,7 @@ namespace binary_reader
 {
 	class stock_data : virtual protected boost::noncopyable
 	{
-	public:
+	private:
 		char stock_name_[8];
 		char date_time_[8];
 		double price_;

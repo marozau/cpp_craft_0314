@@ -40,10 +40,10 @@ void binary_reader::stock_data::write(std::ofstream& out) const
 	string dayS;
 	dayS += date_time_[6];
 	dayS += date_time_[7];
-	int year = stoi(yearS);
-	int month = stoi(monthS);
-	int day = stoi(dayS);
-	boost::uint32_t date = (year - 1) * 372 + (month - 1) * 31 + day;
+	int const year = stoi(yearS);
+	int const month = stoi(monthS);
+	int const day = stoi(dayS);
+	boost::uint32_t const date = (year - 1) * 372 + (month - 1) * 31 + day;
 	read_write_impl::write(out, date);
 	read_write_impl::write(out, vwap_);
 	read_write_impl::write(out, volume_);

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <unordered_set>
 
 int main()
 {
@@ -22,30 +23,30 @@ int main()
 	unordered_map<boost::uint32_t, size_t> sizeByTypeForCurTime;
 	unordered_map<boost::uint32_t, boost::uint32_t> numMessagesByType;
 	unordered_map<boost::uint32_t, boost::uint32_t> numTimesByType;
-	unordered_map<boost::uint32_t, bool> curTimeHasMessageOfType;
+	unordered_set<boost::uint32_t> curTimeHasMessageOfType;
 	while (curPos < fileSize)
 	{
 		market_message mes(fin);
 		curPos += mes.size();
-		bool anotherTime = curTime < mes.time();
-		curTime = mes.time();
-		curTimeHasMessageOfType[mes.type()] = true;
-		if (anotherTime)
+		if (curTime < mes.time())
 		{
 			sizeByTypeForCurTime.clear();
 			for (auto timeHasMsg : curTimeHasMessageOfType)
-			if (timeHasMsg.second)
-				++numTimesByType[timeHasMsg.first];
+				++numTimesByType[timeHasMsg];
 			curTimeHasMessageOfType.clear();
 		}
+		curTime = mes.time();
+		curTimeHasMessageOfType.insert(mes.type());
 		sizeByTypeForCurTime[mes.type()] += mes.size();
 		if (sizeByTypeForCurTime[mes.type()] <= 2048)
 			++numMessagesByType[mes.type()];
 	}
+	for (auto timeHasMsg : curTimeHasMessageOfType)
+		++numTimesByType[timeHasMsg];
 	for (auto messageByType : numMessagesByType)
 	{
 		fout.write(reinterpret_cast<char const*>(&messageByType.first), sizeof(messageByType.first));
-		const double ans = static_cast<double>(messageByType.second) / numTimesByType[messageByType.first];
+		double const ans = static_cast<double>(messageByType.second) / numTimesByType[messageByType.first];
 		fout.write(reinterpret_cast<char const*>(&ans), sizeof(ans));
 	}
 	fin.close();

@@ -2,7 +2,6 @@
 #define _READ_WRITE_IMPL_H_
 
 #include <fstream>
-#include <boost/cstdint.hpp>
 
 namespace read_write_impl
 {
