@@ -69,12 +69,12 @@ public:
 		_width = _map[ 0 ].length();
 	}
 
-	size_t width()
+	int width()
 	{
 		return _width;
 	}
 
-	size_t height()
+	int height()
 	{
 		return _height;
 	}
