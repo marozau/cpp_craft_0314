@@ -56,6 +56,7 @@ int main()
 		}
 
 		double temp;
+		
 		for (size_t i=0;i<=types;i++)
 			if (ans[i].num!=0){
 				if(!out.write(reinterpret_cast<char *>(&i), sizeof(i))) {
@@ -76,6 +77,6 @@ int main()
 		return 1;
 	}
 	inn.close();
-	out.close();
+	out.close(); 
 }
 

@@ -7,11 +7,11 @@ using namespace binary_reader;
 using namespace std;
 
 namespace task4{
-	static const boost::uint32_t type_min = 1u;
-	static const boost::uint32_t type_max = 4u;
-	static const boost::uint32_t diff = 2;
+	static const size_t type_min = 1u;
+	static const size_t type_max = 4u;
+	static const size_t diff = 2;
 }
-bool is_good_type (const boost::uint32_t t){
+bool is_good_type (const size_t t){
 	return (t>=task4::type_min && t<=task4::type_max) ;
 } 
 
@@ -22,7 +22,7 @@ int main()
 	
 	if (inn.is_open()){
 
-		boost::uint32_t cur_time=task4::diff;
+		size_t cur_time=task4::diff;
 		
 		while (!inn.eof()){
 			market_message m(inn);

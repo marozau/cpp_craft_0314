@@ -65,13 +65,13 @@ binary_reader::market_message::~market_message()
 	}
 }
 
-boost::uint32_t binary_reader::market_message::type() const
+size_t binary_reader::market_message::type() const
 {
-	return type_;
+	return static_cast<size_t>(type_);
 }
-boost::uint32_t binary_reader::market_message::time() const
+size_t binary_reader::market_message::time() const
 {
-	return time_;
+	return static_cast<size_t>(time_);
 }
 boost::uint32_t binary_reader::market_message::len() const
 {

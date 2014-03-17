@@ -24,8 +24,8 @@ namespace binary_reader
 		void write( std::ofstream& out );
 		~market_message();
 
-		boost::uint32_t type() const;
-		boost::uint32_t time() const;
+		size_t type() const;
+		size_t time() const;
 		boost::uint32_t len() const;
 		const char* const msg() const;
 

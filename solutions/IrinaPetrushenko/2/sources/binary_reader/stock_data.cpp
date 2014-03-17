@@ -6,14 +6,15 @@ using namespace std;
 
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
+	stock_name_ = new char[8];
 	memset(stock_name_, 0, 8);
-	if(!in.read(reinterpret_cast<char *>(&stock_name_), sizeof(stock_name_))) {
+	if(!in.read(stock_name_, 8)) {
 		cerr<<"Input is incorrect"<<endl;
 		return;
 	}
-
+	date_time_ = new char[8];
 	memset(date_time_, 0, 8);
-	if(!in.read(reinterpret_cast<char *>(&date_time_), sizeof(date_time_))) {
+	if(!in.read(date_time_, 8)) {
 		cerr<<"Input is incorrect"<<endl;
 		return;
 	}
@@ -78,8 +79,10 @@ binary_reader::stock_data::stock_data( const char* stock_name,
 							f4_(f4)
 							
 {
+	date_time_ = new char [8];
+	stock_name_= new char [8];
 	memcpy(stock_name_, stock_name, 8 );
-	memcpy(date_time_, date_time_, 8 );
+	memcpy(date_time_, date_time, 8 );
 }
 
 binary_reader::stock_data::~stock_data()
@@ -88,11 +91,11 @@ binary_reader::stock_data::~stock_data()
 
 void binary_reader::stock_data::write( std::ofstream& out )
 {
-	if(!out.write(reinterpret_cast<char *>(&stock_name_), sizeof(stock_name_))) {
+	if(!out.write(stock_name_, 9)) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}
-	if(!out.write(reinterpret_cast<char *>(&date_time_), sizeof(date_time_))) {
+	if(!out.write(date_time_, 8)) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}
@@ -135,7 +138,7 @@ void binary_reader::stock_data::write_raw( std::ofstream& out )
 	// this method is used for testing. It writes data to the binary file without convertion.
 }
 void binary_reader::stock_data::write_stock_name(std::ofstream& out){
-	if(!out.write(reinterpret_cast<char *>(&stock_name_), sizeof(stock_name_))) {
+	if(!out.write(stock_name_, 9)) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}

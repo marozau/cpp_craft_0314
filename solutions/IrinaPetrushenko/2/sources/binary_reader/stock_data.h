@@ -10,8 +10,8 @@ namespace binary_reader
 {
 	class stock_data : virtual protected boost::noncopyable
 	{
-		char stock_name_[8];
-		char date_time_[8];
+		char * stock_name_;
+		char * date_time_;
 		double price_;
 		double vwap_;
 		boost::uint32_t volume_;
