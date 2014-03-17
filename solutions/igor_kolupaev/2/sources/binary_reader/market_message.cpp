@@ -83,7 +83,7 @@ binary_reader::market_message::market_message( const boost::uint32_t type,
 void binary_reader::market_message::write( std::ofstream& out )
 {
 	write_uint( out, type_ );
-	write_uint( out, type_ );
+	write_uint( out, time_ );
 	write_uint( out, len_ );
 	out.write( msg_, len_ );
 }
