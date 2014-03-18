@@ -10,16 +10,16 @@ namespace binary_reader
 {
 	class stock_data : virtual protected boost::noncopyable
 	{
-		char stock_name_[8];
-		char date_time_[8];
-		double price_;
-		double vwap_;
-		boost::uint32_t volume_;
-		double f1_;
-		double t1_;
-		double f2_;
-		double f3_;
-		double f4_;
+		char _stock_name[8];
+		char _date_time[8];
+		double _price;
+		double _vwap;
+		boost::uint32_t _volume;
+		double _f1;
+		double _t1;
+		double _f2;
+		double _f3;
+		double _f4;
 
 	public:
 		explicit stock_data( std::ifstream& in );

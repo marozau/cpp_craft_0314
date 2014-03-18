@@ -7,8 +7,15 @@
 #include <boost/cstdint.hpp>
 
 
+
 namespace binary_reader
 {
+    typedef union
+    {
+        char chars[sizeof(uint32_t)];
+        uint32_t integer;
+    }Uint32Union;
+    
 	class market_message : virtual protected boost::noncopyable
 	{
 		boost::uint32_t _type;
@@ -25,6 +32,7 @@ namespace binary_reader
 		//
 		boost::uint32_t type() const;
 		boost::uint32_t time() const;
+        boost::uint32_t msg_len() const;
 		const char* const msg() const;
 	};
 }

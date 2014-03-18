@@ -2,11 +2,7 @@
 #include <cstring>
 
 
-typedef union
-{
-    char chars[sizeof(uint32_t)];
-    uint32_t integer;
-}Uint32Union;
+
 
 
 binary_reader::market_message::market_message( std::ifstream& in )
@@ -20,7 +16,8 @@ binary_reader::market_message::market_message( std::ifstream& in )
     _len = rdUnion.integer;
     
     _msg = new char[_len+1];
-    in.read(_msg,_len);
+    if(_len)
+        in.read(_msg,_len);
     _msg[_len]=0;
 }
 
@@ -56,6 +53,10 @@ boost::uint32_t binary_reader::market_message::type() const
 boost::uint32_t binary_reader::market_message::time() const
 {
 	return _time;
+}
+boost::uint32_t binary_reader::market_message::msg_len() const
+{
+	return _len;
 }
 const char* const binary_reader::market_message::msg() const
 {
