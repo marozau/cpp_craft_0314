@@ -4,7 +4,7 @@
 
 #include "stock_data.h"
 
-class stock_data1
+class stock_data_short
 {
 	char stock_name_[ 9 ];
 	boost::uint_fast32_t date_time_;
@@ -45,16 +45,16 @@ class stock_data1
 
 public:
 
-	stock_data1()
+	stock_data_short():
+		date_time_( 0 ),
+		price_( 0 ),
+		volume_( 0 ),
+		f2_( 0 )
 	{
 		set_stock_name( "" );
-		date_time_ = 0;
-		price_ = 0;
-		volume_ = 0;
-		f2_ = 0;
 	}
 
-	stock_data1( binary_reader::stock_data& data )
+	stock_data_short( binary_reader::stock_data& data )
 	{
 		set_stock_name( data.stock_name() );
 		date_time_ = date_as_uint( data.date_time() );
@@ -102,7 +102,7 @@ int main()
 			break;
 		}
 
-		stock_data1 data1( data );
+		stock_data_short data1( data );
 		data1.write( out );
 	}
 

@@ -57,14 +57,17 @@ binary_reader::market_message::market_message( std::ifstream& in ):
 	}
 
 	msg_ = new char[ len_ + 1 ];
-	in.read( msg_, len_ );
-
-	if( in.eof() )
-	{
-		throw unexpected_end_error;
-	}
-
 	msg_[ len_ ] = '\0';
+
+	if( len_ > 0 )
+	{
+		in.read( msg_, len_ );
+
+		if( in.eof() )
+		{
+			throw unexpected_end_error;
+		}
+	}
 }
 
 binary_reader::market_message::market_message( const boost::uint32_t type,
@@ -76,7 +79,7 @@ binary_reader::market_message::market_message( const boost::uint32_t type,
 {
 	len_ = static_cast<uint32_t>( strlen( msg ) );
 	msg_ = new char[ len_ + 1 ];
-	strcpy_s( msg_, len_, msg );
+	strncpy( msg_, msg, len_);
 	msg_[ len_ ] = '\0';
 }
 

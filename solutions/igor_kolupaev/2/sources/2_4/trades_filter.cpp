@@ -40,7 +40,7 @@ public:
 		}
 	}
 
-	uint32_t current_time()
+	uint32_t current_time() const
 	{
 		return _current_time;
 	}
@@ -53,6 +53,8 @@ private:
 
 int main()
 {
+	const int delay = 2;
+
 	std::ifstream in( BINARY_DIR "/input.txt", std::ios::in | std::ios::binary );
 
 	if( !in.is_open() )
@@ -74,7 +76,7 @@ int main()
 			break;
 		}
 
-		if( filter.is_up_to_date( message, 2 ) && filter.is_type_ok( message ) )
+		if( filter.is_up_to_date( message, delay ) && filter.is_type_ok( message ) )
 		{
 			message.write( out );
 

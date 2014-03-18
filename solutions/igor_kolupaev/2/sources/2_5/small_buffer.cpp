@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 
 #include "market_message.h"
 
@@ -42,8 +43,12 @@ private:
 		uint32_t messages_num;
 		uint32_t time_num;
 
-		uint32_t average()
+		uint32_t average() const
 		{
+			if( time_num == 0 )
+			{
+				throw std::logic_error( "Zero occurrence. It is not possible to calc average." );
+			}
 			return messages_num / time_num;
 		};
 	};
@@ -56,8 +61,6 @@ private:
 
 int main()
 {
-	typedef std::map<uint32_t, uint32_t> time_counter_t;
-
 	std::ifstream in( BINARY_DIR "/input.txt", std::ios::in | std::ios::binary );
 
 	if( !in.is_open() )
@@ -65,6 +68,8 @@ int main()
 		std::cerr << "Unable to open input.txt";
 		return 1;
 	}
+
+	typedef std::map<uint32_t, uint32_t> time_counter_t;
 
 	messages_counter counter;
 	time_counter_t curr_time_messages_by_types;
@@ -83,8 +88,8 @@ int main()
 		{
 			for( time_counter_t::iterator it = curr_time_messages_by_types.begin(); it != curr_time_messages_by_types.end(); ++it )
 			{
-				uint32_t message_type = it->first;
-				uint32_t message_number = it->second;
+				const uint32_t message_type = it->first;
+				const uint32_t message_number = it->second;
 
 				counter.add_count( message_type, message_number );
 				counter.inc_time( it->first );
