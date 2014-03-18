@@ -4,25 +4,51 @@
 #include <stdexcept>
 #include <reader.h>
 #include <writer.h>
+#include <string>
 #include <iostream>
 
-
-
-class task
-{
-public:
-	struct data
+struct data
 	{
-		unsigned date,volume;
+		unsigned dat,volume;
 		double f1, t1, f2, f3, f4,price,vwap;
-		char *name;
+		std::string name,date;
 		friend io::bin_reader& operator>>(io::bin_reader &in,data &obj);
 		friend io::bin_writer& operator<<(io::bin_writer &out,data &obj);
 	};
+
+	io::bin_reader& operator>>(io::bin_reader &in,data &obj)
+	{
+		obj.name=in.read(8);
+		obj.date=in.read(8);
+		in.read(obj.price);
+		in.read(obj.vwap);
+		in.read(obj.volume);
+		in.read(obj.f1);
+		in.read(obj.t1);
+		in.read(obj.f2);
+		in.read(obj.f3);
+		in.read(obj.f4);
+		return in;
+
+	}
+	io::bin_writer& operator<<(io::bin_writer &out,data &obj)
+	{
+		out.write(obj.name);
+		out.write(obj.dat);
+		out.write(obj.price);
+		out.write(obj.volume);
+		out.write(obj.f2);
+		return out;
+
+	}
+class task
+{
 	data current_data;
 	io::bin_reader in;
 	io::bin_writer out;
 public:
+	
+
 	task()
 		: in("input.txt" ),out("output.txt")
 	{   
@@ -38,8 +64,11 @@ public:
 		long long T=0;
 		while (!in.eof())
 		{
-			
+			unsigned y,m,d;
+			sscanf(current_data.date.c_str(),"%4d%2d%2d",&y,&m,&d);
+			current_data.dat=((y-1)*372u+(m-1)*31u+d);
 			out<<current_data;
+			
 			in>>current_data;
 		}
 
@@ -50,32 +79,7 @@ public:
 };
 
 
-	io::bin_reader& operator>>(io::bin_reader &in,task::data &obj)
-	{
-		obj.name=new char[8];
-		in.read(obj.name,8);
-		in.read(obj.date);
-		in.read(obj.price);
-		in.read(obj.vwap);
-		in.read(obj.volume);
-		in.read(obj.f1);
-		in.read(obj.t1);
-		in.read(obj.f2);
-		in.read(obj.f3);
-		in.read(obj.f4);
-		return in;
 
-	}
-	io::bin_writer& operator<<(io::bin_writer &out,task::data &obj)
-	{
-		out.write(obj.name,9);
-		out.write(obj.date);
-		out.write(obj.price);
-		out.write(obj.volume);
-		out.write(obj.f2);
-		return out;
-
-	}
 void main()
 {
 	try

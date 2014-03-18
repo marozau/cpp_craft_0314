@@ -5,19 +5,39 @@
 #include <reader.h>
 #include <writer.h>
 #include <iostream>
-
-
-
-class task
-{
-public:
-	struct data
+struct data
 	{
 		unsigned type,time,length;
 		char *msg;
 		friend io::bin_reader& operator>>(io::bin_reader &in,data &obj);
 		friend io::bin_writer& operator<<(io::bin_writer &out,data &obj);
+		~data()
+		{
+			delete []msg;
+		}
 	};
+
+io::bin_reader& operator>>(io::bin_reader &in,data &obj)
+	{
+		in.read(obj.type);
+		in.read(obj.time);
+		in.read(obj.length);
+		obj.msg=new char[obj.length];
+		in.read(obj.msg,obj.length);
+		return in;
+
+	}
+	io::bin_writer& operator<<(io::bin_writer &out,data &obj)
+	{
+		out.write(obj.type);
+		out.write(obj.time);
+		out.write(obj.length);
+		out.write(obj.msg,obj.length);
+		return out;
+
+	}
+class task
+{
 	data current_data;
 	io::bin_reader in;
 	io::bin_writer out;
@@ -34,7 +54,7 @@ public:
 	void solve()
 	{
 		in>>current_data;
-		long long T=0;
+		int T=0;
 		while (!in.eof())
 		{
 			
@@ -52,25 +72,7 @@ public:
 };
 
 
-	io::bin_reader& operator>>(io::bin_reader &in,task::data &obj)
-	{
-		in.read(obj.type);
-		in.read(obj.time);
-		in.read(obj.length);
-		obj.msg=new char[obj.length];
-		in.read(obj.msg,obj.length);
-		return in;
-
-	}
-	io::bin_writer& operator<<(io::bin_writer &out,task::data &obj)
-	{
-		out.write(obj.type);
-		out.write(obj.time);
-		out.write(obj.length);
-		out.write(obj.msg,obj.length);
-		return out;
-
-	}
+	
 void main()
 {
 	try

@@ -16,7 +16,8 @@ namespace io
 			{
 				out.write(reinterpret_cast< char* >( &a ), sizeof( T ) );
 			}
-			void write(char* a,size_t length);
+			void write(char* a,const size_t length);
+			void write(std::string a);
 			bool is_open();
 		
 				

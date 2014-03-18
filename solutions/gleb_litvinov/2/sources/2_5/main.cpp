@@ -10,10 +10,8 @@
 
 #include <boost/ref.hpp>
 
-class task
-{
-public:
-	struct data
+
+struct data
 	{
 		unsigned type,time,length;
 		char *msg;
@@ -22,7 +20,24 @@ public:
 		{
 			return sizeof(int)*3+length;
 		}
-	};
+		~data()
+		{
+			delete []msg;
+		}
+	};	
+io::bin_reader& operator>>(io::bin_reader &in,data &obj)
+	{
+		in.read(obj.type);
+		in.read(obj.time);
+		in.read(obj.length);
+		obj.msg=new char[obj.length];
+		in.read(obj.msg,obj.length);
+		return in;
+
+	}
+class task
+{
+
 	data current_data;
 	io::bin_reader in;
 	static const size_t max_memory=2048ul;
@@ -86,16 +101,7 @@ public:
 };
 
 
-	io::bin_reader& operator>>(io::bin_reader &in,task::data &obj)
-	{
-		in.read(obj.type);
-		in.read(obj.time);
-		in.read(obj.length);
-		obj.msg=new char[obj.length];
-		in.read(obj.msg,obj.length);
-		return in;
-
-	}
+	
 void main()
 {
 	try
