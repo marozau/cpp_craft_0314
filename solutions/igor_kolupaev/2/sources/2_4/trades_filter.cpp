@@ -34,9 +34,9 @@ public:
 
 	void update_time( const binary_reader::market_message& message )
 	{
-		if( this->_current_time < message.time() )
+		if( _current_time < message.time() )
 		{
-			this->_current_time = message.time();
+			_current_time = message.time();
 		}
 	}
 
