@@ -60,7 +60,7 @@ void binary_reader::market_message::write( std::ofstream& out )
 
 binary_reader::market_message::~market_message()
 {
-	delete msg_;
+	delete [] msg_;
 }
 //
 boost::uint32_t binary_reader::market_message::type() const
