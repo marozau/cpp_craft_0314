@@ -10,8 +10,11 @@ namespace binary_reader
 	class stock_data : virtual protected boost::noncopyable
 	{
 	private:
-		char stock_name_[8];
-		char date_time_[8];
+		static const boost::uint8_t stockNameFieldSize = 8;
+		static const boost::uint8_t dataTimeFieldSize = 8;
+
+		char stock_name_[stockNameFieldSize];
+		char date_time_[dataTimeFieldSize];
 		double price_;
 		double vwap_;
 		boost::uint32_t volume_;

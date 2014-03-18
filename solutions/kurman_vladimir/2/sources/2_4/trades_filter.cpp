@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+#include <utility>
 #include "market_message.h"
 
 int main()
@@ -18,14 +19,16 @@ int main()
 	size_t const fileSize = fin.tellg();
 	fin.seekg(0);
 	size_t curPos = 0;
-	boost::int64_t curMaxTime = 0;
+	boost::uint32_t curMaxTime = 0;
+	pair<boost::uint32_t, boost::uint32_t> acceptedMinMaxTypes = make_pair(1, 4);
+	boost::uint32_t const delay = 2;
 	while (curPos < fileSize)
 	{
 		market_message mes(fin);
 		curPos += mes.size();
-		if (!(mes.type() >= 1 && mes.type() <= 4))
+		if (!(mes.type() >= acceptedMinMaxTypes.first && mes.type() <= acceptedMinMaxTypes.second))
 			continue;
-		if (mes.time() <= curMaxTime - 2)
+		if (curMaxTime >= delay && mes.time() <= curMaxTime - delay)
 			continue;
 		mes.write(fout);
 		curMaxTime = max<boost::int64_t>(curMaxTime, mes.time());

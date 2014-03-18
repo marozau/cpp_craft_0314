@@ -4,8 +4,8 @@
 
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
-	read_write_impl::read(in, stock_name_, 8);
-	read_write_impl::read(in, date_time_, 8);
+	read_write_impl::read(in, stock_name_, stockNameFieldSize);
+	read_write_impl::read(in, date_time_, dataTimeFieldSize);
 	read_write_impl::read(in, price_);
 	read_write_impl::read(in, vwap_);
 	read_write_impl::read(in, volume_);
@@ -20,29 +20,19 @@ binary_reader::stock_data::stock_data(const char* stock_name, const char* date_t
 	price_(price), vwap_(vwap), volume_(volume), f1_(f1), t1_(t1), f2_(f2),
 	f3_(f3), f4_(f4)
 {
-	strncpy(stock_name_, stock_name, 8);
-	strncpy(date_time_, date_time, 8);
+	strncpy(stock_name_, stock_name, stockNameFieldSize);
+	strncpy(date_time_, date_time, dataTimeFieldSize);
 }
 
 void binary_reader::stock_data::write(std::ofstream& out) const
 {
 	using namespace std;
-	read_write_impl::write(out, stock_name_, 8);
+	read_write_impl::write(out, stock_name_, stockNameFieldSize);
 	read_write_impl::write(out, '\0');
-	string yearS;
-	yearS += date_time_[0];
-	yearS += date_time_[1];
-	yearS += date_time_[2];
-	yearS += date_time_[3];
-	string monthS;
-	monthS += date_time_[4];
-	monthS += date_time_[5];
-	string dayS;
-	dayS += date_time_[6];
-	dayS += date_time_[7];
-	int const year = stoi(yearS);
-	int const month = stoi(monthS);
-	int const day = stoi(dayS);
+	int year;
+	int month;
+	int day;
+	sscanf(date_time_, "%4d%2d%2d", &year, &month, &day);
 	boost::uint32_t const date = (year - 1) * 372 + (month - 1) * 31 + day;
 	read_write_impl::write(out, date);
 	read_write_impl::write(out, vwap_);
@@ -52,5 +42,6 @@ void binary_reader::stock_data::write(std::ofstream& out) const
 
 size_t binary_reader::stock_data::size() const
 {
-	return 76;
+	return stockNameFieldSize + dataTimeFieldSize + sizeof(price_) + sizeof(vwap_) + sizeof(volume_) + sizeof(f1_) +
+		sizeof(t1_) + sizeof(f2_) + sizeof(f3_) + sizeof(f4_);
 }

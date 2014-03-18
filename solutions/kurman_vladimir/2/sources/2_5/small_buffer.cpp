@@ -24,6 +24,7 @@ int main()
 	unordered_map<boost::uint32_t, boost::uint32_t> numMessagesByType;
 	unordered_map<boost::uint32_t, boost::uint32_t> numTimesByType;
 	unordered_set<boost::uint32_t> curTimeHasMessageOfType;
+	boost::uint32_t maxBufSize = 2048;
 	while (curPos < fileSize)
 	{
 		market_message mes(fin);
@@ -37,9 +38,12 @@ int main()
 		}
 		curTime = mes.time();
 		curTimeHasMessageOfType.insert(mes.type());
-		sizeByTypeForCurTime[mes.type()] += mes.size();
-		if (sizeByTypeForCurTime[mes.type()] <= 2048)
+		auto newSizeForCurTimeAndType = sizeByTypeForCurTime[mes.type()] + mes.size();
+		if (newSizeForCurTimeAndType <= maxBufSize)
+		{
+			sizeByTypeForCurTime[mes.type()] += mes.size();
 			++numMessagesByType[mes.type()];
+		}
 	}
 	for (auto timeHasMsg : curTimeHasMessageOfType)
 		++numTimesByType[timeHasMsg];
