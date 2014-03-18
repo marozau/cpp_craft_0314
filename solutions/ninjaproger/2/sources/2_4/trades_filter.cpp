@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include "market_message.h"
 
 int main()
@@ -31,10 +30,7 @@ int main()
         int64_t timeDelta = (int64_t)max_t - 2;
         
         if(msg.time() > timeDelta)
-        {
             msg.write(out_file);
-            std::cout << ">" << msg.msg() << "\n";
-        }
         
         max_t = std::max(max_t,msg.time());
     }
