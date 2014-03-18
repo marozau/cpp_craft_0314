@@ -48,7 +48,7 @@ public:
 private:
 	uint32_t _current_time;
 
-	std::set<uint32_t> good_types;
+	std::set<uint32_t> _good_types;
 };
 
 int main()
