@@ -20,16 +20,10 @@ int main(int argc, char* argv[])
 	} 
 	ofstream out( BINARY_DIR "/output.txt", ios:: binary ); 
 	boost:: uint32_t T=0;
-	while ( !in.eof() )
+	while ( !in.good() )
 	{
-		char* byte = new char;
-		long int pos = in.tellg();
-		in.read(byte,1);
-		delete byte;
-		if( in.eof() )
-			break;
-		in.seekg(pos);
 		binary_reader:: market_message start(in); 
+		if(!in.good()) break;
 		if (start.type()<1 || start.type()>4) continue;
 
 			if (T<start.time()) 

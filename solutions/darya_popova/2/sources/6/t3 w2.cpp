@@ -22,9 +22,10 @@ int main(int argc, char* argv[])
 
 	vector <binary_reader:: stock_data> a; 
 	
-	while ( !in.eof() )
+	while ( !in.good() )
 	{
-		binary_reader:: stock_data start(in); 
+		binary_reader:: stock_data start(in);
+		if(!in.good()) break;
 		a.push_back(start);
 	}
 	in.close();

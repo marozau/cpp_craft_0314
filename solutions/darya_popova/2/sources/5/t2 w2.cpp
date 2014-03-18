@@ -46,16 +46,11 @@ int main(int argc, char* argv[])
 	last[start.type()] = start.time();
 		
 
-	while ( !in.eof() )
+	while ( !in.good() )
 	{
-		char* byte = new char;
-		long int pos = in.tellg();
-		in.read(byte,1);
-		delete byte;
-		if( in.eof() )
-			break;
-		in.seekg(pos);
+		
 		binary_reader:: market_message start(in); 
+		if(!in.good()) break;
 		if ( last[start.type()]==start.time() && check_size(size, start) ) 
 		{
 			size[start.type()]+= get_size(start); 
