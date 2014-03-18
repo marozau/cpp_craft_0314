@@ -126,6 +126,7 @@ int main(int argc, char **argv) {
 	const int32 limit = 2048;
 	map typesOfMsg;
 	handlerOfData(fileIn, typesOfMsg, size, limit);
+	fileIn.close();
 
 	std::fstream fileOut;
 	fileOut.open( BINARY_DIR "/output.txt", std::ios::binary | std::ios::out);
@@ -137,6 +138,7 @@ int main(int argc, char **argv) {
 	}
 
 	meanOfEachMsg(fileOut, typesOfMsg, size);
+	fileOut.close();
 
 	for (int32 i = 0; i < typesOfMsg.size(); i++) {
 		if (typesOfMsg.find(i) != typesOfMsg.end()) {
@@ -147,9 +149,6 @@ int main(int argc, char **argv) {
 			delete typesOfMsg[i];
 		}
 	}
-
-	fileIn.close();
-	fileOut.close();
 
 	fileIn.open( BINARY_DIR "/output.txt", std::ios::binary | std::ios::in);
 			if (!fileIn) {

@@ -45,8 +45,8 @@ void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const int32 siz
 	fileIn.read(reinterpret_cast<char*>(&request->f3), sizeof(double));
 	fileIn.read(reinterpret_cast<char*>(&request->f4), sizeof(double));
 
-	int32 daysOfYear = 372;
-	int32 daysOfMonth = 31;
+	const int32 daysOfYear = 372;
+	const int32 daysOfMonth = 31;
 	int32 days = 0;
 	date *dateShell = NULL;
 
