@@ -21,9 +21,13 @@ public:
 
 	void output_avg( std::ostream& out )
 	{
-		for( msg_map_t::iterator it = _data.begin(); it != _data.end() ; ++it )
+		for( msg_map_t::iterator it = _data.begin(); it != _data.end(); ++it )
 		{
-			out << it->first << " " << it->second.average() << std::endl;
+			uint32_t message_type = it->first;
+			uint32_t avg = it->second.average();
+
+			out.write( reinterpret_cast<char*>( &message_type ), sizeof( message_type ) );
+			out.write( reinterpret_cast<char*>( &avg ), sizeof( avg ) );
 		}
 	}
 
@@ -31,14 +35,14 @@ private:
 
 	struct messages_data_t
 	{
-		messages_data_t(): messages_num( 0 ), time_num( 0 ) 
+		messages_data_t(): messages_num( 0 ), time_num( 0 )
 		{
 		};
 
 		uint32_t messages_num;
 		uint32_t time_num;
 
-		int average()
+		uint32_t average()
 		{
 			return messages_num / time_num;
 		};
