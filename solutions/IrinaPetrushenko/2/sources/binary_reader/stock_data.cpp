@@ -87,6 +87,14 @@ binary_reader::stock_data::stock_data( const char* stock_name,
 
 binary_reader::stock_data::~stock_data()
 {
+	if (stock_name_){
+		delete [] stock_name_;
+		stock_name_ = NULL;
+	}
+	if (date_time_){
+		delete [] date_time_;
+		date_time_ = NULL;
+	}
 }
 
 void binary_reader::stock_data::write( std::ofstream& out )
