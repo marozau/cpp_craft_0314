@@ -16,10 +16,10 @@ public:
 
 	market_message_filter(): _current_time( 0 )
 	{
-		good_types.insert( MARKET_OPEN );
-		good_types.insert( TRADE );
-		good_types.insert( QUOTE );
-		good_types.insert( MARKET_CLOSE );
+		_good_types.insert( MARKET_OPEN );
+		_good_types.insert( TRADE );
+		_good_types.insert( QUOTE );
+		_good_types.insert( MARKET_CLOSE );
 	}
 
 	bool is_up_to_date( const binary_reader::market_message& message, uint32_t delay )
@@ -29,7 +29,7 @@ public:
 
 	bool is_type_ok( const binary_reader::market_message& message )
 	{
-		return good_types.count( message.type() ) > 0;
+		return _good_types.count( message.type() ) > 0;
 	}
 
 	void update_time( const binary_reader::market_message& message )
