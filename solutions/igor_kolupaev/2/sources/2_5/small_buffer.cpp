@@ -10,6 +10,12 @@ class messages_counter
 {
 public:
 
+	template<class T>
+	void binary_write( std::ostream& out, T &t, size_t len = sizeof( T ) )
+	{
+		out.write( reinterpret_cast<const char*>( &t ), len );
+	}
+
 	void inc_time( const uint32_t message_type )
 	{
 		++( _data[ message_type ].time_num );
@@ -24,11 +30,11 @@ public:
 	{
 		for( msg_map_t::iterator it = _data.begin(); it != _data.end(); ++it )
 		{
-			uint32_t message_type = it->first;
-			uint32_t avg = it->second.average();
+			const uint32_t message_type = it->first;
+			const double avg = it->second.average();
 
-			out.write( reinterpret_cast<char*>( &message_type ), sizeof( message_type ) );
-			out.write( reinterpret_cast<char*>( &avg ), sizeof( avg ) );
+			binary_write( out, message_type );
+			binary_write( out, avg );
 		}
 	}
 
@@ -43,13 +49,13 @@ private:
 		uint32_t messages_num;
 		uint32_t time_num;
 
-		uint32_t average() const
+		double average() const
 		{
 			if( time_num == 0 )
 			{
 				throw std::logic_error( "Zero occurrence. It is not possible to calc average." );
 			}
-			return messages_num / time_num;
+			return static_cast<double>( messages_num ) / time_num;
 		};
 	};
 

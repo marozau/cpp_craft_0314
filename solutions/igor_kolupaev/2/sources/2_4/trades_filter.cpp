@@ -22,12 +22,12 @@ public:
 		_good_types.insert( MARKET_CLOSE );
 	}
 
-	bool is_up_to_date( const binary_reader::market_message& message, uint32_t delay )
+	bool is_up_to_date( const binary_reader::market_message& message, uint32_t delay ) const
 	{
 		return _current_time < message.time() + delay;
 	}
 
-	bool is_type_ok( const binary_reader::market_message& message )
+	bool is_type_ok( const binary_reader::market_message& message ) const
 	{
 		return _good_types.count( message.type() ) > 0;
 	}

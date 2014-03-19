@@ -14,19 +14,11 @@ class stock_data_short
 
 	boost::uint32_t date_as_uint( const char date_time[ 8 ] )
 	{
-		char buff[ 5 ] = { 0 };
-		boost::uint32_t ret_date_time;
+		unsigned int year, month, day;
 
-		strncpy( buff, date_time, 4 );
-		ret_date_time = atoi( buff ) * 372;
+		std::sscanf( date_time, "%4d%2d%2d", &year, &month, &day );
 
-		memset( buff, 0, sizeof( buff ) );
-		strncpy( buff, date_time + 4, 2 );
-		ret_date_time += atoi( buff ) * 31;
-
-		memset( buff, 0, sizeof( buff ) );
-		strncpy( buff, date_time + 6, 2 );
-		ret_date_time += atoi( buff );
+		const boost::uint32_t ret_date_time = ( year - 1 ) * 372 + ( month - 1 ) * 31 + day;
 
 		return ret_date_time;
 	}
