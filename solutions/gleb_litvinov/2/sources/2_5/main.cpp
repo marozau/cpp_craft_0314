@@ -10,7 +10,7 @@
 
 #include <boost/ref.hpp>
 
-
+typedef  std::map<unsigned,int> mmap;
 struct data
 	{
 		unsigned type,time,length;
@@ -20,6 +20,7 @@ struct data
 		{
 			return sizeof(int)*3+length;
 		}
+		data():msg(NULL){}
 		~data()
 		{
 			delete []msg;
@@ -30,7 +31,11 @@ io::bin_reader& operator>>(io::bin_reader &in,data &obj)
 		in.read(obj.type);
 		in.read(obj.time);
 		in.read(obj.length);
-		obj.msg=new char[obj.length];
+		if ( obj.length )
+		{
+			obj.msg=new char[obj.length];
+			in.read(obj.msg,obj.length);
+		}
 		in.read(obj.msg,obj.length);
 		return in;
 
@@ -54,7 +59,7 @@ public:
 
 	void solve()
 	{   
-		std::map<unsigned,int> met,times;
+		mmap met,times;
 		std::set<unsigned> last;
 		std::map<unsigned,size_t> size;
 		unsigned curr_memory=0;
@@ -62,9 +67,9 @@ public:
 		unsigned curr_time=0;
 		while (!in.eof())
 		{
-			if (current_data.time!=curr_time||last.find(current_data.type)!=last.end())
+			if (current_data.time!=curr_time||last.find(current_data.type)==last.end())
 			{
-				if (current_data.time==curr_time)
+				if (current_data.time!=curr_time)
 				last.clear();
 				if (current_data.get_size()<=max_memory)
 				{
@@ -87,9 +92,9 @@ public:
 			curr_time=current_data.time;
 			in>>current_data;
 		}
-		for (std::map<unsigned,int>::iterator it=met.begin();it!=met.end();it++)
+		for (mmap::iterator it=met.begin();it!=met.end();it++)
 		{
-			size_t i=it->first;
+			unsigned i=it->first;
 			out.write(i);
 			double temp=double(it->second)/times[it->first];
 			out.write(temp);
@@ -105,13 +110,17 @@ public:
 void main()
 {
 	try
-	{
+	{	
 		task realization;
 		realization.solve();
 	}
 	catch(const std::logic_error& message)
 	{
 		std::cout<<message.what()<<"\n";
+	}
+	catch( ... )
+	{
+		std::cout<<"Unknown error";
 	}
 	
 

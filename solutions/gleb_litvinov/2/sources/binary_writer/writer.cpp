@@ -16,11 +16,11 @@ namespace io
 	}
 	void bin_writer::write(char* const a,size_t length)
 	{
-		if (!length) length=std::strlen(a);
 		out.write( a, length );
 	}
-	void bin_writer::write(const std::string a)
+	void bin_writer::write(const std::string a,size_t inc)
 	{
-		out.write( a.c_str(),0);
+		size_t length=std::strlen(a.c_str())+inc;
+		out.write( a.c_str(),length);
 	}
 }

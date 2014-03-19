@@ -33,7 +33,7 @@ struct data
 	}
 	io::bin_writer& operator<<(io::bin_writer &out,data &obj)
 	{
-		out.write(obj.name);
+		out.write(obj.name,1);
 		out.write(obj.dat);
 		out.write(obj.price);
 		out.write(obj.volume);
@@ -90,6 +90,10 @@ void main()
     catch(const std::logic_error& message)
 	{
 		std::cout<<message.what()<<"\n";
+	}
+	catch( ... )
+	{
+		std::cout<<"Unknown error";
 	}
 	
 

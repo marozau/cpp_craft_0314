@@ -11,6 +11,7 @@ struct data
 		char *msg;
 		friend io::bin_reader& operator>>(io::bin_reader &in,data &obj);
 		friend io::bin_writer& operator<<(io::bin_writer &out,data &obj);
+		data():msg(NULL){}
 		~data()
 		{
 			delete []msg;
@@ -22,7 +23,11 @@ io::bin_reader& operator>>(io::bin_reader &in,data &obj)
 		in.read(obj.type);
 		in.read(obj.time);
 		in.read(obj.length);
-		obj.msg=new char[obj.length];
+		if ( obj.length )
+		{
+			obj.msg=new char[obj.length];
+			in.read(obj.msg,obj.length);
+		}
 		in.read(obj.msg,obj.length);
 		return in;
 
@@ -32,6 +37,7 @@ io::bin_reader& operator>>(io::bin_reader &in,data &obj)
 		out.write(obj.type);
 		out.write(obj.time);
 		out.write(obj.length);
+		if ( obj.length )
 		out.write(obj.msg,obj.length);
 		return out;
 
@@ -54,14 +60,16 @@ public:
 	void solve()
 	{
 		in>>current_data;
-		int T=0;
+		unsigned T=0;
 		while (!in.eof())
 		{
-			
-			if (current_data.time>T-2 && current_data.type<5u)
-				out<<current_data;
+			if(current_data.type<5u)
+			{
 			if (current_data.time>T)
-				T=static_cast<int>(current_data.time);
+				T=(current_data.time);
+			if (T-current_data.time>=2)
+				out<<current_data;
+			}
 			in>>current_data;
 		}
 
@@ -83,6 +91,10 @@ void main()
     catch(const std::logic_error& message)
 	{
 		std::cout<<message.what()<<"\n";
+	}
+	catch( ... )
+	{
+		std::cout<<"Unknown error";
 	}
 	
 
