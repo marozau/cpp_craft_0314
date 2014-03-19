@@ -15,6 +15,8 @@ namespace binary_reader
 		boost::uint32_t len_;
 		char* msg_;
 
+		bool _eof;
+
 	public:
 		explicit market_message( std::ifstream& in );
 		explicit market_message( const boost::uint32_t type, const boost::uint32_t time, const char* const msg );
@@ -24,6 +26,11 @@ namespace binary_reader
 		boost::uint32_t type() const;
 		boost::uint32_t time() const;
 		const char* const msg() const;
+
+		bool eof()
+		{
+			return _eof;
+		}
 	};
 }
 
