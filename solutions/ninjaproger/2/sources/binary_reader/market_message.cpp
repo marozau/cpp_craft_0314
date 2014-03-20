@@ -2,9 +2,6 @@
 #include <cstring>
 
 
-
-
-
 binary_reader::market_message::market_message( std::ifstream& in )
 {
     Uint32Union rdUnion;
@@ -14,7 +11,7 @@ binary_reader::market_message::market_message( std::ifstream& in )
     _time = rdUnion.integerValue;
     in.read(rdUnion.chars, sizeof(uint32_t));
     _len = rdUnion.integerValue;
-    
+
     _msg = new char[_len+1];
     if(_len)
         in.read(_msg,_len);

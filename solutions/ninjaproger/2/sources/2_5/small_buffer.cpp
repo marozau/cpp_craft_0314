@@ -3,6 +3,7 @@
 #include "market_message.h"
 #include <map>
 
+
 using namespace std;
 
 int main()
@@ -14,7 +15,6 @@ int main()
         throw runtime_error("unable to open file");
     
     map<uint32_t, map<uint32_t, uint32_t> > type_map;
-    
     while (1) {
         binary_reader::market_message msg(in_file);
         

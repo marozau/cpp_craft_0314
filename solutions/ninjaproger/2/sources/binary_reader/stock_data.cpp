@@ -2,6 +2,7 @@
 #include "market_message.h"
 
 
+
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
     DblUnion dblRead;
