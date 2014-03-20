@@ -12,10 +12,21 @@ struct Sdata {
 	int32 LEN;
 	char *MSG;
 
-	Sdata() :
-			TYPE(0), TIME(0), LEN(0), MSG(NULL) {
+	Sdata():TYPE(0), TIME(0), LEN(0), MSG(NULL){
 	}
+
+	bool readData(std::fstream &fileIn);
 };
+
+bool Sdata::readData(std::fstream &fileIn){
+	fileIn.read(reinterpret_cast<char*>(&TYPE), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&TIME), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&LEN), sizeof(int32));
+	MSG = new char[LEN+1];
+	fileIn.read(reinterpret_cast<char*>(MSG), (LEN) * sizeof(char));
+	if(!fileIn)return false;
+	return true;
+}
 
 typedef std::vector<Sdata*> vector;
 typedef std::map<const int32, vector*> map;
@@ -39,16 +50,11 @@ void handlerOfData(std::fstream &fileIn, map &typesOfMsg, const int32 size, cons
 
 	Sdata *request = new Sdata();
 
-	fileIn.read(reinterpret_cast<char*>(&request->TYPE), sizeof(int32));
-	if (!fileIn) {
-		std::cout << "There is no data in input file" << std::endl;
-		fileIn.close();
-		exit(1);
-	}
-	fileIn.read(reinterpret_cast<char*>(&request->TIME), sizeof(int32));
-	fileIn.read(reinterpret_cast<char*>(&request->LEN), sizeof(int32));
-	request->MSG = new char[request->LEN];
-	fileIn.read(reinterpret_cast<char*>(request->MSG), request->LEN * sizeof(char));
+	if(!request->readData(fileIn)){
+			std::cout << "There is no data in input file" << std::endl;
+			fileIn.close();
+			exit(1);
+		}
 
 	do {
 		if (request->TYPE <= size && typesOfMsg.find(request->TYPE) == typesOfMsg.end())
@@ -58,12 +64,8 @@ void handlerOfData(std::fstream &fileIn, map &typesOfMsg, const int32 size, cons
 			typesOfMsg[request->TYPE]->push_back(request);
 		}
 		request = new Sdata();
-		fileIn.read(reinterpret_cast<char*>(&request->TYPE), sizeof(int32));
-		fileIn.read(reinterpret_cast<char*>(&request->TIME), sizeof(int32));
-		fileIn.read(reinterpret_cast<char*>(&request->LEN), sizeof(int32));
-		request->MSG = new char[request->LEN];
-		fileIn.read(reinterpret_cast<char*>(request->MSG), request->LEN * sizeof(char));
-	} while (fileIn);
+	} while (request->readData(fileIn));
+	delete[] request->MSG;
 	delete request;
 }
 
@@ -150,7 +152,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	fileIn.open( BINARY_DIR "/output.txt", std::ios::binary | std::ios::in);
+	/*fileIn.open( BINARY_DIR "/output.txt", std::ios::binary | std::ios::in);
 			if (!fileIn) {
 				std::cout << "Error path for output.txt" << std::endl;
 				fileIn.close();
@@ -159,7 +161,7 @@ int main(int argc, char **argv) {
 
 	concoleCheckForOutput(fileIn);
 
-	fileIn.close();
+	fileIn.close();*/
 
 	return 0;
 }

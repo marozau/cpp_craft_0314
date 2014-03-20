@@ -14,54 +14,63 @@ struct Sdata {
 
 	Sdata():TYPE(0), TIME(0), LEN(0), MSG(NULL){
 	}
+
+	bool readData(std::fstream &fileIn);
+	bool writeData(std::fstream &fileOut);
 };
+
+bool Sdata::readData(std::fstream &fileIn){
+	fileIn.read(reinterpret_cast<char*>(&TYPE), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&TIME), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&LEN), sizeof(int32));
+	MSG = new char[LEN+1];
+	fileIn.read(reinterpret_cast<char*>(MSG), (LEN) * sizeof(char));
+	if(!fileIn)return false;
+	return true;
+}
+
+bool Sdata::writeData(std::fstream &fileOut){
+	fileOut.write(reinterpret_cast<char*>(&TYPE), sizeof(int32));
+	fileOut.write(reinterpret_cast<char*>(&TIME), sizeof(int32));
+	fileOut.write(reinterpret_cast<char*>(&LEN), sizeof(int32));
+	fileOut.write(reinterpret_cast<char*>(MSG), (LEN) * sizeof(char));
+	if(!fileOut)return false;
+	return true;
+}
 
 //Step by step data is readed, handled, written by function in output file,
 //while there isn't eof flag in input file or while counter <= than limit
 void searchActualData(std::fstream &fileIn, std::fstream &fileOut, const bigInt &limit) {
 
 	Sdata *request = new Sdata();
-	bigInt count = 0;
 
-	fileIn.read(reinterpret_cast<char*>(&request->TYPE), sizeof(int32));
-	if (!fileIn) {
+	if(!request->readData(fileIn)){
 		std::cout << "There is no data in input file" << std::endl;
 		fileIn.close();
 		fileOut.close();
 		exit(1);
 	}
-	count++;
-	fileIn.read(reinterpret_cast<char*>(&request->TIME), sizeof(int32));
-	fileIn.read(reinterpret_cast<char*>(&request->LEN), sizeof(int32));
-	request->MSG = new char[request->LEN];
-	fileIn.read(reinterpret_cast<char*>(request->MSG), request->LEN * sizeof(char));
 
 	int time = 0;
+	const int32 from = 0;
+	const int32 to = 5;
+	bigInt count = 0;
 
 	do {
-		if ((int) request->TIME > (time - 2) && request->TYPE > 0 && request->TYPE < 5) {
+		count++;
+		if ((int) request->TIME > (time - 2) && request->TYPE > from && request->TYPE < to) {
 			if ((int) request->TIME > time) time = request->TIME;
-			fileOut.write(reinterpret_cast<char*>(&request->TYPE), sizeof(int32));
-			if (!fileOut) {
+			if(!request->writeData(fileOut)){
 				std::cout << "Write error" << std::endl;
 				fileIn.close();
 				fileOut.close();
 				exit(1);
 			}
-			fileOut.write(reinterpret_cast<char*>(&request->TIME), sizeof(int32));
-			fileOut.write(reinterpret_cast<char*>(&request->LEN), sizeof(int32));
-			fileOut.write(reinterpret_cast<char*>(request->MSG), request->LEN * sizeof(char));
 		}
 		delete[] request->MSG;
 		delete request;
 		request = new Sdata();
-		fileIn.read(reinterpret_cast<char*>(&request->TYPE), sizeof(int32));
-		fileIn.read(reinterpret_cast<char*>(&request->TIME), sizeof(int32));
-		fileIn.read(reinterpret_cast<char*>(&request->LEN), sizeof(int32));
-		request->MSG = new char[request->LEN];
-		fileIn.read(reinterpret_cast<char*>(request->MSG), request->LEN * sizeof(char));
-		count++;
-	} while (count < limit && fileIn);
+	} while ((count+1) < limit && request->readData(fileIn));
 	delete[] request->MSG;
 	delete request;
 }
@@ -70,28 +79,18 @@ void searchActualData(std::fstream &fileIn, std::fstream &fileOut, const bigInt 
 void concoleCheckForOutput(std::fstream &fileIn){
 	Sdata *request = new Sdata();
 
-	fileIn.read(reinterpret_cast<char*>(&request->TYPE), sizeof(int32));
-	if (!fileIn) {
-		std::cout << "There is no data in output file" << std::endl;
-		fileIn.close();
-		exit(1);
-	}
-	fileIn.read(reinterpret_cast<char*>(&request->TIME), sizeof(int32));
-	fileIn.read(reinterpret_cast<char*>(&request->LEN), sizeof(int32));
-	request->MSG = new char[request->LEN];
-	fileIn.read(reinterpret_cast<char*>(request->MSG), request->LEN * sizeof(char));
+	if(!request->readData(fileIn)){
+			std::cout << "There is no data in input file" << std::endl;
+			fileIn.close();
+			exit(1);
+		}
 
 	do {
 	    std::cout<<request->TYPE<<" "<<request->TIME<<" "<<request->LEN<<" "<<request->MSG<<std::endl;
 		delete[] request->MSG;
 		delete request;
 		request = new Sdata();
-		fileIn.read(reinterpret_cast<char*>(&request->TYPE), sizeof(int32));
-		fileIn.read(reinterpret_cast<char*>(&request->TIME), sizeof(int32));
-		fileIn.read(reinterpret_cast<char*>(&request->LEN), sizeof(int32));
-		request->MSG = new char[request->LEN];
-		fileIn.read(reinterpret_cast<char*>(request->MSG), request->LEN * sizeof(char));
-	} while (fileIn);
+	} while (request->readData(fileIn));
 	delete[] request->MSG;
 	delete request;
 }
@@ -121,6 +120,7 @@ int main(int argc, char **argv) {
 	fileIn.close();
 	fileOut.close();
 
+	/*
 	fileIn.open( BINARY_DIR "/output.txt", std::ios::binary | std::ios::in);
 		if (!fileIn) {
 			std::cout << "Error path for output.txt" << std::endl;
@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
 
 	concoleCheckForOutput(fileIn);
 
-	fileIn.close();
+	fileIn.close();*/
 
 	return 0;
 }
