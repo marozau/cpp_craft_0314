@@ -47,7 +47,7 @@ binary_reader::stock_data::~stock_data()
 }
 void binary_reader::stock_data::write( std::ofstream& out )
 {
-	out.write(_stock_name, sizeof(9));
+	out.write(_stock_name,9);
     
     uint32_t years,months,days;
     sscanf( _date_time, "%4d%2d%2d", &years, &months, &days);
