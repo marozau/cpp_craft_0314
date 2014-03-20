@@ -1,5 +1,10 @@
 @echo off
 
+rem don't forget to change path to Boost library
+rem set BOOST_ROOT=< path to boost >
+rem for example
+rem set BOOST_ROOT=d:/usr/boost_1_47_0
+
 set SOLUTION_NAME=puzzle_2_solution
 set BOOST_ROOT=d:/usr/boost_1_47_0
 
