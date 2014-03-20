@@ -24,8 +24,8 @@ int main()
         if(msg.type() > 100000)
             continue;
         
-        uint32_t type = msg.type();
-        uint32_t time = msg.time();
+        const uint32_t type = msg.type();
+        const uint32_t time time = msg.time();
         map<uint32_t, uint32_t> sec_map = type_map[type];
         uint32_t cnt = sec_map[time];
         sec_map[time] = ++cnt;
