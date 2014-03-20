@@ -1,22 +1,11 @@
 #include "stock_data.h"
-
-typedef union
-{
-    char chars[sizeof(double)];
-    double doubleValue;
-}DblUnion;
-
-typedef union
-{
-    char chars[sizeof(uint32_t)];
-    uint32_t integerValue;
-}UintUnion;
+#include "market_message.h"
 
 
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
     DblUnion dblRead;
-    UintUnion uintRead;
+    Uint32Union uintRead;
     
 	in.read(_stock_name,sizeof(_stock_name));
     in.read(_date_time, sizeof(_date_time));
@@ -76,7 +65,7 @@ binary_reader::stock_data::~stock_data()
 void binary_reader::stock_data::write( std::ofstream& out )
 {
     DblUnion dblWrite;
-    UintUnion uintWrite;
+    Uint32Union uintWrite;
     
 	out.write(_stock_name, sizeof(_stock_name));
     
@@ -112,7 +101,7 @@ void binary_reader::stock_data::write( std::ofstream& out )
 void binary_reader::stock_data::write_raw( std::ofstream& out )
 {	
     DblUnion dblWrite;
-    UintUnion uintWrite;
+    Uint32Union uintWrite;
     
 	out.write(_stock_name, sizeof(_stock_name));
     out.write(_date_time, sizeof(_date_time));
