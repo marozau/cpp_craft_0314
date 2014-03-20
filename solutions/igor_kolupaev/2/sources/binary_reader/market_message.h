@@ -8,7 +8,19 @@
 
 namespace binary_reader
 {
-	class market_message : virtual protected boost::noncopyable
+	template<class T>
+	void binary_write( std::ostream& out, T &t, size_t len = sizeof( T ) )
+	{
+		out.write( reinterpret_cast<const char*>( &t ), len );
+	};
+
+	template<class T>
+	void binary_read( std::istream& in, T &t, size_t len = sizeof( T ) )
+	{
+		in.read( reinterpret_cast<char*>( &t ), len );
+	};
+
+	class market_message: virtual protected boost::noncopyable
 	{
 		boost::uint32_t type_;
 		boost::uint32_t time_;
@@ -23,10 +35,10 @@ namespace binary_reader
 		//
 		void write( std::ofstream& out );
 
-		boost::uint32_t type( ) const;
+		boost::uint32_t type() const;
 		boost::uint32_t time() const;
 		const char* const msg() const;
-		bool eof( ) const;
+		bool eof() const;
 	};
 }
 

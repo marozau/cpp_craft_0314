@@ -5,30 +5,7 @@
 
 namespace binary_reader
 {
-	union unit32_dto
-	{
-		char char_value[ 4 ];
-		boost::uint32_t uint_value;
-	};
-
 	const std::logic_error unexpected_end_error( "unexpected error in data file" );
-
-	boost::uint32_t read_uint( std::ifstream& in )
-	{
-		unit32_dto dto;
-
-		in.read( dto.char_value, sizeof( dto.uint_value ) );
-
-		return dto.uint_value;
-	};
-
-	void write_uint( std::ofstream& out, uint32_t v )
-	{
-		unit32_dto dto;
-		dto.uint_value = v;
-
-		out.write( dto.char_value, sizeof( dto.uint_value ) );
-	};
 
 	market_message::market_message( std::ifstream& in ):
 		type_( 0 ),
@@ -37,7 +14,7 @@ namespace binary_reader
 		msg_( NULL ),
 		eof_( false )
 	{
-		type_ = read_uint( in );
+		binary_read( in, type_ );
 
 		if( in.eof() )
 		{
@@ -46,8 +23,8 @@ namespace binary_reader
 			return;
 		}
 
-		time_ = read_uint( in );
-		len_ = read_uint( in );
+		binary_read( in, time_ );
+		binary_read( in, len_ );
 
 		//and now eof is unexpected situation
 		if( in.eof() )
@@ -84,9 +61,10 @@ namespace binary_reader
 
 	void market_message::write( std::ofstream& out )
 	{
-		write_uint( out, type_ );
-		write_uint( out, time_ );
-		write_uint( out, len_ );
+		binary_write( out, type_ );
+		binary_write( out, time_ );
+		binary_write( out, len_ );
+
 		out.write( msg_, len_ );
 	}
 

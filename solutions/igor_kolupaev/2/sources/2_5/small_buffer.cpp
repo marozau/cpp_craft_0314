@@ -10,12 +10,6 @@ class messages_counter
 {
 public:
 
-	template<class T>
-	void binary_write( std::ostream& out, T &t, size_t len = sizeof( T ) )
-	{
-		out.write( reinterpret_cast<const char*>( &t ), len );
-	}
-
 	void inc_time( const uint32_t message_type )
 	{
 		++( _data[ message_type ].time_num );
@@ -33,8 +27,8 @@ public:
 			const uint32_t message_type = it->first;
 			const double avg = it->second.average();
 
-			binary_write( out, message_type );
-			binary_write( out, avg );
+			binary_reader::binary_write( out, message_type );  
+			binary_reader::binary_write( out, avg );
 		}
 	}
 
