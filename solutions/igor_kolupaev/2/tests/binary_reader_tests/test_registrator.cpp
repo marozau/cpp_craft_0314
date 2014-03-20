@@ -11,7 +11,7 @@ boost::unit_test_framework::test_suite* init_unit_test_suite( int argc, char* ar
 
 	using namespace binary_reader::tests_;
 
-//	ts1->add( BOOST_TEST_CASE( &test_market_message ) );	
+	//ts1->add( BOOST_TEST_CASE( &test_market_message ) );	
 
 
 #ifdef RUN_PERFORMANCE_TESTS

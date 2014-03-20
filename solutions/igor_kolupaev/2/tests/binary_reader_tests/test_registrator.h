@@ -4,6 +4,5 @@ namespace binary_reader
 {
 	namespace tests_
 	{
-
 	}
 }
