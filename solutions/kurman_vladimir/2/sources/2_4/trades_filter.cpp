@@ -31,7 +31,7 @@ int main()
 		if (curMaxTime >= delay && mes.time() <= curMaxTime - delay)
 			continue;
 		mes.write(fout);
-		curMaxTime = max<boost::int64_t>(curMaxTime, mes.time());
+		curMaxTime = max(curMaxTime, mes.time());
 	}
 	fin.close();
 	fout.close();

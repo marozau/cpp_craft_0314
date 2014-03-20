@@ -24,7 +24,7 @@ int main()
 	unordered_map<boost::uint32_t, boost::uint32_t> numMessagesByType;
 	unordered_map<boost::uint32_t, boost::uint32_t> numTimesByType;
 	unordered_set<boost::uint32_t> curTimeHasMessageOfType;
-	boost::uint32_t maxBufSize = 2048;
+	boost::uint32_t const maxBufSize = 2048;
 	while (curPos < fileSize)
 	{
 		market_message mes(fin);

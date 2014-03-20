@@ -1,11 +1,11 @@
 #include "read_write_impl.h"
 
-void read_write_impl::read(std::ifstream & in, char * t, size_t n)
+void read_write_impl::read(std::ifstream & in, char * t, size_t const n)
 {
-	in.read(reinterpret_cast<char*>(t), n);
+	in.read(t, n);
 }
 
-void read_write_impl::write(std::ofstream & out, char const * const t, unsigned int n)
+void read_write_impl::write(std::ofstream & out, char const * const t, size_t const n)
 {
-	out.write(reinterpret_cast<char const * const>(t), n);
+	out.write(t, n);
 }
