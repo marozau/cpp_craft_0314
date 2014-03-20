@@ -5,6 +5,8 @@
 
 
 using namespace std;
+typedef map<uint32_t, map<uint32_t, uint32_t> >TypeMap;
+typedef map<uint32_t, uint32_t>TimeMap;
 
 int main()
 {
@@ -14,35 +16,33 @@ int main()
     if(!in_file.is_open()||!out_file.is_open())
         throw runtime_error("unable to open file");
     
-    map<uint32_t, map<uint32_t, uint32_t> > type_map;
+    
+    TypeMap type_map;
+    
     while (1) {
         binary_reader::market_message msg(in_file);
         
         if(in_file.eof())
             break;
         
-        if(msg.type() > 100000)
-            continue;
-        
         const uint32_t type = msg.type();
-        const uint32_t time time = msg.time();
-        map<uint32_t, uint32_t> sec_map = type_map[type];
-        uint32_t cnt = sec_map[time];
-        sec_map[time] = ++cnt;
+        const uint32_t time = msg.time();
+        TimeMap sec_map = type_map[type];
+        sec_map[time]++;
         type_map[type] = sec_map;
     }
     
-    std::map<uint32_t,map<uint32_t, uint32_t> >::iterator type_iter;
+    TypeMap::iterator type_iter;
     
     for(type_iter = type_map.begin();type_iter != type_map.end(); ++type_iter)
     {
         uint32_t type = type_iter->first;
-        map<uint32_t, uint32_t> sec_map = type_iter->second;
+        TimeMap sec_map = type_iter->second;
         
         uint32_t cnt = 0;
         uint32_t secs = 0;
         
-        std::map<uint32_t,uint32_t>::iterator sec_iter;
+        TimeMap::iterator sec_iter;
         
         for(sec_iter = sec_map.begin();sec_iter != sec_map.end(); ++sec_iter)
         {
@@ -50,14 +50,9 @@ int main()
             secs++;
         }
         
-        binary_reader::Uint32Union wrUintUnion;
-        wrUintUnion.integerValue = type;
-        out_file.write(wrUintUnion.chars, sizeof(uint32_t));
-        
-        binary_reader::DblUnion wrDblUnion;
+        out_file.write( reinterpret_cast< char * >( &type), sizeof(type));
         double avg = cnt/static_cast<double>(secs);
-        wrDblUnion.doubleValue = avg;
-        out_file.write(wrDblUnion.chars, sizeof(double));
+        out_file.write( reinterpret_cast< char * >( &avg), sizeof(avg));
     }
     
 }

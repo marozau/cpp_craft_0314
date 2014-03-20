@@ -19,7 +19,7 @@ int main()
         if(in_file.eof())
             break;
         
-        uint32_t msg_type = msg.type();
+        const uint32_t msg_type = msg.type();
         
         if((msg_type != binary_reader::market_message::MARKET_OPEN&&
             msg_type != binary_reader::market_message::TRADE&&

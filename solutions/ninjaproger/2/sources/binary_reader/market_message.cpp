@@ -4,13 +4,10 @@
 
 binary_reader::market_message::market_message( std::ifstream& in )
 {
-    Uint32Union rdUnion;
-    in.read(rdUnion.chars, sizeof(uint32_t));
-	_type = rdUnion.integerValue;
-    in.read(rdUnion.chars, sizeof(uint32_t));
-    _time = rdUnion.integerValue;
-    in.read(rdUnion.chars, sizeof(uint32_t));
-    _len = rdUnion.integerValue;
+
+    in.read( reinterpret_cast< char * >( &_type), sizeof(_type));
+    in.read( reinterpret_cast< char * >( &_time), sizeof(_time));
+    in.read( reinterpret_cast< char * >( &_len), sizeof(_len));
 
     _msg = new char[_len+1];
     if(_len)
@@ -28,13 +25,11 @@ binary_reader::market_message::market_message( const boost::uint32_t type, const
 }
 void binary_reader::market_message::write( std::ofstream& out )
 {
-    Uint32Union wrUnion;
-    wrUnion.integerValue = _type;
-    out.write(wrUnion.chars, sizeof(uint32_t));
-	wrUnion.integerValue = _time;
-    out.write(wrUnion.chars, sizeof(uint32_t));
-    wrUnion.integerValue = _len;
-    out.write(wrUnion.chars, sizeof(uint32_t));
+    
+    out.write( reinterpret_cast< char * >( &_type), sizeof(_type));
+    out.write( reinterpret_cast< char * >( &_time), sizeof(_time));
+    out.write( reinterpret_cast< char * >( &_len), sizeof(_len));
+    
     out.write(_msg,_len);
 }
 

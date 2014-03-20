@@ -10,18 +10,6 @@
 
 namespace binary_reader
 {
-    typedef union
-    {
-        char chars[sizeof(uint32_t)];
-        uint32_t integerValue;
-    }Uint32Union;
-    
-    typedef union
-    {
-        char chars[sizeof(double)];
-        double doubleValue;
-    }DblUnion;
-    
 	class market_message : virtual protected boost::noncopyable
 	{
 		boost::uint32_t _type;

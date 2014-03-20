@@ -5,35 +5,17 @@
 
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
-    DblUnion dblRead;
-    Uint32Union uintRead;
-    
 	in.read(_stock_name,sizeof(_stock_name));
     in.read(_date_time, sizeof(_date_time));
-    
-    in.read(dblRead.chars, sizeof(double));
-    _price = dblRead.doubleValue;
-    
-    in.read(dblRead.chars, sizeof(double));
-    _vwap = dblRead.doubleValue;
-    
-    in.read(uintRead.chars, sizeof(uint32_t));
-    _volume = uintRead.integerValue;
-    
-    in.read(dblRead.chars, sizeof(double));
-    _f1 = dblRead.doubleValue;
-    
-    in.read(dblRead.chars, sizeof(double));
-    _t1 = dblRead.doubleValue;
-    
-    in.read(dblRead.chars, sizeof(double));
-    _f2 = dblRead.doubleValue;
-    
-    in.read(dblRead.chars, sizeof(double));
-    _f3 = dblRead.doubleValue;
-    
-    in.read(dblRead.chars, sizeof(double));
-    _f4 = dblRead.doubleValue;
+
+    in.read( reinterpret_cast< char * >( &_price), sizeof(_price));
+    in.read( reinterpret_cast< char * >( &_vwap), sizeof(_vwap));
+    in.read( reinterpret_cast< char * >( &_volume), sizeof(_volume));
+    in.read( reinterpret_cast< char * >( &_f1), sizeof(_f1));
+    in.read( reinterpret_cast< char * >( &_t1), sizeof(_t1));
+    in.read( reinterpret_cast< char * >( &_f2), sizeof(_f2));
+    in.read( reinterpret_cast< char * >( &_f3), sizeof(_f3));
+    in.read( reinterpret_cast< char * >( &_f4), sizeof(_f4));
 }
 
 
@@ -65,69 +47,29 @@ binary_reader::stock_data::~stock_data()
 }
 void binary_reader::stock_data::write( std::ofstream& out )
 {
-    DblUnion dblWrite;
-    Uint32Union uintWrite;
+	out.write(_stock_name, sizeof(9));
     
-	out.write(_stock_name, sizeof(_stock_name));
-    
-    char yearChars[5];
-    memcpy(yearChars, _date_time, 4);
-    yearChars[4] = 0;
-    uint32_t years = atoi(yearChars) - 1;
-    
-    char monthChars[3];
-    memcpy(monthChars, _date_time+4, 2);
-    monthChars[2] = 0;
-    uint32_t months = atoi(monthChars) - 1;
-    
-    char daysChars[3];
-    memcpy(daysChars, _date_time+6, 2);
-    daysChars[2] = 0;
-    uint32_t days = atoi(daysChars);
-    
+    uint32_t years,months,days;
+    sscanf( _date_time, "%4d%2d%2d", &years, &months, &days);
     uint32_t date = years*372 + months*31 + days;
     
-    uintWrite.integerValue = date;
-    out.write(uintWrite.chars, sizeof(uint32_t));
-    
-    dblWrite.doubleValue = _vwap;
-    out.write(uintWrite.chars, sizeof(double));
-    
-    uintWrite.integerValue = _volume;
-    out.write(uintWrite.chars, sizeof(uint32_t));
-    
-    dblWrite.doubleValue = _f2;
-    out.write(uintWrite.chars, sizeof(double));
+    out.write( reinterpret_cast< char * >( &date), sizeof(date));
+    out.write( reinterpret_cast< char * >( &_vwap), sizeof(_vwap));
+    out.write( reinterpret_cast< char * >( &_volume), sizeof(_volume));
+    out.write( reinterpret_cast< char * >( &_f2), sizeof(_f2));
 }
 void binary_reader::stock_data::write_raw( std::ofstream& out )
-{	
-    DblUnion dblWrite;
-    Uint32Union uintWrite;
-    
+{
 	out.write(_stock_name, sizeof(_stock_name));
     out.write(_date_time, sizeof(_date_time));
     
-    dblWrite.doubleValue = _price;
-    out.write(dblWrite.chars, sizeof(double));
-    
-    dblWrite.doubleValue = _vwap;
-    out.write(dblWrite.chars, sizeof(double));
-    
-    uintWrite.integerValue = _volume;
-    out.write(dblWrite.chars, sizeof(uint32_t));
-    
-    dblWrite.doubleValue = _f1;
-    out.write(dblWrite.chars, sizeof(double));
-    
-    dblWrite.doubleValue = _t1;
-    out.write(dblWrite.chars, sizeof(double));
-    
-    dblWrite.doubleValue = _f2;
-    out.write(dblWrite.chars, sizeof(double));
-    
-    dblWrite.doubleValue = _f3;
-    out.write(dblWrite.chars, sizeof(double));
-    
-    dblWrite.doubleValue = _f4;
-    out.write(dblWrite.chars, sizeof(double));
+    out.write( reinterpret_cast< char * >( &_price), sizeof(_price));
+    out.write( reinterpret_cast< char * >( &_vwap), sizeof(_vwap));
+    out.write( reinterpret_cast< char * >( &_volume), sizeof(_volume));
+    out.write( reinterpret_cast< char * >( &_f1), sizeof(_f1));
+    out.write( reinterpret_cast< char * >( &_t1), sizeof(_t1));
+    out.write( reinterpret_cast< char * >( &_f2), sizeof(_f2));
+    out.write( reinterpret_cast< char * >( &_f3), sizeof(_f3));
+    out.write( reinterpret_cast< char * >( &_f4), sizeof(_f4));
+
 }
