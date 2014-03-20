@@ -3,7 +3,6 @@
 #include "market_message.h"
 #include <map>
 
-
 using namespace std;
 
 int main()
