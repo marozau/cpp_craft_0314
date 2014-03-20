@@ -24,7 +24,8 @@ int main(int argc, char* argv[])
 	ifstream in( BINARY_DIR "/input.txt", ios:: binary ); 
 	if( !in.is_open() )
 	{
-		cout<<"Can't open file!";
+		cerr<<"Can't open file!"<<endl;
+		system("pause");
 		return 1;
 	} 
 
@@ -33,48 +34,59 @@ int main(int argc, char* argv[])
 	map <boost:: uint32_t, boost:: uint32_t> last;
 	map < boost::uint32_t, size_t> size;
 
-	binary_reader:: market_message start(in); 
-	if (check_size(size, start))
-	{
-		kolv[start.type()]++;
-		size[start.type()]+= get_size(start);
-	}
-	else 
-		kolv[start.type()]=0;
-
-	sec[start.type()]=1;
-	last[start.type()] = start.time();
-		
-
-	while ( !in.good() )
-	{
-		
-		binary_reader:: market_message start(in); 
-		if(!in.good()) break;
-		if ( last[start.type()]==start.time() && check_size(size, start) ) 
+	try
 		{
-			size[start.type()]+= get_size(start); 
+		binary_reader:: market_message start(in); 
+		if (check_size(size, start))
+		{
 			kolv[start.type()]++;
+			size[start.type()]+= get_size(start);
 		}
 		else 
-			if( last[start.type()]!=start.time() )
+			kolv[start.type()]=0;
+
+		sec[start.type()]=1;
+		last[start.type()] = start.time();
+		
+
+		while ( in.good() )
+		{
+			binary_reader:: market_message start(in); 
+			if(!in.good()) break;
+			if ( last[start.type()]==start.time() && check_size(size, start) ) 
 			{
-				sec[start.type()]++;
-				size[start.type()] = 0;
-				last[start.type()] = start.time();
+				size[start.type()]+= get_size(start); 
+				kolv[start.type()]++;
 			}
+			else 
+				if( last[start.type()]!=start.time() )
+				{
+					sec[start.type()]++;
+					size[start.type()] = 0;
+					last[start.type()] = start.time();
+				}
 				   
-			if(!kolv.count( start.type() ) )
+				if(!kolv.count( start.type() ) )
 				   kolv[start.type()] = 0;
-		 }
+			 }
+	}
+	catch(...) {};
 	in.close();
 
 
 	ofstream out( BINARY_DIR "/output.txt", ios:: binary ); 
 
-	for( map <boost:: uint32_t, int>::iterator it = kolv.begin();it!=kolv.end();it++)
-			 out<<it->first<<double(it->second)/sec[it->first];
+	try
+	{
 
+		for( map <boost:: uint32_t, int>::iterator it = kolv.begin();it!=kolv.end();it++)
+			 out<<it->first<<double(it->second)/sec[it->first];
+	}
+	catch(exception& e)
+	{
+		cerr<<e.what()<<endl;
+		return 1;
+	}
 
 	out.close();
 	return 0;

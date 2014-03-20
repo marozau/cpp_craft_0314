@@ -17,27 +17,23 @@ int main(int argc, char* argv[])
 	if( !in.is_open() )
 	{
 		cout<<"Can't open file!";
+		system("pause");
 		return 1;
 	} 
-
+	ofstream out( BINARY_DIR "/output.txt", ios:: binary );
 	vector <binary_reader:: stock_data> a; 
 	
-	while ( !in.good() )
+	while ( in.good() )
 	{
-		binary_reader:: stock_data start(in);
-		if(!in.good()) break;
-		a.push_back(start);
+		try
+		{
+			binary_reader:: stock_data start(in);
+			start.write( out );
+		}
+		catch(...){}
+		
 	}
 	in.close();
-
-
-	ofstream out( BINARY_DIR "/output.txt", ios:: binary ); 
-		
-	for( vector <binary_reader:: stock_data > :: iterator it=a.begin(); it!=a.end(); it++ )
-	{
-			 (*it).write( out );
-	}
-
 	out.close();
 	return 0;
 }
