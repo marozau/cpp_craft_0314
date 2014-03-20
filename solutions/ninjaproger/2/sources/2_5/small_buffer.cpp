@@ -40,19 +40,22 @@ int main()
         map<uint32_t, uint32_t> sec_map = type_iter->second;
         
         uint32_t cnt = 0;
-        uint32_t secs = sec_map.size();
+        uint32_t secs = 0;
         
         std::map<uint32_t,uint32_t>::iterator sec_iter;
         
         for(sec_iter = sec_map.begin();sec_iter != sec_map.end(); ++sec_iter)
+        {
             cnt += sec_iter->second;
+            secs++;
+        }
         
         binary_reader::Uint32Union wrUintUnion;
         wrUintUnion.integerValue = type;
         out_file.write(wrUintUnion.chars, sizeof(uint32_t));
         
         binary_reader::DblUnion wrDblUnion;
-        double avg = cnt/(double)secs;
+        double avg = cnt/static_cast<double>(secs);
         wrDblUnion.doubleValue = avg;
         out_file.write(wrDblUnion.chars, sizeof(double));
     }

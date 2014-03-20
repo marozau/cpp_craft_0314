@@ -27,7 +27,7 @@ int main()
             msg_type != binary_reader::market_message::MARKET_CLOSE))
             continue;
         
-        int64_t timeDelta = (int64_t)max_t - 2;
+        int64_t timeDelta = static_cast<int64_t>(max_t) - 2;
         
         if(msg.time() > timeDelta)
             msg.write(out_file);
