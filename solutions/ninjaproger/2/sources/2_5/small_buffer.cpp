@@ -26,10 +26,6 @@ int main()
         
         uint32_t type = msg.type();
         uint32_t time = msg.time();
-        
-        
-        cout << type << ":" << time << endl;
-        
         map<uint32_t, uint32_t> sec_map = type_map[type];
         uint32_t cnt = sec_map[time];
         sec_map[time] = ++cnt;
