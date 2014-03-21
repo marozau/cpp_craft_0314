@@ -51,7 +51,7 @@ void binary_reader::stock_data::write( std::ofstream& out )
     
     uint32_t years,months,days;
     sscanf( _date_time, "%4d%2d%2d", &years, &months, &days);
-    uint32_t date = years*372 + months*31 + days;
+    uint32_t date = (years - 1)*372 + (months - 1)*31 + days;
     
     out.write( reinterpret_cast< char * >( &date), sizeof(date));
     out.write( reinterpret_cast< char * >( &_vwap), sizeof(_vwap));
