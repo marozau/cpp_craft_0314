@@ -25,6 +25,9 @@ int main()
         if(in_file.eof())
             break;
         
+        if(msg.msg_len()> (2048 - sizeof(uint32_t)*3))
+            continue;
+        
         const uint32_t type = msg.type();
         const uint32_t time = msg.time();
         TimeMap sec_map = type_map[type];
