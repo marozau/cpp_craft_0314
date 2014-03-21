@@ -25,7 +25,7 @@ int main()
         if(in_file.eof())
             break;
         
-        if(msg.msg_len()> (2048 - sizeof(uint32_t)*3))
+        if(msg.msg_len() > (2048 - sizeof(uint32_t)*3))
             continue;
         
         const uint32_t type = msg.type();
