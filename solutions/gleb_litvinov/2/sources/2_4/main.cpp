@@ -5,6 +5,7 @@
 #include <reader.h>
 #include <writer.h>
 #include <iostream>
+#include <boost/noncopyable.hpp>
 struct data
 	{
 		unsigned type,time,length;
@@ -14,7 +15,8 @@ struct data
 		data():msg(NULL){}
 		~data()
 		{
-			delete []msg;
+			
+			delete[] msg;
 		}
 	};
 
@@ -25,10 +27,9 @@ io::bin_reader& operator>>(io::bin_reader &in,data &obj)
 		in.read(obj.length);
 		if ( obj.length )
 		{
-			obj.msg=new char[obj.length];
+			obj.msg=new char[obj.length+1];
 			in.read(obj.msg,obj.length);
 		}
-		in.read(obj.msg,obj.length);
 		return in;
 
 	}
@@ -44,36 +45,38 @@ io::bin_reader& operator>>(io::bin_reader &in,data &obj)
 	}
 class task
 {
-	data current_data;
 	io::bin_reader in;
 	io::bin_writer out;
+	static const unsigned max_type=5u;
+	static const unsigned max_difference=2u;
 public:
 	task()
-		: in("input.txt" ),out("output.txt")
+		: in(BINARY_DIR"/input.txt" ),out(BINARY_DIR"/output.txt")
 	{   
-		if (!in.is_open()) throw(std::logic_error("Can't open file"));
-		if (!out.is_open()) throw(std::logic_error("Can't open file "));
+		if (!in.is_open()) throw(std::logic_error("Can't open Input"));
+		if (!out.is_open()) throw(std::logic_error("Can't open Output"));
 		
 	}
 
 
 	void solve()
 	{
+		data current_data;
 		in>>current_data;
 		unsigned T=0;
 		while (!in.eof())
 		{
-			if(current_data.type<5u)
+			if(current_data.type<max_type)
 			{
 			if (current_data.time>T)
-				T=(current_data.time);
-			if (T-current_data.time>=2)
+				T=current_data.time;
+			if (T-current_data.time<max_difference)
 				out<<current_data;
 			}
 			in>>current_data;
 		}
 
-
+		
 	}
 	
 

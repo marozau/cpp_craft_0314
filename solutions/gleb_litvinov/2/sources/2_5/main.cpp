@@ -18,7 +18,7 @@ struct data
 		friend io::bin_reader& operator>>(io::bin_reader &in,data &obj);
 		size_t get_size()
 		{
-			return sizeof(int)*3+length;
+			return sizeof(unsigned)*3+length;
 		}
 		data():msg(NULL){}
 		~data()
@@ -33,10 +33,9 @@ io::bin_reader& operator>>(io::bin_reader &in,data &obj)
 		in.read(obj.length);
 		if ( obj.length )
 		{
-			obj.msg=new char[obj.length];
+			obj.msg=new char[obj.length+1];
 			in.read(obj.msg,obj.length);
 		}
-		in.read(obj.msg,obj.length);
 		return in;
 
 	}
@@ -49,7 +48,7 @@ class task
 	io::bin_writer out;
 public:
 	task()
-		: in("input.txt" ),out("output.txt")
+		: in(BINARY_DIR"/input.txt" ),out(BINARY_DIR"/output.txt")
 	{   
 		if (!in.is_open()) throw(std::logic_error("Can't open file"));
 		if (!out.is_open()) throw(std::logic_error("Can't open file "));
@@ -74,12 +73,13 @@ public:
 				if (current_data.get_size()<=max_memory)
 				{
 					size[current_data.type]=current_data.get_size();
-					last.insert(current_data.type);
+					if (last.find(current_data.type)==last.end())
 					times[current_data.type]++;
+					last.insert(current_data.type);					
 					met[current_data.type]++;
 				}
 				curr_time=current_data.time;
-			    in>>current_data;
+			    in>>current_data;				
 				continue;
 			}
 			if (current_data.get_size()+size[current_data.type]<=max_memory)
@@ -87,10 +87,10 @@ public:
 				met[current_data.type]++;
 				size[current_data.type]+=current_data.get_size();
 
-			}
-			
+			}			
 			curr_time=current_data.time;
 			in>>current_data;
+			
 		}
 		for (mmap::iterator it=met.begin();it!=met.end();it++)
 		{
@@ -125,3 +125,4 @@ void main()
 	
 
 }
+

@@ -15,7 +15,7 @@ namespace io
 	}
 	bin_reader::bin_reader(std::string name)
 	{
-		in.open( BINARY_DIR "/"+name,std::ios_base::binary);
+		in.open(name,std::ios_base::binary);
 	}
 	bin_reader::~bin_reader()
 	{
