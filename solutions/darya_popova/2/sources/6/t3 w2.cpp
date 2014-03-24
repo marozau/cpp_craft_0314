@@ -1,9 +1,7 @@
-#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
-#include <algorithm>
 #include <stdint.h>
 #include "stock_data.h"
 
@@ -21,14 +19,13 @@ int main(int argc, char* argv[])
 		return 1;
 	} 
 	ofstream out( BINARY_DIR "/output.txt", ios:: binary );
-	vector <binary_reader:: stock_data> a; 
 	
 	while ( in.good() )
 	{
 		try
 		{
-			binary_reader:: stock_data start(in);
-			start.write( out );
+			binary_reader:: stock_data st(in);
+			st.write( out );
 		}
 		catch(...){}
 		

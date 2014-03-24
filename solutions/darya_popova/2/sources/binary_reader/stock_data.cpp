@@ -6,9 +6,9 @@ using namespace std;
 
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
-	if(!in.read(stock_name_, 8)) 
+	if(!in.read(stock_name_, len_)) 
 			throw exception("input is incorrect");
-	if(!in.read(date_time_, 8))
+	if(!in.read(date_time_, len_))
 			throw exception("input is incorrect");
 	if(!in.read(reinterpret_cast<char*>(&price_), sizeof( double)) )
 			throw exception("input is incorrect");
@@ -45,8 +45,8 @@ binary_reader::stock_data::stock_data( const char* stock_name,
 												f3_(f3),
 												f4_(f4)
 {
-	memcpy( stock_name_, stock_name, 8);
-	memcpy( date_time_, date_time, 8);
+	memcpy( stock_name_, stock_name, len_);
+	memcpy( date_time_, date_time, len_);
 }
 binary_reader::stock_data::~stock_data()
 {
@@ -62,7 +62,7 @@ boost:: uint32_t binary_reader:: stock_data:: days( char*& date_time)
 
 void binary_reader::stock_data::write( std::ofstream& out )
 {
-	if(!out.write(stock_name_, 9) )
+	if(!out.write(stock_name_, len_+1) )
 				throw exception("can't write");
 	char* date= date_time_;
 	boost:: uint32_t a= days(date);

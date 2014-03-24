@@ -21,6 +21,7 @@ namespace binary_reader
 		double f2_;
 		double f3_;
 		double f4_;
+		static const int len_=8;
 
 	public:
 		explicit stock_data( std::ifstream& in );

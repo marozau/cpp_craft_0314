@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -15,7 +15,7 @@ size_t get_size( binary_reader:: market_message& a)
 
 bool check_size( map <boost:: uint32_t, size_t> size, binary_reader:: market_message& a)
 {
-	return (( size[a.type()] + get_size(a))<=2048);
+	return (( size[a.type()] + get_size(a))<binary_reader:: market_message::buffer_size);
 }
 
 int main(int argc, char* argv[]) 
@@ -36,38 +36,39 @@ int main(int argc, char* argv[])
 
 	try
 		{
-		binary_reader:: market_message start(in); 
-		if (check_size(size, start))
+			binary_reader:: market_message st(in); 
+			if (check_size(size, st))
 		{
-			kolv[start.type()]++;
-			size[start.type()]+= get_size(start);
+			kolv[st.type()]++;
+			size[st.type()]+= get_size(st);
 		}
 		else 
-			kolv[start.type()]=0;
+			kolv[st.type()]=0;
 
-		sec[start.type()]=1;
-		last[start.type()] = start.time();
+		sec[st.type()]=1;
+		last[st.type()] = st.time();
 		
 
 		while ( in.good() )
 		{
-			binary_reader:: market_message start(in); 
+			binary_reader:: market_message st(in); 
 			if(!in.good()) break;
-			if ( last[start.type()]==start.time() && check_size(size, start) ) 
+			if ( last[st.type()]==st.time() && check_size(size, st) ) 
 			{
-				size[start.type()]+= get_size(start); 
-				kolv[start.type()]++;
+				size[st.type()]+= get_size(st); 
+				kolv[st.type()]++;
 			}
 			else 
-				if( last[start.type()]!=start.time() )
+				if( last[st.type()]!=st.time() )
 				{
-					sec[start.type()]++;
-					size[start.type()] = 0;
-					last[start.type()] = start.time();
+					sec[st.type()]++;
+					kolv[st.type()]++;
+					size[st.type()] = 0;
+					last[st.type()] = st.time();
 				}
 				   
-				if(!kolv.count( start.type() ) )
-				   kolv[start.type()] = 0;
+				if(!kolv.count( st.type() ) )
+				   kolv[st.type()] = 0;
 			 }
 	}
 	catch(...) {};
@@ -80,7 +81,15 @@ int main(int argc, char* argv[])
 	{
 
 		for( map <boost:: uint32_t, int>::iterator it = kolv.begin();it!=kolv.end();it++)
-			 out<<it->first<<double(it->second)/sec[it->first];
+		{
+			if (it->second!=0)
+			{
+				boost:: uint32_t a= (it->first);
+				out.write(reinterpret_cast<char*>(&a), sizeof(boost::uint32_t));
+				double b = static_cast< double >(it->second)/sec[it->first];
+				out.write(reinterpret_cast<char*>(&b), sizeof(double));
+			}
+		}
 	}
 	catch(exception& e)
 	{

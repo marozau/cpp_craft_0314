@@ -2,8 +2,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
-#include <algorithm>
 #include "market_message.h"
 
 using namespace std;
@@ -12,42 +10,27 @@ using namespace std;
 int main(int argc, char* argv[]) 
 {
 	 
-	ifstream in( BINARY_DIR "/input.txt", ios:: binary ); //
+	ifstream in( BINARY_DIR "/input.txt", ios:: binary ); 
 	if( !in.is_open() )
 	{
 		cout<<"Can't open file!";
 		system("pause");
 		return 1;
 	} 
-	ofstream out( BINARY_DIR "/output.txt", ios:: binary ); //
+	ofstream out( BINARY_DIR "/output.txt", ios:: binary ); 
 	boost:: uint32_t T=0;
 	while ( in.good() )
 	{
 		try
 			{
-				binary_reader:: market_message start(in); 
+				binary_reader:: market_message st(in); 
 		
-		if(!in.good()) break;
-		if (start.type()>=1 && start.type()<=4) 
-		{
-			if (T<start.time()) 
-			{
-				T=start.time();
-				start.write( out);
+				if(!in.good()) break;
+				if( st.check(T) ) 
+						st.write(out);
+				else 
+						continue;
 			}
-			else
-			{
-				if( start.time()+2>T)
-				{
-					start.write(out);
-				}
-				
-
-			}
-		}
-		else 
-			continue;
-		}
 		catch(...) {};
 	}
 	in.close();
