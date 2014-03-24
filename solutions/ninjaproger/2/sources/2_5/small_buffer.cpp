@@ -5,9 +5,9 @@
 
 
 using namespace std;
-typedef map<uint32_t, uint32_t>TimeMap;
-typedef map<uint32_t, TimeMap> >TypeMap;
 
+typedef map<uint32_t, map<uint32_t, uint32_t> >TypeMap;
+typedef map<uint32_t, uint32_t> TimeMap;
 
 int main()
 {
