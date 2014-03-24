@@ -14,10 +14,10 @@ int main()
 	ofstream out (BINARY_DIR "/output.txt", std::ios::binary);
 
 	if (inn.is_open()){
-
 		while (!inn.eof()){
 			stock_data m(inn);
-			if (inn.eof()) break;
+			if (inn.eof()) 
+				break;
 			m.write_stock_name(out);
 			m.write_data(out);
 			m.write_price(out);

@@ -7,24 +7,28 @@ using namespace std;
 binary_reader::market_message::market_message( std::ifstream& in )
 {
 	if(!in.read(reinterpret_cast<char *>(&type_), sizeof(type_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect type"<<endl;
 		return;
 	}
 
     if(!in.read(reinterpret_cast<char *>(&time_), sizeof(time_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect time"<<endl;
 		return;
 	}
 
     if(!in.read(reinterpret_cast<char *>(&len_), sizeof(len_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect len"<<endl;
 		return;
 	}
-	msg_ = new char[len_];
-	memset(msg_, 0, len_ );
+	msg_ = new char[len_+1];
+	memset(msg_, 0, len_ +1);
 	
-	if(!in.read(reinterpret_cast<char *>(msg_), len_)) {
-		cerr<<"Input is incorrect"<<endl;
+	if(!in.read(msg_, len_)) {
+		if (in.eof()) return;
+		cerr<<"Input is incorrect msg"<<endl;
 		return;
 	}
 
@@ -34,8 +38,8 @@ binary_reader::market_message::market_message( const boost::uint32_t type, const
 	type_=type;
 	time_=time;
 	len_=static_cast<boost::uint32_t>(strlen(msg));
-	msg_ = new char[len_ ];
-	memcpy(msg_, msg, len_);
+	msg_ = new char[len_+1];
+	memcpy(msg_, msg, len_+1);
 }
 void binary_reader::market_message::write( std::ofstream& out )
 {
@@ -84,12 +88,12 @@ const char* const binary_reader::market_message::msg() const
 }
 size_t binary_reader::market_message::size() const
 {
-	return (sizeof(type_)+sizeof(time_)+sizeof(len_)+sizeof(msg_));
+	return (sizeof(type_)+sizeof(time_)+sizeof(len_)+len_);
 }
 binary_reader::market_message::market_message(const market_message & a): type_(a.type_),time_(a.time_),len_(a.len_)
 {
-	msg_ = new char[len_];
-	memcpy(msg_, a.msg_, len_);
+	msg_ = new char[len_+1];
+	memcpy(msg_, a.msg_, len_+1);
 }
 binary_reader::market_message & binary_reader::market_message::operator = (const market_message & a)
 {
@@ -99,8 +103,8 @@ binary_reader::market_message & binary_reader::market_message::operator = (const
 		len_=a.len_;
 		delete [] msg_;
 		msg_=NULL;
-		msg_ = new char[len_];
-		memcpy(msg_, a.msg_, len_);
+		msg_ = new char[len_+1];
+		memcpy(msg_, a.msg_, len_+1);
 	}
 	return *this;
 }

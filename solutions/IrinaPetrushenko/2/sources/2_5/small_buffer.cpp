@@ -10,10 +10,11 @@ using namespace std;
 
 namespace task5{ 
 	struct point{
-		point(size_t s=0,size_t n=0,size_t t=0):size(s),num(n),time(t){};
+		point(size_t s=0,size_t n=0,size_t t=0):size(s),num(n),time(t),good(false){};
 		size_t size;
 		size_t num;
 		size_t time;
+		bool good;
 	};
 	static const size_t max_size=2048;
 }
@@ -35,7 +36,7 @@ int main()
 			if (inn.eof()) break;
 			list.push_back(m);
 			if (m.type()>types) types=m.type();
-			n++;
+			n++;			
 		}
 
 		vector <task5::point>	ans(types+1,task5::point(0,0,0));
@@ -53,17 +54,19 @@ int main()
 				
 				un=i+1;
 			}
+			ans[list[i].type()].good=true;
 		}
 
-		double temp;
 		
 		for (size_t i=0;i<=types;i++)
-			if (ans[i].num!=0){
+			if (ans[i].good){
 				if(!out.write(reinterpret_cast<char *>(&i), sizeof(i))) {
 					cerr<<"I can not write data"<<endl;
 					return 1;
 				}
-				temp=double(ans[i].num)/ans[i].time;
+				double temp=0;
+				if (ans[i].num!=0) 
+					temp = static_cast< double >(ans[i].num)/ans[i].time;
 				if(!out.write(reinterpret_cast<char *>(&temp), sizeof(temp))) {
 					cerr<<"I can not write data"<<endl;
 					return 1;
