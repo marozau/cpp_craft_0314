@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
 	if(argc != 2)
 	{
-		std::cout << "There are should be one commandline argument(text file)\nExample: main.exe input.txt"<< std::endl;
+		std::cout << "There are should be one commandline argument(text file)\nExample: 1_1.exe input.txt"<< std::endl;
 		return 1;
 	}
 	
