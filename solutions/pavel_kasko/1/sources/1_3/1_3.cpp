@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 			sea[row_count].push_back(line[i] == 'o' ? 1 : 0);
 	}
 
-	ShowMatrix(sea);
+	//ShowMatrix(sea);
 
 	for(int i = 0; i < sea.size(); ++i)
 	{
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 			{
 				Inspect(sea, i, j);
 				island_count++;
-				ShowMatrix(sea);
+				//ShowMatrix(sea);
 			}
 		}
 	}
