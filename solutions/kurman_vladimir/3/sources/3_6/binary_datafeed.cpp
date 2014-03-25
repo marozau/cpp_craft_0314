@@ -11,7 +11,7 @@ void BinaryDatafeedFunc(rvref_wrapper<std::vector<binary_reader::stock_data>> rv
 	using namespace std;
 	using namespace binary_reader;
 	const vector<stock_data> vsd = rvsd.get();
-	ofstream fout(BINARY_DIR "/" + vsd.front().stock_name() + ".txt", ios::binary);
+	ofstream fout(BINARY_DIR "/output_" + vsd.front().stock_name() + ".txt", ios::binary);
 	for (const stock_data & sd : vsd)
 		sd.write(fout);
 	fout.close();
