@@ -67,7 +67,9 @@ int main()
     
     for(filesystem::directory_iterator itr(binary_path); itr != filesystem::directory_iterator(); ++itr)
     {
-        if(is_regular_file(itr->path()))
+        const string path_str = itr->path().filename().string();
+        if(is_regular_file(itr->path())&&
+           path_str.find("input_")!=string::npos)
         {
             cout << "found file:" << itr->path().filename() << std::endl;
             pthread_t threads[1000];
