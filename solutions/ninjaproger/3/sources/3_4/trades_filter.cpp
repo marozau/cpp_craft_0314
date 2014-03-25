@@ -9,17 +9,17 @@ using namespace std;
 
 void *process_data(void* arg)
 {
-    char *in_file = (char*)arg;
-    char *out_file = new char[strlen(in_file)];
-    char *file_name_end = strchr(in_file, '_');
-    sprintf(out_file, "output_%s",file_name_end + 1);
+    char *in_file_name = (char*)arg;
+    char *out_file_name = new char[strlen(in_file_name)];
+    char *file_name_end = strchr(in_file_name, '_');
+    sprintf(out_file_name, "output_%s",file_name_end + 1);
     
-    string in_path_str = string(BINARY_DIR).append("/").append(in_file);
-    string out_path_str = string(BINARY_DIR).append("/").append(out_file);
+    string in_path_str = string(BINARY_DIR).append("/").append(in_file_name);
+    string out_path_str = string(BINARY_DIR).append("/").append(out_file_name);
     ifstream in(in_path_str);
     ofstream out(out_path_str);
     
-    delete out_file;
+    delete out_file_name;
     
     if(!in.is_open()||!out.is_open())
     {
