@@ -7,51 +7,61 @@ using namespace std;
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
 	if(!in.read(stock_name_, len_)) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect name"<<endl;
 		return;
 	}
 	if(!in.read(date_time_, len_)) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect time"<<endl;
 		return;
 	}
 
     if(!in.read(reinterpret_cast<char *>(&price_), sizeof(price_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect price"<<endl;
 		return;
 	}
 	
 	if(!in.read(reinterpret_cast<char *>(&vwap_), sizeof(vwap_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrec vwapt"<<endl;
 		return;
 	}
 	
 	if(!in.read(reinterpret_cast<char *>(&volume_), sizeof(volume_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect volume"<<endl;
 		return;
 	}
 	
 	if(!in.read(reinterpret_cast<char *>(&f1_), sizeof(f1_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect f1"<<endl;
 		return;
 	}
 	
 	if(!in.read(reinterpret_cast<char *>(&t1_), sizeof(t1_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect t1"<<endl;
 		return;
 	}
 	
 	if(!in.read(reinterpret_cast<char *>(&f2_), sizeof(f2_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect f2"<<endl;
 		return;
 	}
 	
 	if(!in.read(reinterpret_cast<char *>(&f3_), sizeof(f3_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect f3"<<endl;
 		return;
 	}
 	
 	if(!in.read(reinterpret_cast<char *>(&f4_), sizeof(f4_))) {
-		cerr<<"Input is incorrect"<<endl;
+		if (in.eof()) return;
+		cerr<<"Input is incorrect f4"<<endl;
 		return;
 	}
 }
