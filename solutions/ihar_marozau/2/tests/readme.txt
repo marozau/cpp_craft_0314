@@ -1,6 +1,4 @@
-﻿Hint for tests
-
-puzzle 2_4
+﻿puzzle 1_3
 ==========
 input_241.txt: 192 bytes
 
@@ -8,7 +6,7 @@ input_242.txt: 2344 Kbytes (2400000 bytes)
 
 input_243.txt: 6250 Kbytes (6400000 bytes)
 
-puzzle 2_5
+puzzle 1_4
 ==========
 input_251.txt:  60 bytes
 convert to txt: 
@@ -25,7 +23,7 @@ convert to txt:
 1 1
 2 2
 
-puzzle 2_6
+puzzle 1_6
 ==========
 input_261.txt:  231 bytes
 see output_261.txt
