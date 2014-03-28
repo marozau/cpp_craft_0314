@@ -3,16 +3,17 @@
 #include <boost/cstdint.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 
-typedef boost::multiprecision::uint128_t bigInt;
-typedef boost::uint32_t int32;
+
+typedef boost::multiprecision::uint128_t uint_128;
+typedef boost::uint32_t uint_32;
 
 struct Sdata {
-	int32 TYPE;
-	int32 TIME;
-	int32 LEN;
-	char *MSG;
+	uint_32 type;
+	uint_32 time;
+	uint_32 len;
+	char *msg;
 
-	Sdata():TYPE(0), TIME(0), LEN(0), MSG(NULL){
+	Sdata():type(0), time(0), len(0), msg(NULL){
 	}
 
 	bool readData(std::fstream &fileIn);
@@ -20,27 +21,28 @@ struct Sdata {
 };
 
 bool Sdata::readData(std::fstream &fileIn){
-	fileIn.read(reinterpret_cast<char*>(&TYPE), sizeof(int32));
-	fileIn.read(reinterpret_cast<char*>(&TIME), sizeof(int32));
-	fileIn.read(reinterpret_cast<char*>(&LEN), sizeof(int32));
-	MSG = new char[LEN+1];
-	fileIn.read(reinterpret_cast<char*>(MSG), (LEN) * sizeof(char));
+	fileIn.read(reinterpret_cast<char*>(&type), sizeof(uint_32));
+	fileIn.read(reinterpret_cast<char*>(&time), sizeof(uint_32));
+	fileIn.read(reinterpret_cast<char*>(&len), sizeof(uint_32));
+	msg = new char[len+1];
+	msg[len] = '\0';
+	fileIn.read(reinterpret_cast<char*>(msg), (len) * sizeof(char));
 	if(!fileIn)return false;
 	return true;
 }
 
 bool Sdata::writeData(std::fstream &fileOut){
-	fileOut.write(reinterpret_cast<char*>(&TYPE), sizeof(int32));
-	fileOut.write(reinterpret_cast<char*>(&TIME), sizeof(int32));
-	fileOut.write(reinterpret_cast<char*>(&LEN), sizeof(int32));
-	fileOut.write(reinterpret_cast<char*>(MSG), (LEN) * sizeof(char));
+	fileOut.write(reinterpret_cast<char*>(&type), sizeof(uint_32));
+	fileOut.write(reinterpret_cast<char*>(&time), sizeof(uint_32));
+	fileOut.write(reinterpret_cast<char*>(&len), sizeof(uint_32));
+	fileOut.write(reinterpret_cast<char*>(msg), (len) * sizeof(char));
 	if(!fileOut)return false;
 	return true;
 }
 
 //Step by step data is readed, handled, written by function in output file,
 //while there isn't eof flag in input file or while counter <= than limit
-void searchActualData(std::fstream &fileIn, std::fstream &fileOut, const bigInt &limit) {
+void searchActualData(std::fstream &fileIn, std::fstream &fileOut, const uint_128 &limit) {
 
 	Sdata *request = new Sdata();
 
@@ -52,14 +54,14 @@ void searchActualData(std::fstream &fileIn, std::fstream &fileOut, const bigInt 
 	}
 
 	int time = 0;
-	const int32 from = 0;
-	const int32 to = 5;
-	bigInt count = 0;
+	const uint_32 from = 0;
+	const uint_32 to = 5;
+	uint_128 count = 0;
 
 	do {
 		count++;
-		if ((int) request->TIME > (time - 2) && request->TYPE > from && request->TYPE < to) {
-			if ((int) request->TIME > time) time = request->TIME;
+		if ((int) request->time > (time - 2) && request->type > from && request->type < to) {
+			if ((int) request->time > time) time = request->time;
 			if(!request->writeData(fileOut)){
 				std::cout << "Write error" << std::endl;
 				fileIn.close();
@@ -67,11 +69,11 @@ void searchActualData(std::fstream &fileIn, std::fstream &fileOut, const bigInt 
 				exit(1);
 			}
 		}
-		delete[] request->MSG;
+		delete[] request->msg;
 		delete request;
 		request = new Sdata();
 	} while ((count+1) < limit && request->readData(fileIn));
-	delete[] request->MSG;
+	delete[] request->msg;
 	delete request;
 }
 
@@ -86,12 +88,12 @@ void concoleCheckForOutput(std::fstream &fileIn){
 		}
 
 	do {
-	    std::cout<<request->TYPE<<" "<<request->TIME<<" "<<request->LEN<<" "<<request->MSG<<std::endl;
-		delete[] request->MSG;
+	    std::cout<<request->type<<" "<<request->time<<" "<<request->len<<" "<<request->msg<<std::endl;
+		delete[] request->msg;
 		delete request;
 		request = new Sdata();
 	} while (request->readData(fileIn));
-	delete[] request->MSG;
+	delete[] request->msg;
 	delete request;
 }
 
@@ -114,7 +116,7 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
-	const bigInt limit = 10000000000000000;
+	const uint_128 limit = 10000000000000000;
 	searchActualData(fileIn, fileOut, limit);
 
 	fileIn.close();

@@ -3,7 +3,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
-typedef boost::uint32_t int32;
+typedef boost::uint32_t uint_32;
 typedef boost::gregorian::date date;
 
 struct Sdata {
@@ -11,7 +11,7 @@ struct Sdata {
 	char date_time[9];
 	double price;
 	double vwap;
-	int32 volume;
+	uint_32 volume;
 	double f1;
 	double t1;
 	double f2;
@@ -22,16 +22,18 @@ struct Sdata {
 			price(0), vwap(0), volume(0), f1(0), t1(0), f2(0), f3(0), f4(0) {
 	}
 
-	bool readData(std::fstream &fileIn, const int32 sizeStr);
-	bool writeData(std::fstream &fileOut, int32 days, const int32 sizeStr);
+	bool readData(std::fstream &fileIn, const uint_32 sizeStr);
+	bool writeData(std::fstream &fileOut, uint_32 days, const uint_32 sizeStr);
 };
 
-bool Sdata::readData(std::fstream &fileIn, const int32 sizeStr){
+bool Sdata::readData(std::fstream &fileIn, const uint_32 sizeStr){
 	fileIn.read(reinterpret_cast<char*>(stock_name), (sizeStr - 1) * sizeof(char));
+	stock_name[sizeStr - 1] = '\0';
 	fileIn.read(reinterpret_cast<char*>(date_time), (sizeStr - 1) * sizeof(char));
+	date_time[sizeStr - 1] = '\0';
 	fileIn.read(reinterpret_cast<char*>(&price), sizeof(double));
 	fileIn.read(reinterpret_cast<char*>(&vwap), sizeof(double));
-	fileIn.read(reinterpret_cast<char*>(&volume), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&volume), sizeof(uint_32));
 	fileIn.read(reinterpret_cast<char*>(&f1), sizeof(double));
 	fileIn.read(reinterpret_cast<char*>(&t1), sizeof(double));
 	fileIn.read(reinterpret_cast<char*>(&f2), sizeof(double));
@@ -41,18 +43,18 @@ bool Sdata::readData(std::fstream &fileIn, const int32 sizeStr){
 	return true;
 }
 
-bool Sdata::writeData(std::fstream &fileOut, int32 days, const int32 sizeStr){
-	fileOut.write(reinterpret_cast<char*>(stock_name), (sizeStr-1) * sizeof(char));
-	fileOut.write(reinterpret_cast<char*>(&days), sizeof(int32));
+bool Sdata::writeData(std::fstream &fileOut, uint_32 days, const uint_32 sizeStr){
+	fileOut.write(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
+	fileOut.write(reinterpret_cast<char*>(&days), sizeof(uint_32));
 	fileOut.write(reinterpret_cast<char*>(&vwap), sizeof(double));
-	fileOut.write(reinterpret_cast<char*>(&volume), sizeof(int32));
+	fileOut.write(reinterpret_cast<char*>(&volume), sizeof(uint_32));
 	fileOut.write(reinterpret_cast<char*>(&f2), sizeof(double));
 	if(!fileOut)return false;
 	return true;
 }
 
 //Parsed request to get necessary information
-void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const int32 sizeStr) {
+void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const uint_32 sizeStr) {
 
 	Sdata *request = new Sdata();
 
@@ -63,9 +65,9 @@ void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const int32 siz
 			exit(1);
 		}
 
-	const int32 daysOfYear = 372;
-	const int32 daysOfMonth = 31;
-	int32 days = 0;
+	const uint_32 daysOfYear = 372;
+	const uint_32 daysOfMonth = 31;
+	uint_32 days = 0;
 	date *dateShell = NULL;
 
 	do {
@@ -87,23 +89,23 @@ void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const int32 siz
 }
 
 //Console check for result data
-void concoleCheckForOutput(std::fstream &fileIn, const int32 sizeStr){
+void concoleCheckForOutput(std::fstream &fileIn, const uint_32 sizeStr){
 	char *stock_name=NULL;
-	int32 volume=0;
-	int32 days=0;
+	uint_32 volume=0;
+	uint_32 days=0;
 	double vwap=0;
 	double f2=0;
 	stock_name=new char[sizeStr];
 
-	fileIn.read(reinterpret_cast<char*>(stock_name), (sizeStr-1) * sizeof(char));
+	fileIn.read(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
 	if (!fileIn) {
 		std::cout << "There is no data in output file" << std::endl;
 		fileIn.close();
 		exit(1);
 	}
-	fileIn.read(reinterpret_cast<char*>(&days), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&days), sizeof(uint_32));
 	fileIn.read(reinterpret_cast<char*>(&vwap), sizeof(double));
-	fileIn.read(reinterpret_cast<char*>(&volume), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&volume), sizeof(uint_32));
 	fileIn.read(reinterpret_cast<char*>(&f2), sizeof(double));
 
 
@@ -112,10 +114,10 @@ void concoleCheckForOutput(std::fstream &fileIn, const int32 sizeStr){
 
 	    delete []stock_name;
 	    stock_name=new char[sizeStr];
-	    fileIn.read(reinterpret_cast<char*>(stock_name), (sizeStr-1) * sizeof(char));
-	    fileIn.read(reinterpret_cast<char*>(&days), sizeof(int32));
+	    fileIn.read(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
+	    fileIn.read(reinterpret_cast<char*>(&days), sizeof(uint_32));
 	    fileIn.read(reinterpret_cast<char*>(&vwap), sizeof(double));
-	    fileIn.read(reinterpret_cast<char*>(&volume), sizeof(int32));
+	    fileIn.read(reinterpret_cast<char*>(&volume), sizeof(uint_32));
 	    fileIn.read(reinterpret_cast<char*>(&f2), sizeof(double));
 	} while (fileIn);
 	delete []stock_name;
@@ -141,7 +143,7 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
-	const int32 sizeStr = 9;
+	const uint_32 sizeStr = 9;
 	parseInputData(fileIn, fileOut, sizeStr);
 
 	fileIn.close();

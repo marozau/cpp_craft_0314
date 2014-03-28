@@ -1,52 +1,60 @@
 #include <iostream>
 #include <fstream>
+#include <string.h>
 #include <boost/cstdint.hpp>
 #include <vector>
 #include <map>
 
-typedef boost::uint32_t int32;
+typedef boost::uint32_t uint_32;
 
 struct Sdata {
-	int32 TYPE;
-	int32 TIME;
-	int32 LEN;
-	char *MSG;
+	uint_32 type;
+	uint_32 time;
+	uint_32 len;
+	char *msg;
 
-	Sdata():TYPE(0), TIME(0), LEN(0), MSG(NULL){
+	Sdata():type(0), time(0), len(0), msg(NULL){
 	}
 
 	bool readData(std::fstream &fileIn);
 };
 
 bool Sdata::readData(std::fstream &fileIn){
-	fileIn.read(reinterpret_cast<char*>(&TYPE), sizeof(int32));
-	fileIn.read(reinterpret_cast<char*>(&TIME), sizeof(int32));
-	fileIn.read(reinterpret_cast<char*>(&LEN), sizeof(int32));
-	MSG = new char[LEN+1];
-	fileIn.read(reinterpret_cast<char*>(MSG), (LEN) * sizeof(char));
+	fileIn.read(reinterpret_cast<char*>(&type), sizeof(uint_32));
+	fileIn.read(reinterpret_cast<char*>(&time), sizeof(uint_32));
+	fileIn.read(reinterpret_cast<char*>(&len), sizeof(uint_32));
+	msg = new char[len+1];
+	msg[len] = '\0';
+	fileIn.read(reinterpret_cast<char*>(msg), (len) * sizeof(char));
 	if(!fileIn)return false;
 	return true;
 }
 
 typedef std::vector<Sdata*> vector;
-typedef std::map<const int32, vector*> map;
+typedef std::map<const uint_32, vector*> map;
 
 //Check buffer limit
-bool checkBuffer(vector *vect, int32 time, const int32 limit) {
-	int32 count = 0;
+bool checkBuffer(map &typesOfMsg, const Sdata *const request, const uint_32 limit) {
+	uint_32 count = 0;
+	uint_32 sumLenStr = 0;
+	vector *vect = typesOfMsg[request->type];
+	const uint_32 time = request->time;
 
 	for (vector::iterator it = vect->begin(); it != vect->end(); ++it) {
-		if ((*it)->TIME == time) count++;
+		if ((*it)->time == time){
+			count++;
+			sumLenStr += (*it)->len + 1;
+		}
 	}
 
-	if (count * sizeof(Sdata) > limit)
+	if ((count+1) * 3  * sizeof(uint_32) + sumLenStr + request->len + 1 > limit)
 		return false;
 	else
 		return true;
 }
 
 //Created associative array for storage of vectors, which contain requests of each type
-void handlerOfData(std::fstream &fileIn, map &typesOfMsg, const int32 size, const int32 limit) {
+void handlerOfData(std::fstream &fileIn, map &typesOfMsg, const uint_32 size, const uint_32 limit) {
 
 	Sdata *request = new Sdata();
 
@@ -56,35 +64,39 @@ void handlerOfData(std::fstream &fileIn, map &typesOfMsg, const int32 size, cons
 			exit(1);
 		}
 
+	uint_32 sizeOfReq = 0;
+
 	do {
-		if (request->TYPE <= size && typesOfMsg.find(request->TYPE) == typesOfMsg.end())
-			typesOfMsg[request->TYPE] = new vector;
-		if (request->TYPE <= size && (typesOfMsg[request->TYPE]->empty()
-			|| checkBuffer(typesOfMsg[request->TYPE], request->TIME, limit))) {
-			typesOfMsg[request->TYPE]->push_back(request);
+		sizeOfReq = 3 * sizeof(uint_32) + request->len + 1;
+
+		if (request->type <= size && sizeOfReq <= limit && typesOfMsg.find(request->type) == typesOfMsg.end())
+			typesOfMsg[request->type] = new vector;
+		if (request->type <= size && sizeOfReq <= limit && (typesOfMsg[request->type]->empty()
+			|| checkBuffer(typesOfMsg, request, limit))) {
+			typesOfMsg[request->type]->push_back(request);
 		}
 		request = new Sdata();
 	} while (request->readData(fileIn));
-	delete[] request->MSG;
+	delete[] request->msg;
 	delete request;
 }
 
 //Computed mean number of messages of all seconds for each request type
-void meanOfEachMsg(std::fstream &fileOut, map &typesOfMsg, const int32 size) {
+void meanOfEachMsg(std::fstream &fileOut, map &typesOfMsg, const uint_32 size) {
 
-	int32 sec = 0;
+	uint_32 sec = 0;
 	double mean = 0;
 	int time = -1;
 
-	for (int32 i = 0; i < size; i++) {
+	for (uint_32 i = 0; i < size; i++) {
 		if (typesOfMsg.find(i) != typesOfMsg.end()) {
 			for (vector::iterator it = typesOfMsg[i]->begin(); it != typesOfMsg[i]->end(); ++it) {
-				if (static_cast<int>((*it)->TIME) > time) {
-					time = (*it)->TIME;
+				if (static_cast<int>((*it)->time) > time) {
+					time = (*it)->time;
 					sec++;
 				}
 			}
-			fileOut.write(reinterpret_cast<char*>(&i), sizeof(int32));
+			fileOut.write(reinterpret_cast<char*>(&i), sizeof(uint_32));
 			mean = static_cast<double>(typesOfMsg[i]->size()) / sec;
 			fileOut.write(reinterpret_cast<char*>(&mean), sizeof(double));
 			time = -1;
@@ -96,9 +108,9 @@ void meanOfEachMsg(std::fstream &fileOut, map &typesOfMsg, const int32 size) {
 //Console check for result data
 void concoleCheckForOutput(std::fstream &fileIn){
 	double mean=0;
-	int32 type=0;
+	uint_32 type=0;
 
-	fileIn.read(reinterpret_cast<char*>(&type), sizeof(int32));
+	fileIn.read(reinterpret_cast<char*>(&type), sizeof(uint_32));
 	if (!fileIn) {
 		std::cout << "There is no data in output file" << std::endl;
 		fileIn.close();
@@ -109,7 +121,7 @@ void concoleCheckForOutput(std::fstream &fileIn){
 	do {
 	    std::cout<<type<<" "<<mean<<std::endl;
 
-		fileIn.read(reinterpret_cast<char*>(&type), sizeof(int32));
+		fileIn.read(reinterpret_cast<char*>(&type), sizeof(uint_32));
 		fileIn.read(reinterpret_cast<char*>(&mean), sizeof(double));
 	} while (fileIn);
 }
@@ -124,8 +136,8 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
-	const int32 size = 100000;
-	const int32 limit = 2048;
+	const uint_32 size = 100000;
+	const uint_32 limit = 2048;
 	map typesOfMsg;
 	handlerOfData(fileIn, typesOfMsg, size, limit);
 	fileIn.close();
@@ -142,10 +154,10 @@ int main(int argc, char **argv) {
 	meanOfEachMsg(fileOut, typesOfMsg, size);
 	fileOut.close();
 
-	for (int32 i = 0; i < typesOfMsg.size(); i++) {
+	for (uint_32 i = 0; i < typesOfMsg.size(); i++) {
 		if (typesOfMsg.find(i) != typesOfMsg.end()) {
-			for (int32 j = 0; j < typesOfMsg[i]->size(); j++) {
-				delete[] typesOfMsg[i]->at(j)->MSG;
+			for (uint_32 j = 0; j < typesOfMsg[i]->size(); j++) {
+				delete[] typesOfMsg[i]->at(j)->msg;
 				delete typesOfMsg[i]->at(j);
 			}
 			delete typesOfMsg[i];
