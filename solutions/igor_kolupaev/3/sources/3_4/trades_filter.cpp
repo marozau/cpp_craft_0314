@@ -1,5 +1,6 @@
 #include <mutex>
 #include <string>
+#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
@@ -16,7 +17,15 @@
 
 namespace trades_filter
 {
-	void do_parse()
+	static boost::mutex output_mutex_;
+
+	void debug( const size_t thread_index, const std::string& message )
+	{
+		boost::mutex::scoped_lock lock( output_mutex_ );
+		std::cout << "thread #" << thread_index << " " << message << std::endl;
+	}
+
+	void do_parse(const int thread_index)
 	{
 		static input_files_queue queue;
 
@@ -35,16 +44,19 @@ namespace trades_filter
 				break;
 			}
 
-			input_filename = BINARY_DIR + std::string( "/" ) + input_filename;
-			std::ifstream in( input_filename, std::ios::in | std::ios::binary );
+			std::string input_path = BINARY_DIR + std::string( "/" ) + input_filename;
+			std::ifstream in( input_path, std::ios::in | std::ios::binary );
 
 			if( !in.is_open() )
 			{
+				debug( thread_index, input_filename + " is not found" );
 				continue;
 			}
 
-			output_filename = BINARY_DIR + std::string( "/" ) + output_filename;
-			std::ofstream out( output_filename, std::ios::out | std::ios::binary );
+			debug( thread_index, input_filename + " is opened" );
+
+			std::string output_path= BINARY_DIR + std::string( "/" ) + output_filename;
+			std::ofstream out( output_path, std::ios::out | std::ios::binary );
 
 			market_message_filter filter;
 
@@ -66,6 +78,9 @@ namespace trades_filter
 
 			in.close();
 			out.close();
+
+			debug( thread_index, output_filename + " is created" );
+
 		}
 	}
 }
@@ -83,7 +98,9 @@ int main()
 
 	for( size_t i = 0; i < max_threads; i++ )
 	{	
-		threadpool.create_thread( trades_filter::do_parse );
+		boost::thread *t = new boost::thread( trades_filter::do_parse, i );
+		t->start_thread();
+		threadpool.add_thread(t);
 	}
 
 	threadpool.join_all();
