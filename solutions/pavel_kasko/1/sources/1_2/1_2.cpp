@@ -1,7 +1,3 @@
-// 2_2.cpp : Defines the entry point for the console application.
-//
-
-#include "stdafx.h"
 #include <iostream>
 #include <ostream>
 #include <fstream>
@@ -12,22 +8,17 @@
 
 double const POINT = 0.0001;
 
-//double RoundByPoint(double num, int point)
-//{
-//	int multiplicator = 10 * point;
-//	return floor(num * multiplicator + 0.5) / multiplicator;
-//}
-
 int main(int argc, char* argv[])
 {
-	if(argc != 2)
-	{
-		std::cout << "There are should be one commandline argument(text file)\nExample: 1_1.exe input.txt"<< std::endl;
-		return 1;
-	}
-
-	std::ifstream inputStream(argv[1]);
-	std::ofstream outputStream("output.txt");
+	std::ifstream inputStream(BINARY_DIR "/input.txt");
+	std::ofstream outputStream(BINARY_DIR "/output.txt");
+    
+    if(!inputStream.good())
+    {
+        std::cout << "Couldn't open files!\n";
+        return 1;
+    }
+    
 	int code_count = 0;
 	std::vector<double> codes;
 
@@ -53,15 +44,9 @@ int main(int argc, char* argv[])
 			else if(i == codes.end() - 1)
 				outputStream << "NO\n";
 		}
-		
-		//if(std::find(codes.begin(), codes.end(), RoundByPoint(password, POINT)) != codes.end())
-		//	outputStream << "YES\n";
-		//else
-		//	outputStream << "NO\n";
 	}
 
 	inputStream.close();
 	outputStream.close();
 	return 0;
 }
-

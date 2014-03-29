@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,17 +13,17 @@ int main(int argc, char *argv[])
 {
 	const std::string unused_ch = " -\\";
 	const int legthLimit = 100000;
-
-	if(argc != 2)
-	{
-		std::cout << "There are should be one commandline argument(text file)\nExample: 1_1.exe input.txt"<< std::endl;
-		return 1;
-	}
 	
-	std::ifstream inputStream(argv[1]);
-	std::ofstream outputStream("output.txt");
+	std::ifstream inputStream(BINARY_DIR "/input.txt");
+	std::ofstream outputStream(BINARY_DIR "/output.txt");
 	std::string firstline;
 	
+    if(!inputStream.good())
+    {
+        std::cout << "Couldn't open files!\n";
+        return 1;
+    }
+    
 	std::getline(inputStream, firstline);
 	
 	if(firstline.length() > legthLimit)
@@ -33,23 +32,16 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	//std::cout << firstline << std::endl;
-
 	RemoveUnusedChars(firstline, unused_ch);
 	std::transform(std::begin(firstline), std::end(firstline), std::begin(firstline), ::tolower);
-	//std::cout << firstline << std::endl;
 
 	std::string line;
 	while(!std::getline(inputStream, line).eof())
-	{
-		//std::cout << line << std::endl;
-		
+	{		
 		RemoveUnusedChars(line, unused_ch);
 		std::transform(std::begin(line), std::end(line), std::begin(line), ::tolower);
-		//std::cout << line << std::endl;
 
 		std::reverse(std::begin(line), std::end(line));
-		//std::cout << line << std::endl;
 
 		if(firstline.find(line) != std::string::npos)
 			outputStream << "YES\n";
@@ -61,4 +53,3 @@ int main(int argc, char *argv[])
 	outputStream.close();
 	return 0;
 }
-

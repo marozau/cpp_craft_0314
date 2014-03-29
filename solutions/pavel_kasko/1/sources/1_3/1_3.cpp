@@ -1,30 +1,29 @@
-#include "stdafx.h"
 #include <ostream>
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <string>
 
-void Inspect(std::vector<std::vector<int>> &matrix, int i, int j);
-void ShowMatrix(std::vector<std::vector<int>> &matrix);
+void Inspect(std::vector<std::vector<int>> &matrix, const int i, const int j);
+void ShowMatrix(const std::vector<std::vector<int>> &matrix);
 
 int main(int argc, char* argv[])
 {
-	if(argc != 2)
-	{
-		std::cout << "There are should be one commandline argument(text file)\nExample: 1_1.exe input.txt"<< std::endl;
-		return 1;
-	}
-
-	std::vector<std::vector<int>> sea;
-	std::ifstream inpusStream(argv[1]);
-	std::ofstream outputStream("output.txt");
+	std::ifstream inpusStream(BINARY_DIR "/input.txt");
+	std::ofstream outputStream(BINARY_DIR "/output.txt");
+    
+    if(!inpusStream.good())
+    {
+        std::cout << "Couldn't open files!\n";
+        return 1;
+    }
+    
+    std::vector<std::vector<int>> sea;
 	int island_count = 0;
-
 	std::string line;
 	int row_count = -1;
 
-	while(inpusStream >> line) //fill sea
+	while(inpusStream >> line)
 	{
 		row_count++;
 		std::vector<int> new_row;
@@ -34,8 +33,6 @@ int main(int argc, char* argv[])
 			sea[row_count].push_back(line[i] == 'o' ? 1 : 0);
 	}
 
-	//ShowMatrix(sea);
-
 	for(int i = 0; i < sea.size(); ++i)
 	{
 		for(int j = 0; j < sea[i].size(); ++j)
@@ -44,7 +41,6 @@ int main(int argc, char* argv[])
 			{
 				Inspect(sea, i, j);
 				island_count++;
-				//ShowMatrix(sea);
 			}
 		}
 	}
@@ -53,7 +49,7 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void Inspect(std::vector<std::vector<int>> &matrix, int i, int j)
+void Inspect(std::vector<std::vector<int>> &matrix, const int i, const int j)
 {
 	if(i < 0 || i >= matrix.size()) return;
 	if(j < 0 || j >= matrix[0].size()) return;
@@ -69,7 +65,7 @@ void Inspect(std::vector<std::vector<int>> &matrix, int i, int j)
 	}
 }
 
-void ShowMatrix(std::vector<std::vector<int>> &matrix)
+void ShowMatrix(const std::vector<std::vector<int>> &matrix)
 {
 	for(int i = 0; i < matrix.size(); ++i)
 	{
