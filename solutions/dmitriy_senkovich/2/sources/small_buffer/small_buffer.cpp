@@ -77,6 +77,7 @@ void::small_buffer::small_buffer::run()
 		boost::uint32_t curr_type = iter->first;
 		out.write( reinterpret_cast<char*> (&curr_type), sizeof( boost::uint32_t ) );
 		double avrg = ((double)(iter->second[0]))/((double)(iter->second[1]));
+		out.write( reinterpret_cast<char*> (&avrg), sizeof( double ) );
 	}
 
 	in.close();
