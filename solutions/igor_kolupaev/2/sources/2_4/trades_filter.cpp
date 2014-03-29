@@ -82,10 +82,8 @@ int main()
 
 			filter.update_time( message );
 		}
-
 	}
 
 	in.close();
 	out.close();
 }
-

@@ -10,6 +10,22 @@ class messages_counter
 {
 public:
 
+	typedef std::map<uint32_t, uint32_t> time_counter_t;
+
+	void merge( const time_counter_t& second_counter )
+	{
+		for( time_counter_t::const_iterator it = second_counter.begin();
+			 it != second_counter.end();
+			 ++it )
+		{
+			const uint32_t message_type = it->first;
+			const uint32_t message_number = it->second;
+
+			add_count( message_type, message_number );
+			inc_time( it->first );
+		}
+	}
+
 	void inc_time( const uint32_t message_type )
 	{
 		++( _data[ message_type ].time_num );
@@ -59,6 +75,7 @@ private:
 };
 
 
+
 int main()
 {
 	std::ifstream in( BINARY_DIR "/input.txt", std::ios::in | std::ios::binary );
@@ -69,10 +86,8 @@ int main()
 		return 1;
 	}
 
-	typedef std::map<uint32_t, uint32_t> time_counter_t;
-
 	messages_counter counter;
-	time_counter_t curr_time_messages_by_types;
+	messages_counter::time_counter_t curr_time_messages_by_types;
 	uint32_t curr_time = 0;
 
 	while( !in.eof() )
@@ -86,14 +101,7 @@ int main()
 
 		if( message.time() != curr_time )
 		{
-			for( time_counter_t::iterator it = curr_time_messages_by_types.begin(); it != curr_time_messages_by_types.end(); ++it )
-			{
-				const uint32_t message_type = it->first;
-				const uint32_t message_number = it->second;
-
-				counter.add_count( message_type, message_number );
-				counter.inc_time( it->first );
-			}
+			counter.merge( curr_time_messages_by_types );
 
 			curr_time_messages_by_types.clear();
 			curr_time = message.time();
@@ -103,6 +111,8 @@ int main()
 	}
 
 	in.close();
+
+	counter.merge( curr_time_messages_by_types );
 
 	std::ofstream out( BINARY_DIR "/output.txt", std::ios::out | std::ios::binary );
 

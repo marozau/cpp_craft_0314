@@ -59,7 +59,7 @@ namespace binary_reader
 		msg_[ len_ ] = '\0';
 	}
 
-	void market_message::write( std::ofstream& out )
+	void market_message::write( std::ofstream& out ) const
 	{
 		binary_write( out, type_ );
 		binary_write( out, time_ );

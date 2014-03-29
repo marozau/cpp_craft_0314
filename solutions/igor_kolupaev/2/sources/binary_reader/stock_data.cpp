@@ -56,16 +56,20 @@ binary_reader::stock_data::~stock_data()
 
 void binary_reader::stock_data::write( std::ofstream& out )
 {
-	out.write( stock_name_, sizeof( stock_name_ ) );
-	out.write( date_time_, sizeof( date_time_ ) );
-	out.write( reinterpret_cast<char*>( &price_ ), sizeof( price_ ) );
-	out.write( reinterpret_cast<char*>( &vwap_ ), sizeof( vwap_ ) );
-	out.write( reinterpret_cast<char*>( &volume_ ), sizeof( volume_ ) );
-	out.write( reinterpret_cast<char*>( &f1_ ), sizeof( f1_ ) );
-	out.write( reinterpret_cast<char*>( &t1_ ), sizeof( t1_ ) );
-	out.write( reinterpret_cast<char*>( &f2_ ), sizeof( f2_ ) );
-	out.write( reinterpret_cast<char*>( &f3_ ), sizeof( f3_ ) );
-	out.write( reinterpret_cast<char*>( &f4_ ), sizeof( f4_ ) );
+	boost::uint32_t date = 0;
+	int month;
+	int day;
+	int year;
+	std::sscanf( date_time_, "%4d%2d%2d", &year, &month, &day );
+	date = ( year - 1 ) * 372 + ( month - 1 ) * 31 + day;
+
+	static char stock_name[ 9 ];
+	memcpy( stock_name, stock_name_, sizeof( stock_name_ ) );
+	write_binary( out, stock_name );
+	write_binary( out, date );
+	write_binary( out, vwap_ );
+	write_binary( out, volume_ );
+	write_binary( out, f2_ );
 }
 
 void binary_reader::stock_data::write_raw( std::ofstream& out )

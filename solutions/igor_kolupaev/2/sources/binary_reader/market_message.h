@@ -9,7 +9,7 @@
 namespace binary_reader
 {
 	template<class T>
-	void binary_write( std::ostream& out, T &t, size_t len = sizeof( T ) )
+	void binary_write( std::ostream& out, const T &t, size_t len = sizeof( T ) )
 	{
 		out.write( reinterpret_cast<const char*>( &t ), len );
 	};
@@ -33,7 +33,7 @@ namespace binary_reader
 		explicit market_message( const boost::uint32_t type, const boost::uint32_t time, const char* const msg );
 		~market_message();
 		//
-		void write( std::ofstream& out );
+		void write( std::ofstream& out ) const;
 
 		boost::uint32_t type() const;
 		boost::uint32_t time() const;
