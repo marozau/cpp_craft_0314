@@ -4,7 +4,7 @@ set( CMAKE_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE} CACHE STRING "Configurations"
 project( ${SOLUTION_NAME} )
 include( environment.cmake required )
 
-modules( binary_reader trade_filter small_buffer th_trade_filter th_small_buffer )
-binaries( 3_4 3_5 )
+modules( binary_reader trade_filter small_buffer th_trade_filter th_small_buffer th_binary_datafeed )
+binaries( 3_4 3_5 3_6 )
 
 compile()

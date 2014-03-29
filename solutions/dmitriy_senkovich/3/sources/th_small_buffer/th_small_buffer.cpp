@@ -43,8 +43,8 @@ namespace th_small_buffer
 			std::string input, output;
 			char id[4];
 			sprintf( id, "%03d", temp_id );
-			input = "input_" + boost::lexical_cast<std::string>(id) + ".in";
-			output = "output_" + boost::lexical_cast<std::string>(id) + ".out";
+			input = BINARY_DIR"/input_" + boost::lexical_cast<std::string>(id) + ".in";
+			output = BINARY_DIR"/output_" + boost::lexical_cast<std::string>(id) + ".out";
 			
 			try
 			{
