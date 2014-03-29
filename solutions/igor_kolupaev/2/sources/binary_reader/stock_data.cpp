@@ -70,6 +70,14 @@ void binary_reader::stock_data::write( std::ofstream& out )
 
 void binary_reader::stock_data::write_raw( std::ofstream& out )
 {
-	// your code. Can be emty
-	// this method is used for testing. It writes data to the binary file without convertion.
+	write_binary( out, stock_name_ );
+	write_binary( out, date_time_ );
+	write_binary( out, price_ );
+	write_binary( out, vwap_ );
+	write_binary( out, volume_ );
+	write_binary( out, f1_ );
+	write_binary( out, t1_ );
+	write_binary( out, f2_ );
+	write_binary( out, f3_ );
+	write_binary( out, f4_ );
 }

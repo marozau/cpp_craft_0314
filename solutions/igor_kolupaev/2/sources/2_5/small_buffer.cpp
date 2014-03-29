@@ -105,6 +105,15 @@ int main()
 	in.close();
 
 	std::ofstream out( BINARY_DIR "/output.txt", std::ios::out | std::ios::binary );
-	counter.output_avg( out );
+
+	try
+	{
+		counter.output_avg( out );
+	}
+	catch( std::logic_error &error )
+	{
+		std::cerr << error.what();
+	}
+
 	out.close();
 }

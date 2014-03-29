@@ -8,6 +8,18 @@
 
 namespace binary_reader
 {
+	template< class T >
+	void read_binary( std::ifstream& in, T& t, const size_t len = sizeof( T ) )
+	{
+		in.read( reinterpret_cast<char*>( &t ), len );
+	}
+
+	template< class T >
+	void write_binary( std::ofstream& out, T& t, const size_t len = sizeof( T ) )
+	{
+		out.write( reinterpret_cast<const char*>( &t ), len );
+	}
+
 	class stock_data: virtual protected boost::noncopyable
 	{
 		char stock_name_[ 8 ];
