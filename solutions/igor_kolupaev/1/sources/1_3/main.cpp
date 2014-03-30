@@ -10,12 +10,12 @@ class map_point_t
 {
 public:
 
-	int X()
+	int X() const
 	{
 		return _x;
 	}
 
-	int Y()
+	int Y() const
 	{
 		return _y;
 	}
@@ -65,28 +65,28 @@ public:
 			_map.push_back( s );
 		}
 
-		_height = _map.size();
-		_width = _map[ 0 ].length();
+		_height = static_cast<int>( _map.size() );
+		_width = static_cast<int>( _map[ 0 ].length() );
 	}
 
-	int width()
+	int width() const
 	{
 		return _width;
 	}
 
-	int height()
+	int height() const
 	{
 		return _height;
 	}
 
-	bool is_earth( int x, int y )
+	bool is_earth( int x, int y ) const
 	{
 		return is_earth( map_point_t( x, y ) );
 	}
 
-	bool is_earth( map_point_t p )
+	bool is_earth( map_point_t p ) const
 	{
-		return !( is_outside( p ) || _map[ p.Y() ][ p.X() ] != earth ); 
+		return !( is_outside( p ) || _map[ p.Y() ][ p.X() ] != earth );
 	}
 
 	void set_visited( map_point_t p )
@@ -102,10 +102,10 @@ private:
 
 	vector<string> _map;
 
-	size_t _width;
-	size_t _height;
+	int _width;
+	int _height;
 
-	bool is_outside( map_point_t p )
+	bool is_outside( map_point_t p ) const
 	{
 		return
 			p.Y() < 0 || p.Y() >= height() ||
