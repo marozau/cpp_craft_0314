@@ -23,8 +23,6 @@ namespace binary_reader
 
 		bool eof_;
 
-		boost::uint32_t date_as_uint();
-
 	public:
 		explicit stock_data( std::ifstream& in );
 
