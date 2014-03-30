@@ -64,6 +64,6 @@ $errors_count += TestOutputSize( 1, 800, 60)
 $errors_count += TestOutputSize( 801, 900, 0 )
 $errors_count += TestOutputSize( 901, 999, 24 )
 
-Write-Output "3_4 is done with $errors_count errors"
+Write-Output "3_5 is done with $errors_count errors"
 
 DeleteTextData
