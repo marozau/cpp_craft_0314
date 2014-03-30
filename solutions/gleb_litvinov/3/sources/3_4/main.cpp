@@ -66,8 +66,12 @@ public:
 
 	void start()
 	{
+		io::bin_writer out;
 		file_number=0;
 		boost::thread_group t;
+		out.open(pref+"output.txt");
+			if (!out.is_open())
+				throw(std::logic_error("Can't open file"));
 		for(int i=0;i<f_count;++i)
 			t.create_thread( boost::bind(&task::solve,this));
 		t.join_all();
@@ -86,12 +90,12 @@ public:
 				in.open(pref+"input_"+c+".txt");
 				file_number++;
 			}
-			if (!in.is_open())
-				throw(std::logic_error("Can't open file"));
-			file_number++;
+			file_number--;
 			sprintf(c,"%03d",file_number);
 			out.open(pref+"output_"+c+".txt");
 			if (!out.is_open())
+				throw(std::logic_error("Can't open file"));
+			if (!in.is_open())
 				throw(std::logic_error("Can't open file"));
 		}
 		data current_data;

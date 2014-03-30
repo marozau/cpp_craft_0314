@@ -95,7 +95,7 @@ public:
 		{
 			unsigned i=it->first;
 			out.write(i);
-			const double temp=double(it->second)/times[it->first];
+			const double temp=static_cast<double>(it->second)/times[it->first];
 			out.write(temp);
 		}
 
