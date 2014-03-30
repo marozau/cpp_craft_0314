@@ -116,7 +116,7 @@ public:
 	}
 	
 };
-const std::string task::pref=SOURCE_DIR"/";
+const std::string task::pref=BINARY_DIR"/";
 
 	
 void main()
