@@ -2,7 +2,7 @@
 #define _BINARY_READER_MARKET_MESSAGE_H_
 
 #include <fstream>
-
+#include <map>
 #include <boost/noncopyable.hpp>
 #include <boost/cstdint.hpp>
 
@@ -21,7 +21,7 @@ namespace binary_reader
 
 		explicit market_message( std::ifstream& );
 		explicit market_message( const boost::uint32_t, const boost::uint32_t, const char* const );
-		void write( std::ofstream& );
+		void write( std::ofstream& ) const;
 		void write_txt( std::ofstream& );
 		~market_message();
 		//
@@ -30,6 +30,9 @@ namespace binary_reader
 		boost::uint32_t len() const;
 		bool check( boost:: uint32_t& ) const;
 		const char* const msg() const;
+
+		size_t get_size() const;
+		bool check_size( std::map <boost::uint32_t, size_t>&) const;
 	};
 }
 

@@ -52,7 +52,7 @@ binary_reader::stock_data::~stock_data()
 {
 }
 
-boost:: uint32_t binary_reader:: stock_data:: days( char*& date_time)
+boost:: uint32_t binary_reader:: stock_data:: days( const char* const& date_time) const
 {
 	unsigned int day, month, year;
 	sscanf( date_time, "%4d%2d%2d", &year,&month,&day);
@@ -66,7 +66,7 @@ void binary_reader::stock_data::write( std::ofstream& out )
 				throw exception("can't write");
 	char* date= date_time_;
 	boost:: uint32_t a= days(date);
-	if(!out.write(reinterpret_cast<char*>(&a), sizeof( boost:: uint32_t)) )
+	if(!out.write(reinterpret_cast< const char*>(&a), sizeof( boost:: uint32_t)) )
 				throw exception("can't write");
 	if(!out.write(reinterpret_cast<char*>(&vwap_), sizeof( double)) )
 				throw exception("can't write");

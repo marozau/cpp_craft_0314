@@ -3,6 +3,8 @@
 #include <exception>
 #include <iostream>
 
+
+
 using namespace std;
 
  binary_reader::market_message:: market_message( std::ifstream& in )
@@ -25,13 +27,13 @@ binary_reader::market_message::market_message( const boost::uint32_t type,
 	msg_=new char[len_ +1];
 	memcpy(msg_,msg, len_);
 }
-void binary_reader::market_message::write( std::ofstream& out )
+void binary_reader::market_message::write( std::ofstream& out ) const
 {
-	if(!out.write(reinterpret_cast<char*>(&type_),sizeof(type_)) )
+	if(!out.write(reinterpret_cast< const char*>(&type_),sizeof(type_)) )
 			throw exception("can't write");
-	if(!out.write(reinterpret_cast<char*>(&time_), sizeof(time_)) )
+	if(!out.write(reinterpret_cast<const char*>(&time_), sizeof(time_)) )
 			throw exception("can't write");
-	if(!out.write(reinterpret_cast<char*>(&len_), sizeof(len_)) )
+	if(!out.write(reinterpret_cast<const char*>(&len_), sizeof(len_)) )
 			throw exception("can't write");
 	if(!out.write(msg_, len_ ))
 			throw exception("can't write");
@@ -51,17 +53,17 @@ binary_reader::market_message::~market_message()
 	}
 }
 
-bool binary_reader::market_message:: check(boost:: uint32_t& T) const 
+bool binary_reader::market_message:: check(boost:: uint32_t& curr_time) const 
 {
-	if (T<time_) 
+	if (curr_time<time_) 
 		{
-			T=time_;
+			curr_time=time_;
 			if (type_>=1 && type_<=4)  
 				return true;
 		}
 	else
 		{
-			if( time_+2>T && type_>=1 && type_<=4 )
+			if( time_+2>curr_time && type_>=1 && type_<=4 )
 				return true;
 		} 
 	return false;
@@ -80,8 +82,17 @@ const char* const binary_reader::market_message::msg() const
 {
 	return msg_;
 }
-
 boost::uint32_t binary_reader::market_message::len() const
 {
 	return len_;
+}
+
+size_t  binary_reader::market_message:: get_size() const
+{
+	return (sizeof(type_) + sizeof(time_) + sizeof(len_) + sizeof(char)*len_);
+}
+
+bool binary_reader::market_message:: check_size( map <boost:: uint32_t, size_t> & size) const 
+{
+	return ( ( size[type_] + get_size()) < binary_reader:: market_message::buffer_size );
 }

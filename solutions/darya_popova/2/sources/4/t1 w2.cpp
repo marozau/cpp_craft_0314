@@ -18,16 +18,16 @@ int main(int argc, char* argv[])
 		return 1;
 	} 
 	ofstream out( BINARY_DIR "/output.txt", ios:: binary ); 
-	boost:: uint32_t T=0;
+	boost:: uint32_t curr_time=0;
 	while ( in.good() )
 	{
 		try
 			{
-				binary_reader:: market_message st(in); 
+				binary_reader:: market_message message(in); 
 		
 				if(!in.good()) break;
-				if( st.check(T) ) 
-						st.write(out);
+				if( message.check(curr_time) ) 
+						message.write(out);
 				else 
 						continue;
 			}

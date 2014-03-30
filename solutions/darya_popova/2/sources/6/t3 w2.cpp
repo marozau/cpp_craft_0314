@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
 	{
 		try
 		{
-			binary_reader:: stock_data st(in);
-			st.write( out );
+			binary_reader:: stock_data message(in);
+			message.write( out );
 		}
 		catch(...){}
 		

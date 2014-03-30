@@ -11,8 +11,9 @@ namespace binary_reader
 {
 	class stock_data 
 	{
-		char stock_name_[8];
-		char date_time_[8];
+		static const int len_=8;
+		char stock_name_[len_];
+		char date_time_[len_];
 		double price_;
 		double vwap_;
 		boost::uint32_t volume_;
@@ -21,7 +22,8 @@ namespace binary_reader
 		double f2_;
 		double f3_;
 		double f4_;
-		static const int len_=8;
+	
+		boost:: uint32_t days( const char* const& date_time) const;
 
 	public:
 		explicit stock_data( std::ifstream& in );
@@ -39,7 +41,7 @@ namespace binary_reader
 		//
 		void write( std::ofstream& out );
 		void write_raw( std::ofstream& out );
-		boost:: uint32_t days( char*& date_time);
+		
 	};
 }
 
