@@ -39,6 +39,8 @@ namespace binary_reader
 		boost::uint32_t time() const;
 		const char* const msg() const;
 		bool eof() const;
+
+		size_t size() const;
 	};
 }
 

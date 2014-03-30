@@ -93,4 +93,12 @@ namespace binary_reader
 	{
 		return eof_;
 	}
+
+	size_t market_message::size() const
+	{
+		return sizeof(type_) + 
+			   sizeof(time_) + 
+			   sizeof(len_) + 
+			   len_;
+	}
 }

@@ -43,7 +43,7 @@ public:
 			const uint32_t message_type = it->first;
 			const double avg = it->second.average();
 
-			binary_reader::binary_write( out, message_type );  
+			binary_reader::binary_write( out, message_type );
 			binary_reader::binary_write( out, avg );
 		}
 	}
@@ -75,9 +75,11 @@ private:
 };
 
 
+const size_t MAX_BUFF_SIZE = 2048;
 
 int main()
 {
+
 	std::ifstream in( BINARY_DIR "/input.txt", std::ios::in | std::ios::binary );
 
 	if( !in.is_open() )
@@ -85,6 +87,8 @@ int main()
 		std::cerr << "Unable to open input.txt";
 		return 1;
 	}
+
+	std::map<uint32_t, size_t> size_by_types;
 
 	messages_counter counter;
 	messages_counter::time_counter_t curr_time_messages_by_types;
@@ -99,15 +103,22 @@ int main()
 			break;
 		}
 
+		if( size_by_types[ message.type() ] + message.size() > MAX_BUFF_SIZE )
+		{
+			continue;
+		}
+
 		if( message.time() != curr_time )
 		{
 			counter.merge( curr_time_messages_by_types );
 
+			size_by_types.clear();
 			curr_time_messages_by_types.clear();
 			curr_time = message.time();
 		}
 
 		curr_time_messages_by_types[ message.type() ]++;
+		size_by_types[ message.type() ] += message.size();
 	}
 
 	in.close();

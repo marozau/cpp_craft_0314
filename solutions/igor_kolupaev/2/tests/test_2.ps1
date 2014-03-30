@@ -72,6 +72,15 @@ if( (Get-Item output.txt).Length -ne 231 )
 {
     Write-Error -Message "input_261.txt test failed"
 }
+
+$o = Get-Content output.txt
+$o1 = Get-Content output_261.txt
+$diff = Compare-Object $o $o1
+
+if( $diff.Length -ne 0 )
+{
+    Write-Error -Message "output_261 content doesn't match"
+}
 else
 {
     Write-Output "input_261.txt test OK"
@@ -82,6 +91,15 @@ copy input_262.txt input.txt
 if( (Get-Item output.txt).Length -ne 66000000 )
 {
     Write-Error -Message "input_262.txt test failed"
+}
+
+$o = Get-Content output.txt
+$o1 = Get-Content output_262.txt
+$diff = Compare-Object $o $o1
+
+if( $diff.Length -ne 0 )
+{
+    Write-Error -Message "output_261 content doesn't match"
 }
 else
 {
