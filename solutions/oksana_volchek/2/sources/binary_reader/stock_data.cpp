@@ -50,7 +50,7 @@ void binary_reader::stock_data::write(std::ofstream& output)
 	int day;
 	int year;
 	int month;
-	sscanf_s(date_time_, "%4d%2d%2d", &year, &month, &day);
+	sscanf(date_time_, "%4d%2d%2d", &year, &month, &day);
 	boost::uint32_t date = (year - 1) * myConst::oneYear + (month - 1)* myConst::oneMonth + day;
 	
 	read_and_write::write_binary(output, stock_name);
