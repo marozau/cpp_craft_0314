@@ -61,12 +61,11 @@ public:
 		mmap met,times;
 		std::set<unsigned> last;
 		std::map<unsigned,size_t> size;
-		unsigned curr_memory=0;
 		in>>current_data;
 		unsigned curr_time=0;
 		while (!in.eof())
 		{
-			if (current_data.time!=curr_time||last.find(current_data.type)==last.end())
+			if ( current_data.time != curr_time || last.find(current_data.type) == last.end() )
 			{
 				if (current_data.time!=curr_time)
 				last.clear();
@@ -96,7 +95,7 @@ public:
 		{
 			unsigned i=it->first;
 			out.write(i);
-			double temp=double(it->second)/times[it->first];
+			const double temp=double(it->second)/times[it->first];
 			out.write(temp);
 		}
 
@@ -117,6 +116,10 @@ void main()
 	catch(const std::logic_error& message)
 	{
 		std::cout<<message.what()<<"\n";
+	}
+	catch(std::exception )
+	{
+		std::cout<<"Unknown error";
 	}
 	catch( ... )
 	{

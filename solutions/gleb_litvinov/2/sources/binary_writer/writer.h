@@ -7,17 +7,17 @@ namespace io
 {
 	class bin_writer:virtual protected boost::noncopyable
 	{
-		std::ofstream out;
+		mutable std::ofstream out;
 		public:
 			bin_writer(std::string name);
 			~bin_writer();
 			template <typename T>
-			void write(T &a)
+			void write(T &a)const
 			{
-				out.write(reinterpret_cast< char* >( &a ), sizeof( T ) );
+				out.write(reinterpret_cast< char* >( const_cast< T* >( &a ) ), sizeof( T ) );
 			}
-			void write(char* a,const size_t length);
-			bool is_open();
+			void write(const char* const a,const size_t length)const;
+			bool is_open()const ;
 		
 				
 	};

@@ -9,7 +9,7 @@ namespace io
 	{
 		std::ifstream in;
 		public:
-			bin_reader(std::string name);
+			bin_reader(const std::string& name);
 			~bin_reader();
 			template <typename T>
 			void read(T &a)
@@ -19,7 +19,7 @@ namespace io
 			void read(char* a,const size_t length);
 			std::string read(const size_t length);
 			bool is_open()const;
-			bool eof();
+			bool eof() const;
 				
 	};
 

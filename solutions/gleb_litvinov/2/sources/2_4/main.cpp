@@ -52,7 +52,7 @@ class task
 public:
 	task()
 		: in(BINARY_DIR"/input.txt" ),out(BINARY_DIR"/output.txt")
-	{   
+	{
 		if (!in.is_open()) throw(std::logic_error("Can't open Input"));
 		if (!out.is_open()) throw(std::logic_error("Can't open Output"));
 		
@@ -87,19 +87,21 @@ public:
 void main()
 {
 	try
-    {
+	{
 		task realization;
 		realization.solve();
-    }
-    catch(const std::logic_error& message)
+	}
+	catch(const std::logic_error& message)
 	{
 		std::cout<<message.what()<<"\n";
 	}
-	catch( ... )
+	catch(std::exception )
 	{
 		std::cout<<"Unknown error";
 	}
-	
+		catch( ... )
+	{
+		std::cout<<"Unknown error";
+	}
 
 }
-

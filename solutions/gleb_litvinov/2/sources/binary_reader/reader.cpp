@@ -13,7 +13,7 @@ namespace io
 		delete []c;
 		return tmp;
 	}
-	bin_reader::bin_reader(std::string name)
+	bin_reader::bin_reader(const std::string& name)
 	{
 		in.open(name,std::ios_base::binary);
 	}
@@ -29,7 +29,7 @@ namespace io
 	{
 		in.read( a, length );
 	}
-	bool bin_reader::eof()
+	bool bin_reader::eof() const
 	{
 		return !in;
 	}

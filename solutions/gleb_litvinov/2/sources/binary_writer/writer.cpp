@@ -10,11 +10,11 @@ namespace io
 	{
 		if (out.is_open()) out.close();
 	}
-	bool bin_writer::is_open()
+	bool bin_writer::is_open()const
 	{
 		return out.is_open();
 	}
-	void bin_writer::write(char* const a,size_t length)
+	void bin_writer::write(const char* const a,size_t length) const
 	{
 		out.write( a, length );
 	}

@@ -48,13 +48,13 @@ class task
 {
 	data current_data;
 	io::bin_reader in;
-	io::bin_writer out;	
+	io::bin_writer out;
 public:
 	
 
 	task()
-		: in(BINARY_DIR"/input.txt" ),out(BINARY_DIR"/output.txt")
-	{   
+		: in(SOURCE_DIR"/input.txt" ),out(BINARY_DIR"/output.txt")
+	{
 		if (!in.is_open()) throw(std::logic_error("Can't open file"));
 		if (!out.is_open()) throw(std::logic_error("Can't open file "));
 		
@@ -84,13 +84,17 @@ public:
 void main()
 {
 	try
-    {
+	{
 		task realization;
 		realization.solve();
-    }
-    catch(const std::logic_error& message)
+	}
+	catch(const std::logic_error& message)
 	{
 		std::cout<<message.what()<<"\n";
+	}
+	catch(std::exception )
+	{
+		std::cout<<"Unknown error";
 	}
 	catch( ... )
 	{
