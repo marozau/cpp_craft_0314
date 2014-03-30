@@ -12,9 +12,9 @@ namespace io
 			bin_writer(std::string name);
 			~bin_writer();
 			template <typename T>
-			void write(T &a)const
+			void write(const T &a)const
 			{
-				out.write(reinterpret_cast< char* >( const_cast< T* >( &a ) ), sizeof( T ) );
+				out.write(reinterpret_cast< const char* >( &a ), sizeof( T ) );
 			}
 			void write(const char* const a,const size_t length)const;
 			bool is_open()const ;
