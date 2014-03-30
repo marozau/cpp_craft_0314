@@ -1,4 +1,5 @@
 #include "stock_data.h"
+#include "market_message.h"
 
 binary_reader::stock_data::stock_data( std::ifstream& in )
 {
@@ -54,7 +55,7 @@ binary_reader::stock_data::~stock_data()
 {
 }
 
-void binary_reader::stock_data::write( std::ofstream& out )
+void binary_reader::stock_data::write( std::ofstream& out ) const
 {
 	boost::uint32_t date = 0;
 	int month;
@@ -65,23 +66,23 @@ void binary_reader::stock_data::write( std::ofstream& out )
 
 	static char stock_name[ 9 ];
 	memcpy( stock_name, stock_name_, sizeof( stock_name_ ) );
-	write_binary( out, stock_name );
-	write_binary( out, date );
-	write_binary( out, vwap_ );
-	write_binary( out, volume_ );
-	write_binary( out, f2_ );
+	binary_write( out, stock_name );
+	binary_write( out, date );
+	binary_write( out, vwap_ );
+	binary_write( out, volume_ );
+	binary_write( out, f2_ );
 }
 
-void binary_reader::stock_data::write_raw( std::ofstream& out )
+void binary_reader::stock_data::write_raw( std::ofstream& out ) const
 {
-	write_binary( out, stock_name_ );
-	write_binary( out, date_time_ );
-	write_binary( out, price_ );
-	write_binary( out, vwap_ );
-	write_binary( out, volume_ );
-	write_binary( out, f1_ );
-	write_binary( out, t1_ );
-	write_binary( out, f2_ );
-	write_binary( out, f3_ );
-	write_binary( out, f4_ );
+	binary_write( out, stock_name_ );
+	binary_write( out, date_time_ );
+	binary_write( out, price_ );
+	binary_write( out, vwap_ );
+	binary_write( out, volume_ );
+	binary_write( out, f1_ );
+	binary_write( out, t1_ );
+	binary_write( out, f2_ );
+	binary_write( out, f3_ );
+	binary_write( out, f4_ );
 }

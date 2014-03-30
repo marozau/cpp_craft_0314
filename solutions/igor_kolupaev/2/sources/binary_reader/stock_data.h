@@ -8,18 +8,6 @@
 
 namespace binary_reader
 {
-	template< class T >
-	void read_binary( std::ifstream& in, T& t, const size_t len = sizeof( T ) )
-	{
-		in.read( reinterpret_cast<char*>( &t ), len );
-	}
-
-	template< class T >
-	void write_binary( std::ofstream& out, T& t, const size_t len = sizeof( T ) )
-	{
-		out.write( reinterpret_cast<const char*>( &t ), len );
-	}
-
 	class stock_data: virtual protected boost::noncopyable
 	{
 		char stock_name_[ 8 ];
@@ -65,13 +53,10 @@ namespace binary_reader
 		double f4() const { return f4_; }
 
 		//
-		void write( std::ofstream& out );
-		void write_raw( std::ofstream& out );
+		void write( std::ofstream& out ) const;
+		void write_raw( std::ofstream& out ) const;
 
-		bool eof()
-		{
-			return eof_;
-		}
+		bool eof() const { return eof_; }
 	};
 }
 

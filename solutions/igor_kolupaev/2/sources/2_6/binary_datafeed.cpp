@@ -55,13 +55,13 @@ public:
 		f2_ = data.f2();
 	};
 
-	void write( std::ofstream& out )
+	void write( std::ofstream& out ) const
 	{
 		out.write( stock_name_, sizeof( stock_name_ ) );
-		out.write( reinterpret_cast<char*>( &date_time_ ), sizeof( date_time_ ) );
-		out.write( reinterpret_cast<char*>( &price_ ), sizeof( price_ ) );
-		out.write( reinterpret_cast<char*>( &volume_ ), sizeof( volume_ ) );
-		out.write( reinterpret_cast<char*>( &f2_ ), sizeof( f2_ ) );
+		out.write( reinterpret_cast<const char*>( &date_time_ ), sizeof( date_time_ ) );
+		out.write( reinterpret_cast<const char*>( &price_ ), sizeof( price_ ) );
+		out.write( reinterpret_cast<const char*>( &volume_ ), sizeof( volume_ ) );
+		out.write( reinterpret_cast<const char*>( &f2_ ), sizeof( f2_ ) );
 	}
 
 	void read( std::ifstream& in )
