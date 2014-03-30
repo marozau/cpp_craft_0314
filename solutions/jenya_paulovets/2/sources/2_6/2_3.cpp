@@ -18,15 +18,15 @@ struct Sdata {
 	double f3;
 	double f4;
 
-	Sdata() :
-			price(0), vwap(0), volume(0), f1(0), t1(0), f2(0), f3(0), f4(0) {
-	}
+	Sdata() : price(0), vwap(0), volume(0), f1(0), t1(0), f2(0), f3(0), f4(0)
+	{}
 
 	bool readData(std::fstream &fileIn, const uint_32 sizeStr);
-	bool writeData(std::fstream &fileOut, uint_32 days, const uint_32 sizeStr);
+	bool writeData(std::fstream &fileOut, uint_32 days, const uint_32 sizeStr) const;
 };
 
-bool Sdata::readData(std::fstream &fileIn, const uint_32 sizeStr){
+bool Sdata::readData(std::fstream &fileIn, const uint_32 sizeStr)
+{
 	fileIn.read(reinterpret_cast<char*>(stock_name), (sizeStr - 1) * sizeof(char));
 	stock_name[sizeStr - 1] = '\0';
 	fileIn.read(reinterpret_cast<char*>(date_time), (sizeStr - 1) * sizeof(char));
@@ -43,43 +43,48 @@ bool Sdata::readData(std::fstream &fileIn, const uint_32 sizeStr){
 	return true;
 }
 
-bool Sdata::writeData(std::fstream &fileOut, uint_32 days, const uint_32 sizeStr){
-	fileOut.write(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
-	fileOut.write(reinterpret_cast<char*>(&days), sizeof(uint_32));
-	fileOut.write(reinterpret_cast<char*>(&vwap), sizeof(double));
-	fileOut.write(reinterpret_cast<char*>(&volume), sizeof(uint_32));
-	fileOut.write(reinterpret_cast<char*>(&f2), sizeof(double));
+bool Sdata::writeData(std::fstream &fileOut, uint_32 days, const uint_32 sizeStr) const
+{
+	fileOut.write(reinterpret_cast<const char*>(stock_name), sizeStr * sizeof(char));
+	fileOut.write(reinterpret_cast<const char*>(&days), sizeof(uint_32));
+	fileOut.write(reinterpret_cast<const char*>(&vwap), sizeof(double));
+	fileOut.write(reinterpret_cast<const char*>(&volume), sizeof(uint_32));
+	fileOut.write(reinterpret_cast<const char*>(&f2), sizeof(double));
 	if(!fileOut)return false;
 	return true;
 }
 
 //Parsed request to get necessary information
-void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const uint_32 sizeStr) {
+void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const uint_32 sizeStr)
+{
 
 	Sdata *request = new Sdata();
 
-	if(!request->readData(fileIn, sizeStr)){
-			std::cout << "There is no data in input file" << std::endl;
-			fileIn.close();
-			fileOut.close();
-			exit(1);
-		}
+	if(!request->readData(fileIn, sizeStr))
+	{
+		std::cout << "There is no data in input file" << std::endl;
+		fileIn.close();
+		fileOut.close();
+		exit(1);
+	}
 
 	const uint_32 daysOfYear = 372;
 	const uint_32 daysOfMonth = 31;
 	uint_32 days = 0;
 	date *dateShell = NULL;
 
-	do {
+	do
+	{
 		dateShell = new date(boost::gregorian::from_undelimited_string(request->date_time));
 		days = dateShell->year() * daysOfYear + (dateShell->month()-1) * daysOfMonth + dateShell->day();
 
-		if(!request->writeData(fileOut, days, sizeStr)){
-						std::cout << "Write error" << std::endl;
-						fileIn.close();
-						fileOut.close();
-						exit(1);
-					}
+		if(!request->writeData(fileOut, days, sizeStr))
+		{
+			std::cout << "Write error" << std::endl;
+			fileIn.close();
+			fileOut.close();
+			exit(1);
+		}
 
 		delete request;
 		request = new Sdata();
@@ -88,47 +93,13 @@ void parseInputData(std::fstream &fileIn, std::fstream &fileOut, const uint_32 s
 	delete request;
 }
 
-//Console check for result data
-void concoleCheckForOutput(std::fstream &fileIn, const uint_32 sizeStr){
-	char *stock_name=NULL;
-	uint_32 volume=0;
-	uint_32 days=0;
-	double vwap=0;
-	double f2=0;
-	stock_name=new char[sizeStr];
-
-	fileIn.read(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
-	if (!fileIn) {
-		std::cout << "There is no data in output file" << std::endl;
-		fileIn.close();
-		exit(1);
-	}
-	fileIn.read(reinterpret_cast<char*>(&days), sizeof(uint_32));
-	fileIn.read(reinterpret_cast<char*>(&vwap), sizeof(double));
-	fileIn.read(reinterpret_cast<char*>(&volume), sizeof(uint_32));
-	fileIn.read(reinterpret_cast<char*>(&f2), sizeof(double));
-
-
-	do {
-	    std::cout<<stock_name<<" "<<days<<" "<<vwap<<" "<<volume<<" "<<f2<<std::endl;
-
-	    delete []stock_name;
-	    stock_name=new char[sizeStr];
-	    fileIn.read(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
-	    fileIn.read(reinterpret_cast<char*>(&days), sizeof(uint_32));
-	    fileIn.read(reinterpret_cast<char*>(&vwap), sizeof(double));
-	    fileIn.read(reinterpret_cast<char*>(&volume), sizeof(uint_32));
-	    fileIn.read(reinterpret_cast<char*>(&f2), sizeof(double));
-	} while (fileIn);
-	delete []stock_name;
-}
-
-
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 
 	std::fstream fileIn;
 	fileIn.open( BINARY_DIR "/input.txt", std::ios::binary | std::ios::in);
-	if (!fileIn) {
+	if (!fileIn)
+	{
 		std::cout << "Error path for input.txt" << std::endl;
 		fileIn.close();
 		exit(1);
@@ -136,7 +107,8 @@ int main(int argc, char **argv) {
 
 	std::fstream fileOut;
 	fileOut.open( BINARY_DIR "/output.txt", std::ios::binary | std::ios::out);
-	if (!fileOut) {
+	if (!fileOut)
+	{
 		std::cout << "Error path for output.txt" << std::endl;
 		fileIn.close();
 		fileOut.close();
@@ -148,17 +120,6 @@ int main(int argc, char **argv) {
 
 	fileIn.close();
 	fileOut.close();
-
-	/*fileIn.open( BINARY_DIR "/output.txt", std::ios::binary | std::ios::in);
-			if (!fileIn) {
-				std::cout << "Error path for output.txt" << std::endl;
-				fileIn.close();
-				exit(1);
-			}
-
-	concoleCheckForOutput(fileIn, sizeStr);
-
-	fileIn.close();*/
 
 	return 0;
 }
