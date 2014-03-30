@@ -37,9 +37,9 @@ void messages_counter::add_count( const uint32_t message_type, const uint32_t nu
 	_data[ message_type ].messages_num += number;
 }
 
-void messages_counter::output_avg( std::ostream& out )
+void messages_counter::output_avg( std::ostream& out ) const
 {
-	for( msg_map_t::iterator it = _data.begin(); it != _data.end(); ++it )
+	for( msg_map_t::const_iterator it = _data.begin(); it != _data.end(); ++it )
 	{
 		const uint32_t message_type = it->first;
 		const double avg = it->second.average();

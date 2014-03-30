@@ -18,12 +18,6 @@ namespace trades_filter
 {
 	static boost::mutex output_mutex_;
 
-	void debug( const size_t thread_index, const std::string& message )
-	{
-		boost::mutex::scoped_lock lock( output_mutex_ );
-		std::cerr << "thread #" << thread_index << " " << message << std::endl;
-	}
-
 	void do_parse(const int thread_index)
 	{
 		static input_files_queue queue;
@@ -48,11 +42,8 @@ namespace trades_filter
 
 			if( !in.is_open() )
 			{
-				debug( thread_index, input_filename + " is not found" );
 				continue;
 			}
-
-			debug( thread_index, input_filename + " is opened" );
 
 			std::string output_path= BINARY_DIR + std::string( "/" ) + output_filename;
 			std::ofstream out( output_path, std::ios::out | std::ios::binary );
@@ -77,9 +68,6 @@ namespace trades_filter
 
 			in.close();
 			out.close();
-
-			debug( thread_index, output_filename + " is created" );
-
 		}
 	}
 }

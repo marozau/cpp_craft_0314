@@ -23,7 +23,7 @@ public:
 	void merge( const time_counter_t& second_counter );
 	void inc_time( const uint32_t message_type );
 	void add_count( const uint32_t message_type, const uint32_t number );
-	void output_avg( std::ostream& out );
+	void output_avg( std::ostream& out ) const;
 
 private: 
 	msg_map_t _data;
