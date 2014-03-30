@@ -20,15 +20,15 @@ struct Sdata {
 	double f3;
 	double f4;
 
-	Sdata() :
-			price(0), vwap(0), volume(0), f1(0), t1(0), f2(0), f3(0), f4(0) {
-	}
+	Sdata() : price(0), vwap(0), volume(0), f1(0), t1(0), f2(0), f3(0), f4(0)
+	{}
 
 	bool readData(std::ifstream * const fileIn, const uint_32 sizeStr);
-	bool writeData(std::ofstream * const fileOut, uint_32 days, const uint_32 sizeStr);
+	bool writeData(std::ofstream * const fileOut, uint_32 days, const uint_32 sizeStr) const;
 };
 
-bool Sdata::readData(std::ifstream * const fileIn, const uint_32 sizeStr) {
+bool Sdata::readData(std::ifstream * const fileIn, const uint_32 sizeStr)
+{
 	fileIn->read(reinterpret_cast<char*>(stock_name), (sizeStr - 1) * sizeof(char));
 	stock_name[sizeStr] = '\0';
 	fileIn->read(reinterpret_cast<char*>(date_time), (sizeStr - 1) * sizeof(char));
@@ -46,24 +46,27 @@ bool Sdata::readData(std::ifstream * const fileIn, const uint_32 sizeStr) {
 	return true;
 }
 
-bool Sdata::writeData(std::ofstream * const fileOut, uint_32 days, const uint_32 sizeStr) {
-	fileOut->write(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
-	fileOut->write(reinterpret_cast<char*>(&days), sizeof(uint_32));
-	fileOut->write(reinterpret_cast<char*>(&vwap), sizeof(double));
-	fileOut->write(reinterpret_cast<char*>(&volume), sizeof(uint_32));
-	fileOut->write(reinterpret_cast<char*>(&f2), sizeof(double));
+bool Sdata::writeData(std::ofstream * const fileOut, uint_32 days, const uint_32 sizeStr) const
+{
+	fileOut->write(reinterpret_cast<const char*>(stock_name), sizeStr * sizeof(char));
+	fileOut->write(reinterpret_cast<const char*>(&days), sizeof(uint_32));
+	fileOut->write(reinterpret_cast<const char*>(&vwap), sizeof(double));
+	fileOut->write(reinterpret_cast<const char*>(&volume), sizeof(uint_32));
+	fileOut->write(reinterpret_cast<const char*>(&f2), sizeof(double));
 	if (!*fileOut)
 		return false;
 	return true;
 }
 
 //Parsed request to get necessary information
-void parseInputData(std::ifstream * const fileIn, std::ofstream * const fileOut) {
+void parseInputData(std::ifstream * const fileIn, std::ofstream * const fileOut)
+{
 	Sdata *request = new Sdata();
 
 	const uint_32 sizeStr = 9;
 
-	if (!request->readData(fileIn, sizeStr)) {
+	if (!request->readData(fileIn, sizeStr))
+	{
 		std::cout << "There is no data in input file" << std::endl;
 		fileIn->close();
 		fileOut->close();
@@ -77,11 +80,13 @@ void parseInputData(std::ifstream * const fileIn, std::ofstream * const fileOut)
 	uint_32 days = 0;
 	date *dateShell = NULL;
 
-	do {
+	do
+	{
 		dateShell = new date(boost::gregorian::from_undelimited_string(request->date_time));
 		days = dateShell->year() * daysOfYear + (dateShell->month() - 1) * daysOfMonth + dateShell->day();
 
-		if (!request->writeData(fileOut, days, sizeStr)) {
+		if (!request->writeData(fileOut, days, sizeStr))
+		{
 			std::cout << "Write error" << std::endl;
 			fileIn->close();
 			fileOut->close();
@@ -101,45 +106,10 @@ void parseInputData(std::ifstream * const fileIn, std::ofstream * const fileOut)
 
 	delete fileIn;
 	delete fileOut;
-
 }
 
-//Console check for result data
-void consoleCheckForOutput(std::ifstream *const fileIn){
-	const uint_32 sizeStr = 9;
-	char *stock_name=NULL;
-	uint_32 volume=0;
-	uint_32 days=0;
-	double vwap=0;
-	double f2=0;
-	stock_name=new char[sizeStr];
-
-	fileIn->read(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
-	if (!fileIn) {
-		std::cout << "There is no data in output file" << std::endl;
-		return;
-	}
-	fileIn->read(reinterpret_cast<char*>(&days), sizeof(uint_32));
-	fileIn->read(reinterpret_cast<char*>(&vwap), sizeof(double));
-	fileIn->read(reinterpret_cast<char*>(&volume), sizeof(uint_32));
-	fileIn->read(reinterpret_cast<char*>(&f2), sizeof(double));
-
-
-	do {
-	    std::cout<<stock_name<<" "<<days<<" "<<vwap<<" "<<volume<<" "<<f2<<std::endl;
-
-	    delete []stock_name;
-	    stock_name=new char[sizeStr];
-	    fileIn->read(reinterpret_cast<char*>(stock_name), sizeStr * sizeof(char));
-	    fileIn->read(reinterpret_cast<char*>(&days), sizeof(uint_32));
-	    fileIn->read(reinterpret_cast<char*>(&vwap), sizeof(double));
-	    fileIn->read(reinterpret_cast<char*>(&volume), sizeof(uint_32));
-	    fileIn->read(reinterpret_cast<char*>(&f2), sizeof(double));
-	} while (*fileIn);
-	delete []stock_name;
-}
-
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 
 	boost::thread_group threads;
 
@@ -150,20 +120,23 @@ int main(int argc, char **argv) {
 	const uint_32 var = number.size();
 	std::string buf;
 
-	for (uint_32 i = 1; i <= 999; i++) {
+	for (uint_32 i = 1; i <= 999; i++)
+	{
 		buf = boost::lexical_cast<std::string>(i);
 		number.insert(number.size() - buf.size(), buf);
 		number.erase(var);
 
 		std::ifstream *fileIn = new std::ifstream( BINARY_DIR (nameIn + number + format).c_str(), std::ios::binary);
-		if (!*fileIn) {
+		if (!*fileIn)
+		{
 			std::cout << "Error path for " << nameIn + number + format << std::endl;
 			fileIn->close();
 			delete fileIn;
 			continue;
 		}
 		std::ofstream *fileOut = new std::ofstream( BINARY_DIR (nameOut + number + format).c_str(), std::ios::binary);
-		if (!*fileOut) {
+		if (!*fileOut)
+		{
 			std::cout << "Error path for " << nameOut + number + format << std::endl;
 			fileIn->close();
 			fileOut->close();
@@ -175,23 +148,6 @@ int main(int argc, char **argv) {
 	}
 
 	threads.join_all();
-
-	/*number = "000";
-
-		for (uint_32 i = 1; i <= 999; i++) {
-					buf = boost::lexical_cast<std::string>(i);
-					number.insert(number.size() - buf.size(), buf);
-					number.erase(var);
-
-					std::ifstream *fileIn = new std::ifstream( BINARY_DIR (nameOut + number + format).c_str(), std::ios::binary);
-
-					consoleCheckForOutput(fileIn);
-
-					std::cout<<std::endl<<std::endl<<std::endl;
-
-					fileIn->close();
-					delete fileIn;
-			}*/
 
 	return 0;
 }
