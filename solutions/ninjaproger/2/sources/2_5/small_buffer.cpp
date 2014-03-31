@@ -9,6 +9,7 @@ using namespace std;
 typedef map<uint32_t, map<uint32_t, uint32_t> >TypeMap;
 typedef map<uint32_t, uint32_t> TimeMap;
 
+
 int main()
 {
     ifstream in_file(BINARY_DIR "/input.txt",std::ios_base::binary);
@@ -19,6 +20,8 @@ int main()
     
     
     TypeMap type_map;
+    map<uint32_t, uint32_t> bufferUsedBytesMap;
+    uint32_t lastSecond = UINT32_MAX;
     
     while (1) {
         binary_reader::market_message msg(in_file);
@@ -26,11 +29,22 @@ int main()
         if(in_file.eof())
             break;
         
-        if(msg.msg_len() > (2048 - sizeof(uint32_t)*3))
-            continue;
-        
         const uint32_t type = msg.type();
         const uint32_t time = msg.time();
+        
+        if(lastSecond!=time)
+        {
+            bufferUsedBytesMap.empty();
+            lastSecond = time;
+        }
+        
+        uint32_t msgBytes = msg.msg_len() + sizeof(uint32_t)*3;
+        
+        if((bufferUsedBytesMap[type] + msgBytes) > 2048)
+            continue;
+        
+        bufferUsedBytesMap[type]+=msgBytes;
+        
         TimeMap sec_map = type_map[type];
         sec_map[time]++;
         type_map[type] = sec_map;
