@@ -11,14 +11,14 @@ using namespace std;
 {
 
 	if(!in.read(reinterpret_cast<char*>(&type_), sizeof(boost:: uint32_t)) )
-			throw exception("input is incorrect");
+		throw logic_error("input is incorrect");
 	if(!in.read(reinterpret_cast<char*>(&time_), sizeof(boost:: uint32_t)) )
-			throw exception("input is incorrect");
+			throw logic_error("input is incorrect");
 	if(!in.read(reinterpret_cast<char*>(&len_), sizeof(boost:: uint32_t)) )
-			throw exception("input is incorrect");
+			throw logic_error("input is incorrect");
 	msg_ = new char[len_];
 	if(!in.read(msg_, len_) )
-			throw exception("input is incorrect");
+			throw logic_error("input is incorrect");
 }
 binary_reader::market_message::market_message( const boost::uint32_t type,
 											   const boost::uint32_t time,
@@ -86,6 +86,7 @@ boost::uint32_t binary_reader::market_message::len() const
 {
 	return len_;
 }
+
 
 size_t  binary_reader::market_message:: get_size() const
 {
