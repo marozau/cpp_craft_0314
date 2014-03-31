@@ -15,9 +15,10 @@ namespace task4_6
 	{
 	public:
 		explicit solution(const lines & calulatorLines);
+		~solution();
 		int result_for(const std::string & key) const;
 	private:
-		std::shared_ptr<solution_4_6_impl> solutionImpl_;
+		std::unique_ptr<solution_4_6_impl> solutionImpl_;
 	};
 }
 

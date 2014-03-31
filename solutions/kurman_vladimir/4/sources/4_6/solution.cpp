@@ -195,3 +195,8 @@ int task4_6::solution::result_for(const std::string & key) const
 	const int ans = static_cast<int>(std::floor(std::abs(value) + 0.5));
 	return sign ? ans : -ans;
 }
+
+task4_6::solution::~solution()
+{
+
+}
