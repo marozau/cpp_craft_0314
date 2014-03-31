@@ -9,10 +9,9 @@ binary_reader::market_message::market_message( std::ifstream& in )
     in.read( reinterpret_cast< char * >( &_time), sizeof(_time));
     in.read( reinterpret_cast< char * >( &_len), sizeof(_len));
 
-    _msg = new char[_len+1];
+    _msg = new char[_len];
     if(_len)
         in.read(_msg,_len);
-    _msg[_len]=0;
 }
 
 binary_reader::market_message::market_message( const boost::uint32_t type, const boost::uint32_t time,const boost::uint32_t len,const char* const msg )
