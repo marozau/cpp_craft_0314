@@ -22,7 +22,7 @@ int main()
 			binary_reader::market_message market(filein);
 			if (filein.good() && market.type() >= 1 && market.type() <= 4){
 				// cout << market.type() << "\t" << market.time() << "\t" << market.len() << "\t" << market.msg() << endl;
-				boost::uint32_t this_time = market.time();
+				const boost::uint32_t this_time = market.time();
 				if (this_time + 2 <= maxTime){
 					continue;
 				}
