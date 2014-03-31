@@ -4,9 +4,10 @@
 
 using namespace std;
 
-double truncate(double& x)
+double truncate(const double& x)
 {
-	return floor(x * 10000) / 10000; 
+	const int prec = 10000;
+	return floor(x * prec) / prec; 
 }
 
 int main()

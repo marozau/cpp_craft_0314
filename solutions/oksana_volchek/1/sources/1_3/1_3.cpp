@@ -6,6 +6,11 @@
 
 using namespace std;
 
+namespace myConst {
+	const char land = 'o';
+	const char water ='~';
+}
+
 int main()
 {
 	ifstream filein;
@@ -21,11 +26,11 @@ int main()
 			row++;
 			strLength = line.length();
 			for (column = 1; column <= strLength; ++column){
-				if (line[column - 1] == 'o'){
+				if (line[column - 1] == myConst::land){
 					datapoint = make_pair(row, column);
 					coordinates.insert(datapoint);
 				}
-				else if (line[column - 1] == '~'){ 
+				else if (line[column - 1] == myConst::water){ 
 					continue;
 				}
 				else { cout << "Error! Unknown symbol in input.txt!" << endl; }
