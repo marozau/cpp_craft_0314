@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
 	map < boost::uint32_t, size_t> size;
 
 	try
-		{
-			binary_reader:: market_message message(in); 
-			if (message.check_size(size))
+	{
+		binary_reader:: market_message message(in); 
+		if (message.check_size(size))
 		{
 			kolv[message.type()]++;
 			size[message.type()]+= message.get_size();
@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
 				kolv[message.type()]++;
 			}
 			else 
+			{
 				if( last[message.type()]!=message.time() )
 				{
 					sec[message.type()]++;
@@ -60,7 +61,8 @@ int main(int argc, char* argv[])
 				   
 				if(!kolv.count( message.type() ) )
 				   kolv[message.type()] = 0;
-			 }
+			}
+		}
 	}
 	catch(...) {};
 	in.close();
@@ -71,14 +73,14 @@ int main(int argc, char* argv[])
 	try
 	{
 
-		for( map <boost:: uint32_t, int>::iterator it = kolv.begin();it!=kolv.end();it++)
+		for( map <boost:: uint32_t, int>::const_iterator it = kolv.begin();it!=kolv.end();it++)
 		{
 			if (it->second!=0)
 			{
-				boost:: uint32_t a= (it->first);
+				const boost:: uint32_t a = it->first;
 				out.write(reinterpret_cast< const char*>(&a), sizeof(boost::uint32_t));
-				double b = static_cast< double >(it->second)/sec[it->first];
-				out.write(reinterpret_cast<char*>(&b), sizeof(double));
+				const double b = static_cast< double >(it->second)/sec[it->first];
+				out.write(reinterpret_cast<const char*>(&b), sizeof(double));
 			}
 		}
 	}

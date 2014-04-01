@@ -22,15 +22,14 @@ int main(int argc, char* argv[])
 	while ( in.good() )
 	{
 		try
-			{
-				binary_reader:: market_message message(in); 
+		{
+			binary_reader:: market_message message(in); 
 		
-				if(!in.good()) break;
-				if( message.check(curr_time) ) 
-						message.write(out);
-				else 
-						continue;
-			}
+			if(!in.good()) break;
+			if( message.check(curr_time) ) 
+					message.write(out);
+
+		}
 		catch(...) {};
 	}
 

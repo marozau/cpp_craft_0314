@@ -30,42 +30,42 @@ binary_reader::market_message::market_message( const boost::uint32_t type,
 void binary_reader::market_message::write( std::ofstream& out ) const
 {
 	if(!out.write(reinterpret_cast< const char*>(&type_),sizeof(type_)) )
-			throw exception("can't write");
+			throw logic_error("can't write");
 	if(!out.write(reinterpret_cast<const char*>(&time_), sizeof(time_)) )
-			throw exception("can't write");
+			throw logic_error("can't write");
 	if(!out.write(reinterpret_cast<const char*>(&len_), sizeof(len_)) )
-			throw exception("can't write");
+			throw logic_error("can't write");
 	if(!out.write(msg_, len_ ))
-			throw exception("can't write");
+			throw logic_error("can't write");
 
 }
 
-void binary_reader::market_message::write_txt( std::ofstream& out )
+void binary_reader::market_message::write_txt( std::ofstream& out ) const
 {
-	out<<type_<<" "<<time_<<" "<<len_<<" "<<msg_<<endl;
+	out << type_ << " " << time_ << " " << len_ << " " << msg_ << endl;
 }
 
 binary_reader::market_message::~market_message()
 {
 	if( msg_ != NULL )
 	{
-		delete msg_;
+		delete [] msg_;
 	}
 }
 
 bool binary_reader::market_message:: check(boost:: uint32_t& curr_time) const 
 {
 	if (curr_time<time_) 
-		{
-			curr_time=time_;
-			if (type_>=1 && type_<=4)  
-				return true;
-		}
+	{
+		curr_time=time_;
+		if (type_>=1 && type_<=4)  
+			return true;
+	}
 	else
-		{
-			if( time_+2>curr_time && type_>=1 && type_<=4 )
-				return true;
-		} 
+	{
+		if( time_+2>curr_time && type_>=1 && type_<=4 )
+			return true;
+	} 
 	return false;
 
 }
