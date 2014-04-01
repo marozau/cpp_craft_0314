@@ -2,37 +2,45 @@
 #include <iostream>
 #include <fstream>
 #include <boost/filesystem.hpp>
+#include <boost/thread.hpp>
 #include <pthread.h>
+
+static const uint32_t kDelta = 2;
 
 using namespace boost;
 using namespace std;
 
-void *process_data(void* arg)
+void process_data(const void* path)
 {
-    char *in_file_name = (char*)arg;
-    char *out_file_name = new char[strlen(in_file_name)];
-    char *file_name_end = strchr(in_file_name, '_');
-    sprintf(out_file_name, "output_%s",file_name_end + 1);
+    const filesystem::path* in_fname_path = static_cast<const filesystem::path*>(path);
+    filesystem::path out_fname_path(*in_fname_path);
     
-    string in_path_str = string(BINARY_DIR).append("/").append(in_file_name);
-    string out_path_str = string(BINARY_DIR).append("/").append(out_file_name);
-    ifstream in(in_path_str);
-    ofstream out(out_path_str);
+    string out_fname_str(out_fname_path.filename().string());
+    const char * str_to_replace = "input_";
+    size_t pos = out_fname_str.find(str_to_replace);
+    size_t len = strlen(str_to_replace);
+    out_fname_str.replace(pos, len,"output_");
+    out_fname_path.remove_filename();
+    out_fname_path /= out_fname_str;
     
-    delete out_file_name;
+    std::ifstream in_file(in_fname_path->string(),ios_base::binary);
+    std::ofstream out_file(out_fname_path.string(),ios_base::binary);
     
-    if(!in.is_open()||!out.is_open())
-    {
-        runtime_error("Error:Couldn't open file!");
+    try {
+        if(!in_file.is_open()||!out_file.is_open())
+            throw runtime_error("Error:Unable to open file");
+    } catch (runtime_error& e) {
+        cout << e.what() << endl;
+        return;
     }
     
     uint32_t max_t = 0;
     
     while (1) {
         
-        binary_reader::market_message msg(in);
+        binary_reader::market_message msg(in_file);
         
-        if(in.eof())
+        if(in_file.eof())
             break;
         
         const uint32_t msg_type = msg.type();
@@ -43,18 +51,17 @@ void *process_data(void* arg)
             msg_type != binary_reader::market_message::MARKET_CLOSE))
             continue;
         
-        int64_t timeDelta = static_cast<int64_t>(max_t) - 2;
+        const int64_t timeDelta = static_cast<int64_t>(max_t) - kDelta;
         
         if(msg.time() > timeDelta)
-            msg.write(out);
+            msg.write(out_file);
         
         max_t = max(max_t,msg.time());
     }
     
-    in.close();
-    out.close();
+    in_file.close();
+    out_file.close();
 
-    pthread_exit(NULL);
 }
 
 
@@ -62,32 +69,24 @@ int main()
 {
     filesystem::path binary_path(BINARY_DIR);
     
-    if(!exists(binary_path))
-        runtime_error("Error:Directory does not exists!");
-    
-    for(filesystem::directory_iterator itr(binary_path); itr != filesystem::directory_iterator(); ++itr)
-    {
-        const string path_str = itr->path().filename().string();
-        if(is_regular_file(itr->path())&&
-           path_str.find("input_")!=string::npos)
+    try {
+        if(!exists(binary_path))
+            throw runtime_error("Error:Directory does not exists!");
+        
+        for(filesystem::directory_iterator itr(binary_path); itr != filesystem::directory_iterator(); ++itr)
         {
-            cout << "found file:" << itr->path().filename() << std::endl;
-            pthread_t threads[1000];
-            
-            const char *c_file = itr->path().filename().c_str();
-            char * arg_file = new char[strlen(c_file)];
-            strcpy(arg_file,c_file);
-            
-            int i = 0;
-            int rc = pthread_create(&threads[i++], NULL, process_data, (void*)arg_file);
-            if(rc)
+            const string path_str = itr->path().filename().string();
+            if(is_regular_file(itr->path())&&
+               path_str.find("input_")!=string::npos)
             {
-                cout << "Error:return from pthread_create() is:%d" << rc;
+                cout << "found file:" << itr->path().filename() << std::endl;
+                boost::thread thrd(process_data,static_cast<const void*>(&itr->path()));
+                thrd.join();
             }
         }
+    } catch (std::exception& e) {
+        cout << e.what() << endl;
     }
-    
-    pthread_exit(NULL);
 }
 
 
