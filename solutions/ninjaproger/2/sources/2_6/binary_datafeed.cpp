@@ -2,14 +2,21 @@
 #include <fstream>
 #include "stock_data.h"
 
+using namespace std;
+
 
 int main()
 {
-    std::ifstream in_file(BINARY_DIR "/input.txt",std::ios_base::binary);
-    std::ofstream out_file(BINARY_DIR "/output.txt",std::ios_base::binary);
+    ifstream in_file(BINARY_DIR "/input.txt",ios_base::binary);
+    ofstream out_file(BINARY_DIR "/output.txt",ios_base::binary);
     
-    if(!in_file.is_open()||!out_file.is_open())
-        throw std::runtime_error("unable to open file");
+    try {
+        if(!in_file.is_open()||!out_file.is_open())
+            throw runtime_error("unable to open file");
+    } catch (runtime_error& e) {
+        cout << e.what() << endl;
+        return 1;
+    }
     
     
     while (1) {

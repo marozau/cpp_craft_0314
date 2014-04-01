@@ -2,13 +2,22 @@
 #include <fstream>
 #include "market_message.h"
 
+static const uint32_t kDelta = 2;
+
+using namespace std;
+
 int main()
 {
-    std::ifstream in_file(BINARY_DIR "/input.txt",std::ios_base::binary);
-    std::ofstream out_file(BINARY_DIR "/output.txt",std::ios_base::binary);
+    std::ifstream in_file(BINARY_DIR "/input.txt",ios_base::binary);
+    std::ofstream out_file(BINARY_DIR "/output.txt",ios_base::binary);
     
-    if(!in_file.is_open()||!out_file.is_open())
-        throw std::runtime_error("unable to open file");
+    try {
+        if(!in_file.is_open()||!out_file.is_open())
+            throw runtime_error("unable to open file");
+    } catch (runtime_error& e) {
+        cout << e.what() << endl;
+        return 1;
+    }
     
     uint32_t max_t = 0;
     
@@ -27,12 +36,12 @@ int main()
             msg_type != binary_reader::market_message::MARKET_CLOSE))
             continue;
         
-        int64_t timeDelta = static_cast<int64_t>(max_t) - 2;
+        const int64_t timeDelta = static_cast<int64_t>(max_t) - kDelta;
         
         if(msg.time() > timeDelta)
             msg.write(out_file);
         
-        max_t = std::max(max_t,msg.time());
+        max_t = max(max_t,msg.time());
     }
 
     in_file.close();
