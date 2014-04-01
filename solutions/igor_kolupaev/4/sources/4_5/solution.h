@@ -9,6 +9,8 @@ namespace task4_5
 
 	class solution
 	{
+		const data_type &data;
+
 	public:
 		explicit solution( const data_type& data );
 		int get_min() const;
