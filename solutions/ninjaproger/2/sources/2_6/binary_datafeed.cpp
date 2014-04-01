@@ -29,6 +29,7 @@ int main()
         stk_data.write(out_file);
     }
     
-    
+    in_file.close();
+    out_file.close();
 }
 
