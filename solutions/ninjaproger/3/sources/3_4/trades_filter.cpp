@@ -3,18 +3,16 @@
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
-#include <pthread.h>
+#include <boost/ref.hpp>
 
 static const uint32_t kDelta = 2;
 
 using namespace boost;
 using namespace std;
 
-void process_data(const void* path)
+void process_data(const filesystem::path & in_fname_path)
 {
-    const filesystem::path* in_fname_path = static_cast<const filesystem::path*>(path);
-    filesystem::path out_fname_path(*in_fname_path);
-    
+    filesystem::path out_fname_path(in_fname_path);
     string out_fname_str(out_fname_path.filename().string());
     const char * str_to_replace = "input_";
     size_t pos = out_fname_str.find(str_to_replace);
@@ -23,14 +21,14 @@ void process_data(const void* path)
     out_fname_path.remove_filename();
     out_fname_path /= out_fname_str;
     
-    std::ifstream in_file(in_fname_path->string(),ios_base::binary);
+    std::ifstream in_file(in_fname_path.string(),ios_base::binary);
     std::ofstream out_file(out_fname_path.string(),ios_base::binary);
     
     try {
         if(!in_file.is_open()||!out_file.is_open())
             throw runtime_error("Error:Unable to open file");
     } catch (runtime_error& e) {
-        cout << e.what() << endl;
+        cerr << e.what() << endl;
         return;
     }
     
@@ -79,13 +77,12 @@ int main()
             if(is_regular_file(itr->path())&&
                path_str.find("input_")!=string::npos)
             {
-                cout << "found file:" << itr->path().filename() << std::endl;
-                boost::thread thrd(process_data,static_cast<const void*>(&itr->path()));
+                boost::thread thrd(process_data,boost::ref(itr->path()));
                 thrd.join();
             }
         }
     } catch (std::exception& e) {
-        cout << e.what() << endl;
+        cerr << e.what() << endl;
     }
 }
 
