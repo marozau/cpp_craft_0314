@@ -43,30 +43,33 @@ int task4_5::solution::get_max() const
 
 void task4_5::solution::sorting_data()
 {
-	std::vector< int > curr_vect;
+	while( true )
 	{
-		boost::mutex::scoped_lock lock( mtx_ );
+		std::vector< int > curr_vect;
 		{
-			if( curr_numb_ == size_of_data_ )
-				return;
-			curr_vect = (*data_ptr_)[curr_numb_];
-			curr_numb_++;
+			boost::mutex::scoped_lock lock( mtx_ );
+			{
+				if( curr_numb_ == size_of_data_ )
+					return;
+				curr_vect = (*data_ptr_)[curr_numb_];
+				curr_numb_++;
+			}
 		}
-	}
-	int curr_min = curr_vect[0], curr_max = curr_vect[0];
-	size_t size = curr_vect.size();
-	for( size_t i = 0; i < size; i++ )
-	{
-		if( curr_vect[i] < curr_min )
-			curr_min = curr_vect[i];
-		if( curr_vect[i] > curr_max )
-			curr_max = curr_vect[i];
-	}
-	{
-		boost::mutex::scoped_lock lock( mtx_ );
+		int curr_min = curr_vect[0], curr_max = curr_vect[0];
+		size_t size = curr_vect.size();
+		for( size_t i = 0; i < size; i++ )
 		{
-			vect_of_min_.push_back( curr_min );
-			vect_of_max_.push_back( curr_max );
+			if( curr_vect[i] < curr_min )
+				curr_min = curr_vect[i];
+			if( curr_vect[i] > curr_max )
+				curr_max = curr_vect[i];
+		}
+		{
+			boost::mutex::scoped_lock lock( mtx_ );
+			{
+				vect_of_min_.push_back( curr_min );
+				vect_of_max_.push_back( curr_max );
+			}
 		}
 	}
 }
