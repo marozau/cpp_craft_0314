@@ -3,10 +3,14 @@
 #include <boost/cstdint.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/thread.hpp>
-#include <boost/lexical_cast.hpp>
+#include <map>
+
+class fileOut;
 
 typedef boost::uint32_t uint_32;
 typedef boost::gregorian::date date;
+typedef boost::mutex io_mutex;
+typedef std::map<const std::string, fileOut*> map;
 
 struct Sdata {
 	char stock_name[9];
@@ -58,96 +62,92 @@ bool Sdata::writeData(std::ofstream * const fileOut, uint_32 days, const uint_32
 	return true;
 }
 
-//Parsed request to get necessary information
-void parseInputData(std::ifstream * const fileIn, std::ofstream * const fileOut)
+class fileOut{
+	io_mutex mutex;
+	std::ofstream *out;
+public:
+	fileOut(const char *const name);
+	void parseInputData(const Sdata *const req);
+	~fileOut();
+};
+
+fileOut::fileOut(const char *const name)
 {
-	Sdata *request = new Sdata();
+	const std::string ext = ".txt";
+	const std::string fName = std::string( BINARY_DIR ).append("/").append(name).append(ext);
 
-	const uint_32 sizeStr = 9;
+	out = new std::ofstream( fName.c_str(), std::ios::binary);
+}
 
-	if (!request->readData(fileIn, sizeStr))
-	{
-		std::cout << "There is no data in input file" << std::endl;
-		fileIn->close();
-		fileOut->close();
-		delete fileIn;
-		delete fileOut;
-		return;
-	}
+//Parsed request to get necessary information
+void fileOut::parseInputData(const Sdata *const request)
+{
+		const uint_32 sizeStr = 9;
 
-	const uint_32 daysOfYear = 372;
-	const uint_32 daysOfMonth = 31;
-	uint_32 days = 0;
-	date *dateShell = NULL;
+		const uint_32 daysOfYear = 372;
+		const uint_32 daysOfMonth = 31;
+		uint_32 days = 0;
+		date *dateShell = NULL;
 
-	do
-	{
 		dateShell = new date(boost::gregorian::from_undelimited_string(request->date_time));
 		days = dateShell->year() * daysOfYear + (dateShell->month() - 1) * daysOfMonth + dateShell->day();
 
-		if (!request->writeData(fileOut, days, sizeStr))
+		{
+		boost::mutex::scoped_lock lock(mutex);
+
+		if (!request->writeData(out, days, sizeStr))
 		{
 			std::cout << "Write error" << std::endl;
-			fileIn->close();
-			fileOut->close();
-			delete fileIn;
-			delete fileOut;
-			return;
+		}
 		}
 
 		delete request;
-		request = new Sdata();
-		delete dateShell;
-	} while (request->readData(fileIn, sizeStr));
-	delete request;
+}
 
-	fileIn->close();
-	fileOut->close();
-
-	delete fileIn;
-	delete fileOut;
+fileOut::~fileOut()
+{
+	out->close();
+	delete out;
 }
 
 int main(int argc, char **argv)
 {
-
-	boost::thread_group threads;
-
-	const std::string nameIn = "/input_";
-	const std::string nameOut = "/output_";
-	const std::string format = ".txt";
-	std::string number = "000";
-	const uint_32 var = number.size();
-	std::string buf;
-
-	for (uint_32 i = 1; i <= 999; i++)
-	{
-		buf = boost::lexical_cast<std::string>(i);
-		number.insert(number.size() - buf.size(), buf);
-		number.erase(var);
-
-		std::ifstream *fileIn = new std::ifstream( BINARY_DIR (nameIn + number + format).c_str(), std::ios::binary);
-		if (!*fileIn)
-		{
-			std::cout << "Error path for " << nameIn + number + format << std::endl;
-			fileIn->close();
-			delete fileIn;
-			continue;
-		}
-		std::ofstream *fileOut = new std::ofstream( BINARY_DIR (nameOut + number + format).c_str(), std::ios::binary);
-		if (!*fileOut)
-		{
-			std::cout << "Error path for " << nameOut + number + format << std::endl;
-			fileIn->close();
-			fileOut->close();
-			delete fileIn;
-			delete fileOut;
-			continue;
-		}
-		threads.create_thread(boost::bind(&parseInputData, fileIn, fileOut));
+	std::ifstream *fileIn = new std::ifstream( BINARY_DIR "/input.txt", std::ios::binary);
+	if(!*fileIn){
+		std::cout << "There is no input file" << std::endl;
+		delete fileIn;
+		return 1;
 	}
 
+	map *outFiles = new map();
+	boost::thread_group threads;
+	const uint_32 sizeStr = 9;
+
+	do
+	{
+		Sdata *request = new Sdata();
+
+		if(!request->readData(fileIn, sizeStr))
+		{
+			std::cout << "There is no more data" << std::endl;
+			fileIn->close();
+			delete fileIn;
+			break;
+		}
+
+		if(outFiles->find(request->stock_name) == outFiles->end())
+		(*outFiles)[request->stock_name] = new fileOut(request->stock_name);
+
+		threads.create_thread(boost::bind(&fileOut::parseInputData, (*outFiles)[request->stock_name], request));
+	}while(*fileIn);
+
 	threads.join_all();
+
+	for (map::iterator it = outFiles->begin(); it != outFiles->end(); ++it) {
+		delete it->second;
+	}
+
+	delete outFiles;
 
 	return 0;
 }

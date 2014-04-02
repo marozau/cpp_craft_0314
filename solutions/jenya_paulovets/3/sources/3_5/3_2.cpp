@@ -2,7 +2,7 @@
 #include <fstream>
 #include <boost/cstdint.hpp>
 #include <boost/thread.hpp>
-#include <boost/lexical_cast.hpp>
+#include <boost/format.hpp>
 #include <vector>
 #include <map>
 
@@ -53,7 +53,9 @@ bool checkBuffer(map *typesOfMsg, const Sdata *const request, const uint_32 limi
 		}
 	}
 
-	if ((count+1) * 3  * sizeof(uint_32) + sumLenStr + request->len + 1 > limit)
+	const uint_32 numOfElem = 3;
+
+	if ((count+1) * numOfElem  * sizeof(uint_32) + sumLenStr + request->len + 1 > limit)
 		return false;
 	else
 		return true;
@@ -73,11 +75,11 @@ bool handlerOfData(std::ifstream * const fileIn, map * const typesOfMsg, const u
 		return false;
 	}
 
-	uint_32 sizeOfReq = 0;
+	const uint_32 numOfElem = 3;
 
 	do
 	{
-		sizeOfReq = 3 * sizeof(uint_32) + request->len + 1;
+		const uint_32 sizeOfReq = numOfElem * sizeof(uint_32) + request->len + 1;
 
 		if (request->type <= size && sizeOfReq <= limit && typesOfMsg->find(request->type) == typesOfMsg->end())
 			(*typesOfMsg)[request->type] = new vector;
@@ -166,35 +168,31 @@ int main(int argc, char **argv)
 	const std::string nameIn = "/input_";
 	const std::string nameOut = "/output_";
 	const std::string format = ".txt";
-	std::string number = "000";
-	const uint_32 var = number.size();
-	std::string buf;
 
 	for (uint_32 i = 1; i <= 999; i++)
 	{
-		buf = boost::lexical_cast<std::string>(i);
-		number.insert(number.size() - buf.size(), buf);
-		number.erase(var);
+		const std::string number = boost::str(boost::format("%03u") % i);
 
-		std::ifstream *fileIn = new std::ifstream( BINARY_DIR (nameIn + number + format).c_str(), std::ios::binary);
+		const std::string in_path = std::string( BINARY_DIR ).append( nameIn ).append( number ).append( format );
+		const std::string out_path = std::string( BINARY_DIR ).append( nameOut ).append( number ).append( format );
+
+		std::ifstream *fileIn = new std::ifstream( in_path.c_str(), std::ios::binary);
 		if (!*fileIn)
 		{
-			std::cout << "Error path for " << nameIn + number + format << std::endl;
-			fileIn->close();
+			std::cout << "There is no file " << nameIn + number + format << std::endl;
 			delete fileIn;
 			continue;
 		}
-		std::ofstream *fileOut = new std::ofstream( BINARY_DIR (nameOut + number + format).c_str(), std::ios::binary);
+		std::ofstream *fileOut = new std::ofstream( out_path.c_str(), std::ios::binary);
 		if (!*fileOut)
 		{
-			std::cout << "Error path for " << nameOut + number + format	<< std::endl;
+			std::cout << "There is no file " << nameOut + number + format	<< std::endl;
 			fileIn->close();
-			fileOut->close();
 			delete fileIn;
 			delete fileOut;
 			continue;
 		}
-		threads.create_thread(boost::bind(&functionsShell, fileIn, fileOut));
+		threads.create_thread(boost::bind(&functionsShell, boost::ref(fileIn), boost::ref(fileOut)));
 	}
 
 	threads.join_all();
