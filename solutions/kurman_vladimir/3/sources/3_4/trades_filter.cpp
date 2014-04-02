@@ -53,7 +53,7 @@ int main()
 		ss >> fileNum;
 		ifstream fin(inputFilePrefixName + fileNum + inputFileSuffixName, ios::binary);
 		if (!fin.is_open())
-			break;
+			continue;
 		futures.push_back(async(&TradesFilterFunc, rvref(fin), rvref(fileNum)));
 	}
 	for (auto & ftr : futures)

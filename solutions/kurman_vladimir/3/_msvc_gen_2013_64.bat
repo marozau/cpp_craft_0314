@@ -1,6 +1,5 @@
 @echo off
 
-set Path=%Path%;C:/CMake 2.8/bin/
 set SOLUTION_NAME=puzzle_3_solution
 set BOOST_ROOT=D:/Install/boost_1_55_0/boost_1_55_0
 set BINARY_READER_ROOT=d:/cpp_craft_0314/solutions/kurman_vladimir/3/
