@@ -6,6 +6,53 @@
 
 #include <solution.h>
 
+void task4_6::tests_::solution_develop_tests()
+{
+	task4_6::lines lines;
+
+	{
+		lines.push_back( "F = ( 43 + 4 ) * 0.1" );
+		solution s( lines );
+		BOOST_CHECK_EQUAL( s.result_for( "F" ), 5 );
+		lines.clear();
+	}
+
+	{
+		lines.push_back( "A = 1 + 1" );
+		solution s( lines );
+		BOOST_CHECK_EQUAL( s.result_for( "A" ), 2 );
+		lines.clear();
+	}
+
+	{
+		lines.push_back( "1 + 1" );
+		solution s( lines );
+		BOOST_CHECK_EQUAL( s.result_for( "result" ), 2 );
+		lines.clear();
+	}
+
+	{
+		lines.push_back( "1 * 1" );
+		solution s( lines );
+		BOOST_CHECK_EQUAL( s.result_for( "result" ), 1 );
+		lines.clear();
+	}
+
+	{
+		lines.push_back( "1 / 1" );
+		solution s( lines );
+		BOOST_CHECK_EQUAL( s.result_for( "result" ), 1 );
+		lines.clear();
+	}
+
+	{
+		lines.push_back( "1 - 1" );
+		solution s( lines );
+		BOOST_CHECK_EQUAL( s.result_for( "result" ), 0 );
+		lines.clear();
+	}
+}
+
 void task4_6::tests_::solution_constructor_tests()
 {
 	task4_6::lines lines;

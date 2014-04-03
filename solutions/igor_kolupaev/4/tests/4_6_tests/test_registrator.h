@@ -4,6 +4,7 @@ namespace task4_6
 {
 	namespace tests_
 	{
+		void solution_develop_tests();
 		void solution_constructor_tests();
 		void solution_results_tests();
 	}
