@@ -4,7 +4,8 @@
 #include <regex>
 
 #include "solution.h"
-
+#include "infix_reader.h"
+ 
 class not_correct_expression: public std::logic_error
 {
 public:
@@ -53,100 +54,14 @@ public:
 	}
 };
 
-class infix_reader
-{
-	bool eof_;
-	std::istringstream stream;
-
-public:
-
-	infix_reader( const std::string& infix ): stream( infix )
-	{
-	}
-
-	void read( std::string& out_string )
-	{
-		stream >> out_string;
-	}
-
-	bool eof() const
-	{
-		return stream.eof();
-	}
-};
-
 class RPN
 {
-	std::vector<std::string> operators; //choisen vector type to allow multichars operators
+	std::vector<std::string> operators; //vector type chosen to allow multichars operators
 
-	bool is_numeric( const std::string& s ) const
-	{
-		std::regex isnum( "^-?\\d+(?:\\.\\d+)?$" );
-		return std::regex_match( s, isnum );
-	}
-
-	bool is_variable( const std::string& s ) const
-	{
-		std::regex letter( "[A-Z]" );
-		return std::regex_match( s, letter );
-	}
-
-	bool is_operand( const std::string& s ) const
-	{
-		return is_numeric( s ) || is_variable( s );
-	}
-
-	bool is_operator( const std::string& s ) const
-	{
-		return prio( s ) < operators.size();
-	}
-
-	bool is_left( const std::string& op ) const
-	{
-		return op != "=";
-	}
-
-	unsigned int prio( const std::string& op ) const
-	{
-		auto p = std::find( operators.cbegin(), operators.cend(), op ) - operators.cbegin();
-		return static_cast<unsigned int>( p );
-	}
 
 	std::stack<std::string> stack_;
 	std::deque<std::string> output_;
 	task4_6::variables_map_t &vars_;
-
-	void add_brackets()
-	{
-		while( stack_.size() > 0 && stack_.top() != "(" )
-		{
-			output_.push_back( stack_.top() );
-			stack_.pop();
-		}
-
-		if( stack_.size() == 0 )
-		{
-			throw not_correct_expression();
-		}
-
-		stack_.pop(); // pop "("
-	}
-
-	void add_operator( std::string &s )
-	{
-		bool op_left = is_left( s );
-		unsigned int op_prio = prio( s );
-
-		while( stack_.size() > 0 &&
-			   is_operator( stack_.top() ) &&
-			   ( ( op_left && op_prio < prio( stack_.top() ) ) || op_prio == prio( stack_.top() ) ) )
-		{
-			output_.push_back( stack_.top() );
-			stack_.pop();
-		}
-
-		stack_.push( s );
-	}
 
 public:
 
@@ -159,6 +74,7 @@ public:
 		operators.push_back( "/" );
 
 		convert_from_infix( infix );
+		
 		calc();
 
 		if( stack_.size() > 0 )
@@ -274,52 +190,6 @@ public:
 		stack_.push( std::string( strbuff ) );
 	}
 
-	void convert_from_infix( const std::string& infix )
-	{
-		infix_reader reader( infix );
-
-		bool orerator_in_prev_it = false;
-
-		while( !reader.eof() )
-		{
-			std::string s;
-			reader.read( s );
-
-			if( is_variable( s ) )
-			{
-				output_.push_back( s );
-			}
-			else if( is_numeric( s ) )
-			{
-				output_.push_back( s );
-			}
-			else if( s == "(" )
-			{
-				stack_.push( s );
-			}
-			else if( s == ")" )
-			{
-				add_brackets();
-			}
-			else if( is_operator( s ) )
-			{
-				if( orerator_in_prev_it )
-				{
-					throw not_correct_expression();
-				}
-
-				add_operator( s );
-			}
-
-			orerator_in_prev_it = is_operator( s );
-		}
-
-		while( stack_.size() > 0 )
-		{
-			output_.push_back( stack_.top() );
-			stack_.pop();
-		}
-	}
 };
 
 void task4_6::solution::calc( std::string line )

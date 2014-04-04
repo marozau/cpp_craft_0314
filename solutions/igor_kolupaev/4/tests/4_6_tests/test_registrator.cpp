@@ -11,6 +11,7 @@ boost::unit_test_framework::test_suite* init_unit_test_suite( int argc, char* ar
 
 	using namespace task4_6::tests_;
 
+	ts1->add( BOOST_TEST_CASE( &infix_reader_tests ) );
 	ts1->add( BOOST_TEST_CASE( &solution_develop_tests ) );
 	ts1->add( BOOST_TEST_CASE( &solution_constructor_tests ) );
 	ts1->add( BOOST_TEST_CASE( &solution_results_tests ) );

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+
 namespace task4_6
 {
 	typedef std::vector< std::string > lines;

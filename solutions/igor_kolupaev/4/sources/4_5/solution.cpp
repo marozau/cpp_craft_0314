@@ -46,15 +46,15 @@ void task4_5::solution::do_calc()
 
 	boost::thread_group calculators;
 
+	int i = 0;
 	for( auto it = data_.cbegin(); it != data_.cend(); it++ )
 	{
 		data_item_t d = *it;
 
-		do_calc_vector( *it );
-
-		//boost::thread *t = new boost::thread( &solution::do_calc_vector, this, d );
-		//t->start_thread();
-		//calculators.add_thread( t );
+		boost::thread *t = new boost::thread( &solution::do_calc_vector, this, d );
+		t->start_thread();
+		calculators.add_thread( t );
+		std::cout << i++ << std::endl;
 	}
 
 	calculators.join_all();
