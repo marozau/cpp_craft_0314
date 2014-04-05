@@ -15,8 +15,6 @@ namespace task4_6
 	{
 		expression_calc::variables_map_t vars_;
 
-		void calc( std::string line );
-
 	public:
 		explicit solution( const lines& calulator_lines );
 		int result_for( const std::string& key ) const;

@@ -4,10 +4,10 @@
 
 std::regex expression_calc::infix_reader::token_( "(-?(\\d|\\.)+)|\\w+|\\+|-|\\*|/|=|\\(|\\)" );
 
-expression_calc::infix_reader::infix_reader( const std::string& infix ): infix_( infix )
+expression_calc::infix_reader::infix_reader( const std::string& infix ): infix_( infix ),
+it_( std::sregex_token_iterator( infix_.cbegin(), infix_.cend(), token_ ) ),
+end_( std::sregex_token_iterator() )
 {
-	it_ = std::sregex_token_iterator( infix_.cbegin(), infix_.cend(), token_ );
-	end_ = std::sregex_token_iterator();
 }
 
 

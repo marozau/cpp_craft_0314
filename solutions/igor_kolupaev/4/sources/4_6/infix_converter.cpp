@@ -66,7 +66,7 @@ void expression_calc::infix_converter::add_brackets()
 	stack_.pop(); // pop "("
 }
 
-void expression_calc::infix_converter::add_operator( std::string &s )
+void expression_calc::infix_converter::add_operator( const std::string &s )
 {
 	bool op_left = is_left_associative( s );
 	unsigned int op_prio = prio( s );

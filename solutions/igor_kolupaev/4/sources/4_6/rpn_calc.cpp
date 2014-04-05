@@ -27,17 +27,17 @@ double expression_calc::rpn_calc::pop_value()
 
 void expression_calc::rpn_calc::calc( rpn_queue_t &queue )
 {
-	while( output_.size() > 0 )
+	while( queue.size() > 0 )
 	{
-		if( is_operand( output_.front() ) )
+		if( is_operand( queue.front() ) )
 		{
-			stack_.push( output_.front() );
-			output_.pop();
+			stack_.push( queue.front() );
+			queue.pop();
 		}
-		else if( is_operator( output_.front() ) )
+		else if( is_operator( queue.front() ) )
 		{
-			auto op = output_.front();
-			output_.pop();
+			auto op = queue.front();
+			queue.pop();
 
 			switch( op[ 0 ] )
 			{

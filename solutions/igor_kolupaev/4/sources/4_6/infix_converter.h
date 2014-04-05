@@ -10,7 +10,7 @@ namespace expression_calc
 		std::stack<std::string> stack_;
 		rpn_queue_t *output_;
 
-		void add_operator( std::string &s );
+		void add_operator( const std::string &s );
 		void add_brackets();
 
 	public:

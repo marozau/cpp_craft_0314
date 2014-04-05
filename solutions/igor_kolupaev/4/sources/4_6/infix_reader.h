@@ -11,9 +11,9 @@ namespace expression_calc
 
 		static std::regex token_;
 
-		std::string infix_;
+		const std::string infix_;
 		std::sregex_token_iterator it_;
-		std::sregex_token_iterator end_;
+		const std::sregex_token_iterator end_;
 
 	public:
 
