@@ -5,14 +5,15 @@
 #include <string>
 #include <map>
 
+#include "expression_calc.h"
+
 namespace task4_6
 {
 	typedef std::vector< std::string > lines;
-	typedef std::map<std::string, std::string> variables_map_t;
 
 	class solution
 	{
-		variables_map_t vars_;
+		expression_calc::variables_map_t vars_;
 
 		void calc( std::string line );
 

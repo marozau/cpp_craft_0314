@@ -3,7 +3,7 @@
 #include <string>
 #include <regex>
 
-namespace task4_6
+namespace expression_calc
 {
 	class infix_reader
 	{

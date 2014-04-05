@@ -10,7 +10,7 @@
 void task4_6::tests_::infix_reader_tests()
 {
 	{
-		task4_6::infix_reader reader( std::string( "-0.1" ) );
+		expression_calc::infix_reader reader( std::string( "-0.1" ) );
 		std::string s;
 
 		reader.read( s );
@@ -18,7 +18,7 @@ void task4_6::tests_::infix_reader_tests()
 	}
 
 	{
-		task4_6::infix_reader reader( std::string( "++" ) );
+		expression_calc::infix_reader reader( std::string( "++" ) );
 		std::string s;
 
 		reader.read( s );
@@ -32,8 +32,8 @@ void task4_6::tests_::infix_reader_tests()
 
 	task4_6::lines lines;
 
-	task4_6::infix_reader reader( std::string( "F = ( B + 4 ) * 0.1" ) );
-	task4_6::infix_reader reader1( std::string( "F=(B+4)*0.1" ) );
+	expression_calc::infix_reader reader( std::string( "F = ( B + 4 ) * 0.1" ) );
+	expression_calc::infix_reader reader1( std::string( "F=(B+4)*0.1" ) );
 	while( !reader.eof() && !reader1.eof() )
 	{
 		std::string s;
