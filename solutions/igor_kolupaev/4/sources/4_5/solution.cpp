@@ -4,27 +4,6 @@
 
 #include "solution.h"
 
-boost::mutex task4_5::data_queue_iterator::queue_mutex_;
-
-task4_5::data_queue_iterator::data_queue_iterator( const data_type& data ): data_( data ), data_it_( data.cbegin() )
-{
-}
-
-task4_5::data_item_t& task4_5::data_queue_iterator::next()
-{
-	boost::mutex::scoped_lock lock( queue_mutex_ );
-
-	if( data_it_ == data_.end() )
-	{
-		throw std::logic_error("end");
-	}
-
-	data_item_t item = *data_it_;
-	data_it_++;
-
-	return item;
-}
-
 boost::mutex task4_5::solution::min_max_mutex;
 
 task4_5::solution::solution( const data_type& data ): 
