@@ -62,46 +62,45 @@ bool Sdata::writeData(std::ofstream * const fileOut, uint_32 days, const uint_32
 	return true;
 }
 
-class fileOut{
+class fileOut
+{
 	io_mutex mutex;
 	std::ofstream *out;
 public:
-	fileOut(const char *const name);
-	void parseInputData(const Sdata *const req);
+	fileOut(const char * const name);
+	void parseInputData(const Sdata * const req);
 	~fileOut();
 };
 
-fileOut::fileOut(const char *const name)
-{
+fileOut::fileOut(const char * const name) {
 	const std::string ext = ".txt";
-	const std::string fName = std::string( BINARY_DIR ).append("/").append(name).append(ext);
+	const std::string fName = std::string(BINARY_DIR).append("/").append(name).append(ext);
 
-	out = new std::ofstream( fName.c_str(), std::ios::binary);
+	out = new std::ofstream(fName.c_str(), std::ios::binary);
 }
 
 //Parsed request to get necessary information
-void fileOut::parseInputData(const Sdata *const request)
+void fileOut::parseInputData(const Sdata * const request)
 {
-		const uint_32 sizeStr = 9;
+	const uint_32 sizeStr = 9;
 
-		const uint_32 daysOfYear = 372;
-		const uint_32 daysOfMonth = 31;
-		uint_32 days = 0;
-		date *dateShell = NULL;
+	const uint_32 daysOfYear = 372;
+	const uint_32 daysOfMonth = 31;
+	date *dateShell = NULL;
 
-		dateShell = new date(boost::gregorian::from_undelimited_string(request->date_time));
-		days = dateShell->year() * daysOfYear + (dateShell->month() - 1) * daysOfMonth + dateShell->day();
+	dateShell = new date(boost::gregorian::from_undelimited_string(request->date_time));
+	const uint_32 days = (dateShell->year() - 1) * daysOfYear + (dateShell->month() - 1) * daysOfMonth + dateShell->day();
 
-		{
+	{
 		boost::mutex::scoped_lock lock(mutex);
 
 		if (!request->writeData(out, days, sizeStr))
 		{
 			std::cout << "Write error" << std::endl;
 		}
-		}
+	}
 
-		delete request;
+	delete request;
 }
 
 fileOut::~fileOut()
@@ -113,7 +112,8 @@ fileOut::~fileOut()
 int main(int argc, char **argv)
 {
 	std::ifstream *fileIn = new std::ifstream( BINARY_DIR "/input.txt", std::ios::binary);
-	if(!*fileIn){
+	if (!*fileIn)
+	{
 		std::cout << "There is no input file" << std::endl;
 		delete fileIn;
 		return 1;
@@ -123,27 +123,28 @@ int main(int argc, char **argv)
 	boost::thread_group threads;
 	const uint_32 sizeStr = 9;
 
-	do
-	{
+	do {
 		Sdata *request = new Sdata();
 
-		if(!request->readData(fileIn, sizeStr))
+		if (!request->readData(fileIn, sizeStr))
 		{
 			std::cout << "There is no more data" << std::endl;
 			fileIn->close();
+			delete request;
 			delete fileIn;
 			break;
 		}
 
-		if(outFiles->find(request->stock_name) == outFiles->end())
-		(*outFiles)[request->stock_name] = new fileOut(request->stock_name);
+		if (outFiles->find(request->stock_name) == outFiles->end())
+			(*outFiles)[request->stock_name] = new fileOut(request->stock_name);
 
 		threads.create_thread(boost::bind(&fileOut::parseInputData, (*outFiles)[request->stock_name], request));
-	}while(*fileIn);
+	} while (*fileIn);
 
 	threads.join_all();
 
-	for (map::iterator it = outFiles->begin(); it != outFiles->end(); ++it) {
+	for (map::iterator it = outFiles->begin(); it != outFiles->end(); ++it)
+	{
 		delete it->second;
 	}
 

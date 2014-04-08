@@ -8,8 +8,7 @@
 typedef boost::multiprecision::uint128_t uint_128;
 typedef boost::uint32_t uint_32;
 
-struct Sdata
-{
+struct Sdata {
 	uint_32 type;
 	uint_32 time;
 	uint_32 len;
@@ -20,6 +19,11 @@ struct Sdata
 
 	bool readData(std::ifstream * const fileIn);
 	bool writeData(std::ofstream * const fileOut) const;
+
+	~Sdata()
+	{
+		delete[] msg;
+	}
 };
 
 bool Sdata::readData(std::ifstream * const fileIn)
@@ -57,6 +61,7 @@ void searchActualData(std::ifstream * const fileIn, std::ofstream * const fileOu
 		std::cout << "There is no data in input file" << std::endl;
 		fileIn->close();
 		fileOut->close();
+		delete request;
 		delete fileIn;
 		delete fileOut;
 		return;
@@ -69,28 +74,26 @@ void searchActualData(std::ifstream * const fileIn, std::ofstream * const fileOu
 	const uint_32 dif = 2;
 	uint_128 count = 0;
 
-	do
-	{
+	do {
 		count++;
-		if (static_cast<int> (request->time) > (time - static_cast<int> (dif)) && request->type > from && request->type < to)
+		if (static_cast<int>(request->time) > (time - static_cast<int>(dif)) && request->type > from && request->type < to)
 		{
-			if (static_cast<int> (request->time) > time)
+			if (static_cast<int>(request->time) > time)
 				time = request->time;
 			if (!request->writeData(fileOut))
 			{
 				std::cout << "Write error" << std::endl;
 				fileIn->close();
 				fileOut->close();
+				delete request;
 				delete fileIn;
 				delete fileOut;
 				return;
 			}
 		}
-		delete[] request->msg;
 		delete request;
 		request = new Sdata();
 	} while ((count + 1) < limit && request->readData(fileIn));
-	delete[] request->msg;
 	delete request;
 
 	fileIn->close();
@@ -108,21 +111,20 @@ int main(int argc, char **argv)
 	const std::string nameOut = "/output_";
 	const std::string format = ".txt";
 
-	for (uint_32 i = 1; i <= 999; i++)
-	{
+	for (uint_32 i = 1; i <= 999; i++) {
 		const std::string number = boost::str(boost::format("%03u") % i);
 
-		const std::string in_path = std::string( BINARY_DIR ).append( nameIn ).append( number ).append( format );
-		const std::string out_path = std::string( BINARY_DIR ).append( nameOut ).append( number ).append( format );
+		const std::string in_path = std::string(BINARY_DIR).append(nameIn).append(number).append(format);
+		const std::string out_path = std::string(BINARY_DIR).append(nameOut).append(number).append(format);
 
-		std::ifstream *fileIn = new std::ifstream( in_path.c_str(), std::ios::binary);
+		std::ifstream *fileIn = new std::ifstream(in_path.c_str(), std::ios::binary);
 		if (!*fileIn)
 		{
 			std::cout << "There is no file " << nameIn + number + format << std::endl;
 			delete fileIn;
 			continue;
 		}
-		std::ofstream *fileOut = new std::ofstream( out_path.c_str(), std::ios::binary);
+		std::ofstream *fileOut = new std::ofstream(out_path.c_str(), std::ios::binary);
 		if (!*fileOut)
 		{
 			std::cout << "There is no file " << nameOut + number + format << std::endl;
