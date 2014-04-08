@@ -49,7 +49,11 @@ void task4_6::solution::rpn( const std::string &line, const size_t i, expression
 		std::string val;
 
 		if( !st && *it != '=' ) continue;
-		else if ( !st ){st = true; continue; }
+		else if ( !st )
+		{
+			st = true;
+			continue;
+		}
 
 		val.push_back(*it);
 		while( it + 1 != line.end() && (isdigit(*(it+1)) || *(it+1) == '.'))
@@ -90,9 +94,10 @@ void task4_6::solution::rpn( const std::string &line, const size_t i, expression
 				}while(operations.back() != "(");
 				operations.pop_back();
 			}
-			else {
+			else
+			{
 				operations.push_back( val );
-				}
+			}
 		}
 		prevVal = val;
 	}

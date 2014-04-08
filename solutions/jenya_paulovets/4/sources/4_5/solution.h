@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <boost/thread.hpp>
-#include <boost/thread.hpp>
 
 namespace task4_5
 {
@@ -13,17 +12,16 @@ namespace task4_5
 	class solution
 	{
 		boost::mutex mutex;
-		vect mins;
-		vect maxs;
-		data_type data;
+		size_t max;
+		int min;
 
-		void search_max(vect &vect);
-		void search_min(vect &vect);
+		void search_max(vect &v, vect &maxs);
+		void search_min(vect &v, vect &mins);
 
 	public:
 		explicit solution(const data_type& data );
-		int get_min();
-		int get_max();
+		int get_min() const;
+		int get_max() const;
 	};
 }
 
