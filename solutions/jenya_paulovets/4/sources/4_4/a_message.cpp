@@ -27,5 +27,5 @@ const char task4_4::a_message::type() const
 }
 const std::string task4_4::a_message::str() const
 {
-	return "a_message(0123456789123456)";
+	return std::string( "a_message(").append( content_).append(")");
 }

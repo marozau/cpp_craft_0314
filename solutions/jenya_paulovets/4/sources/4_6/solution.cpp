@@ -52,7 +52,7 @@ void task4_6::solution::rpn( const std::string &line, const size_t i, expression
 		else if ( !st ){st = true; continue; }
 
 		val.push_back(*it);
-		while( isdigit(*(it+1)) || *(it+1) == '.')
+		while( it + 1 != line.end() && (isdigit(*(it+1)) || *(it+1) == '.'))
 		{
 			val.push_back(*(++it));
 		}
