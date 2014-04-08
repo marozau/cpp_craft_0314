@@ -1,5 +1,4 @@
 @echo off
-set Path=%Path%;C:\CMake 2.8\bin\
 set SOLUTION_NAME=puzzle_1_solution
 
 set BUILD_TYPE=Debug

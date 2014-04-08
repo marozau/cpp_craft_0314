@@ -1,15 +1,14 @@
 #include "solution.h"
-#include "../../../3/sources/utility/rvref_wrapper.h"
 #include <future>
 #include <algorithm>
 #include <numeric>
 #include <utility>
+#include <functional>
 
-std::pair<int, int> VectMinMaxFindingFunc(rvref_wrapper<task4_5::data_type::value_type> rvvect)
+std::pair<int, int> VectMinMaxFindingFunc(const task4_5::data_type::value_type & vect)
 {
 	int min = std::numeric_limits<int>().max();
 	int max = std::numeric_limits<int>().min();
-	task4_5::data_type::value_type vect = rvvect.get();
 	for (size_t i = 0; i < vect.size(); ++i)
 	{
 		min = std::min(min, vect[i]);
@@ -32,12 +31,7 @@ task4_5::solution::solution(const data_type& data) : min_(0), max_(0)
 		max_ = std::numeric_limits<int>().min();
 	}
 	for (size_t i = 0; i < data.size(); ++i)
-	{
-		data_type::value_type vectOfIntegers;
-		for (size_t j = 0; j < data[i].size(); ++j)
-			vectOfIntegers.push_back(data[i][j]);
-		futures.push_back(std::async(&VectMinMaxFindingFunc, rvref(vectOfIntegers)));
-	}
+		futures.push_back(std::async(&VectMinMaxFindingFunc, std::cref(data[i])));
 	for (auto & ftr : futures)
 	{
 		const auto ftrAns = ftr.get();

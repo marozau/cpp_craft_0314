@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <future>
 #include <sstream>
+#include <iomanip>
 #include <market_message.h>
 #include "../utility/rvref_wrapper.h"
 
@@ -66,14 +67,14 @@ int main()
 	for (int i = 1; i <= 999; ++i)
 	{
 		stringstream ss;
+		ss.width(3);
+		ss << setfill('0');
 		ss << i;
 		string fileNum;
 		ss >> fileNum;
-		while (fileNum.size() < 3)
-			fileNum = '0' + fileNum;
 		ifstream fin(inputFilePrefixName + fileNum + inputFileSuffixName, ios::binary);
 		if (!fin.is_open())
-			break;
+			continue;
 		futures.push_back(async(&SmallBufferFunc, rvref(fin), rvref(fileNum)));
 	}
 	for (auto & ftr : futures)

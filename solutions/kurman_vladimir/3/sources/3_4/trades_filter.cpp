@@ -3,6 +3,7 @@
 #include <sstream>
 #include <future>
 #include <market_message.h>
+#include <iomanip>
 #include "../utility/rvref_wrapper.h"
 
 void TradesFilterFunc(rvref_wrapper<std::ifstream> rvfin, rvref_wrapper<std::string> rvfileNum)
@@ -17,7 +18,7 @@ void TradesFilterFunc(rvref_wrapper<std::ifstream> rvfin, rvref_wrapper<std::str
 	size_t curPos = 0;
 	boost::uint32_t curMaxTime = 0;
 	static const pair<boost::uint32_t, boost::uint32_t> acceptedMinMaxTypes = make_pair(1, 4);
-	static const boost::uint32_t const delay = 2;
+	static const boost::uint32_t delay = 2;
 	static const string outputFilePrefixName = BINARY_DIR "/output_";
 	static const string outputFileSuffixName = ".txt";
 	ofstream fout(outputFilePrefixName + fileNum + outputFileSuffixName, ios::binary);
@@ -45,14 +46,14 @@ int main()
 	for (int i = 1; i <= 999; ++i)
 	{
 		stringstream ss;
+		ss.width(3);
+		ss << setfill('0');
 		ss << i;
 		string fileNum;
 		ss >> fileNum;
-		while (fileNum.size() < 3)
-			fileNum = '0' + fileNum;
 		ifstream fin(inputFilePrefixName + fileNum + inputFileSuffixName, ios::binary);
 		if (!fin.is_open())
-			break;
+			continue;
 		futures.push_back(async(&TradesFilterFunc, rvref(fin), rvref(fileNum)));
 	}
 	for (auto & ftr : futures)
