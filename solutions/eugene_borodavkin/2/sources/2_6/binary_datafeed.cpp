@@ -9,13 +9,13 @@
 
 
 template <class T>
-void readFromBinaryInput(std::ifstream &input, const T &t, size_t len = sizeof(T)){
-    input.read((char*)&t, len);
+void readFromBinaryInput(std::ifstream &input, T &t, size_t len = sizeof(T)){
+    input.read(reinterpret_cast< char*> ( &t ), len);
 }
 
 template <class T>
 void writeToBinaryOutput( std::ofstream &output, const T &t, size_t len = sizeof(T)){
-    output.write((char*)&t,len);
+    output.write(reinterpret_cast< const char* >( &t ),len);
 }
 
 
@@ -49,10 +49,9 @@ public:
 
     void write( std::ofstream& out ) const
     {
-        std::uint32_t date = 0;
         int year,day,month;
         std::sscanf( date_time, "%4d%2d%2d", &year, &month, &day );
-        date = ( year - 1 ) * 372 +  ( month  - 1 )* 31 + day;
+        std::uint32_t date = ( year - 1 ) * 372 +  ( month  - 1 )* 31 + day;
 
         char stock[9];
         memcpy( stock, stock_name, sizeof( stock_name ) );
@@ -71,6 +70,8 @@ int main()
     std::ofstream output(BINARY_DIR"/output.txt", std::ios::binary);
     while(!input.eof()){
         Message msg(input);
+        if( input.eof() )
+            break;
         msg.write(output);
     }
 
