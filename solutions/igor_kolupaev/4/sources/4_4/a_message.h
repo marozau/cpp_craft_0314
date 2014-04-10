@@ -8,11 +8,7 @@ namespace task4_4
 	class a_message : public message
 	{
 		static const size_t content_size = 16; 
-
 		std::string content_;
-
-		//not sure if this is allowed hack but as far as a_message expects 
-		//for exact content_size from stream it will work
 
 		explicit a_message( std::istream& inp );
 	public:

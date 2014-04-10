@@ -8,7 +8,7 @@ task4_4::a_message::a_message( std::istream& inp )
 	char content[ content_size ];
 
 	inp.read( content, content_size );
-	int read_bytes = inp.gcount();
+	size_t read_bytes = inp.gcount();
 
 	if( !inp )
 		throw std::logic_error( "bad input stream, a_message cannot be readed" );
