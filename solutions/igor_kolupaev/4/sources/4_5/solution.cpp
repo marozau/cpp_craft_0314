@@ -31,9 +31,7 @@ void task4_5::solution::do_calc()
 		data_item_t d = *it;
 
 		boost::thread *t = new boost::thread( &solution::do_calc_vector, this, d );
-		t->start_thread();
 		calculators.add_thread( t );
-		std::cout << i++ << std::endl;
 	}
 
 	calculators.join_all();
