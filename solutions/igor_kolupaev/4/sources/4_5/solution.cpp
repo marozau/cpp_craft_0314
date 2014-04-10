@@ -11,10 +11,10 @@ task4_5::solution::solution( const data_type& data ):
 	min_( std::numeric_limits< int >().max() ),
 	max_( std::numeric_limits< int >().min() )
 {
-	do_calc();
+	do_calc_();
 }
 
-void task4_5::solution::do_calc()
+void task4_5::solution::do_calc_()
 {
 	if( data_.size() == 0 )
 	{
@@ -28,18 +28,16 @@ void task4_5::solution::do_calc()
 	int i = 0;
 	for( auto it = data_.cbegin(); it != data_.cend(); it++ )
 	{
-		data_item_t d = *it;
-
-		boost::thread *t = new boost::thread( &solution::do_calc_vector, this, d );
+		boost::thread *t = new boost::thread( &solution::do_calc_vector_, this, &(*it) );
 		calculators.add_thread( t );
 	}
 
 	calculators.join_all();
 }
 
-void task4_5::solution::do_calc_vector( const data_item_t &data )
+void task4_5::solution::do_calc_vector_( const data_item_t *data )
 {
-	if( data.size() == 0 )
+	if( data->size() == 0 )
 	{
 		return;
 	}
@@ -47,7 +45,7 @@ void task4_5::solution::do_calc_vector( const data_item_t &data )
 	int min = std::numeric_limits< int >().max();
 	int max = std::numeric_limits< int >().min();
 
-	for( data_item_t_i it = data.cbegin(); it != data.cend(); ++it )
+	for( data_item_t_i it = data->cbegin(); it != data->cend(); ++it )
 	{
 		min = std::min( min, *it );
 		max = std::max( max, *it );
