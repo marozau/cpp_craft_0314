@@ -2,8 +2,7 @@ find_package( Boost ${SEARCH_PARAMETERS} COMPONENTS
 	system
 	thread
 	# date_time
-	chrono
-	regex
+	# chrono
 	filesystem
 )
 
