@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include <stdint.h>
+#include <cstdint>
 #include <string.h>
 #include <iomanip>
 #include <fstream>
