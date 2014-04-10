@@ -1,6 +1,4 @@
 @echo off
-
-set Path=%Path%;C:/CMake 2.8/bin/
 set SOLUTION_NAME=puzzle_2_solution
 set BOOST_ROOT=D:/Install/boost_1_55_0/boost_1_55_0
 
