@@ -37,12 +37,11 @@ namespace binary_reader
 							const double f4 );		
 		~stock_data();
 		void write( std::ofstream& out );	
-		void write_raw( std::ofstream& out );
 		void write_stock_name (std::ofstream& out); 
 		void write_data (std::ofstream& out) const;
-		void write_price (std::ofstream& out);
-		void write_volume (std::ofstream& out);
-		void write_f2 (std::ofstream& out);
+		void write_price (std::ofstream& out) ;
+		void write_volume (std::ofstream& out) ;
+		void write_f2 (std::ofstream& out) ;
 
 		const char * stock_name () const;
 

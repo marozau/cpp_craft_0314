@@ -20,10 +20,10 @@ namespace binary_reader
 		market_message & operator = (const market_message & a);
 		
 	
-		void write( std::ofstream& out );
+		void write( std::ofstream& out ) ;
 		~market_message();
 
-		size_t type() const;
+		boost::uint32_t type() const;
 		boost::uint32_t time() const;
 		boost::uint32_t len() const;
 		const char* const msg() const;

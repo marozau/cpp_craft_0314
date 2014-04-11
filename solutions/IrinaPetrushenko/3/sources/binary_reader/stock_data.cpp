@@ -140,12 +140,8 @@ void binary_reader::stock_data::write( std::ofstream& out )
 		return;
 	}
 }
-void binary_reader::stock_data::write_raw( std::ofstream& out )
-{	
-	// your code. Can be empty
-	// this method is used for testing. It writes data to the binary file without convertion.
-}
-void binary_reader::stock_data::write_stock_name(std::ofstream& out){
+
+void binary_reader::stock_data::write_stock_name(std::ofstream& out) {
 	if(!out.write(stock_name_, len_)) {
 		cerr<<"I can not write data"<<endl;
 		return;
@@ -168,19 +164,19 @@ void binary_reader::stock_data::write_data (std::ofstream& out) const{
 	}
 }
 
-void binary_reader::stock_data::write_price (std::ofstream& out){
+void binary_reader::stock_data::write_price (std::ofstream& out) {
 	if(!out.write(reinterpret_cast<char *>(&vwap_), sizeof(vwap_))) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}
 }
-void binary_reader::stock_data::write_volume (std::ofstream& out){
+void binary_reader::stock_data::write_volume (std::ofstream& out) {
 	if(!out.write(reinterpret_cast<char *>(&volume_), sizeof(volume_))) {
 		cerr<<"I can not write data"<<endl;
 		return;
 	}
 }
-void binary_reader::stock_data::write_f2 (std::ofstream& out){
+void binary_reader::stock_data::write_f2 (std::ofstream& out) {
 	if(!out.write(reinterpret_cast<char *>(&f2_), sizeof(f2_))) {
 		cerr<<"I can not write data"<<endl;
 		return;
