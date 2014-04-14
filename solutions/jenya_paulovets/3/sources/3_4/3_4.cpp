@@ -29,6 +29,7 @@ struct Sdata {
 bool Sdata::readData(std::ifstream * const fileIn)
 {
 	fileIn->read(reinterpret_cast<char*>(&type), sizeof(uint_32));
+	if(fileIn->eof()) return false;
 	fileIn->read(reinterpret_cast<char*>(&time), sizeof(uint_32));
 	fileIn->read(reinterpret_cast<char*>(&len), sizeof(uint_32));
 	msg = new char[len + 1];
@@ -67,7 +68,7 @@ void searchActualData(std::ifstream * const fileIn, std::ofstream * const fileOu
 		return;
 	}
 
-	int time = 0;
+	uint32_t time = 0;
 	const uint_32 from = 0;
 	const uint_32 to = 5;
 	const uint_128 limit = 10000000000000000;

@@ -27,6 +27,7 @@ struct Sdata {
 
 bool Sdata::readData(std::ifstream * const fileIn) {
 	fileIn->read(reinterpret_cast<char*>(&type), sizeof(uint_32));
+	if(fileIn->eof()) return false;
 	fileIn->read(reinterpret_cast<char*>(&time), sizeof(uint_32));
 	fileIn->read(reinterpret_cast<char*>(&len), sizeof(uint_32));
 	msg = new char[len + 1];
@@ -59,7 +60,7 @@ bool checkBuffer(map *typesOfMsg, const Sdata * const request, const uint_32 lim
 
 	const uint_32 numOfElem = 3;
 
-	if ((count + 1) * numOfElem * sizeof(uint_32) + sumLenStr + request->len + 1 > limit)
+	if ((count + 1) * numOfElem * sizeof(uint_32) + sumLenStr + request->len > limit)
 		return false;
 	else
 		return true;
@@ -82,7 +83,7 @@ bool handlerOfData(std::ifstream * const fileIn, map * const typesOfMsg, const u
 	const uint_32 numOfElem = 3;
 
 	do {
-		const uint_32 sizeOfReq = numOfElem * sizeof(uint_32) + request->len + 1;
+		const uint_32 sizeOfReq = numOfElem * sizeof(uint_32) + request->len;
 
 		if (request->type <= size && sizeOfReq <= limit && typesOfMsg->find(request->type) == typesOfMsg->end())
 			(*typesOfMsg)[request->type] = new vector;
@@ -115,7 +116,7 @@ void meanOfEachMsg(std::ofstream * const fileOut, map * const typesOfMsg, const 
 	{
 		if (typesOfMsg->find(i) != typesOfMsg->end())
 		{
-			for (vector::iterator it = (*typesOfMsg)[i]->begin(); it != (*typesOfMsg)[i]->end(); ++it)
+			for (vector::const_iterator it = (*typesOfMsg)[i]->begin(); it != (*typesOfMsg)[i]->end(); ++it)
 			{
 				if (static_cast<int>((*it)->time) > time)
 				{

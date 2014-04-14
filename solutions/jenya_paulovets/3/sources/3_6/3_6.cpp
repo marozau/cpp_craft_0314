@@ -34,6 +34,7 @@ struct Sdata {
 bool Sdata::readData(std::ifstream * const fileIn, const uint_32 sizeStr)
 {
 	fileIn->read(reinterpret_cast<char*>(stock_name), (sizeStr - 1) * sizeof(char));
+	if( fileIn->eof() ) return false;
 	stock_name[sizeStr] = '\0';
 	fileIn->read(reinterpret_cast<char*>(date_time), (sizeStr - 1) * sizeof(char));
 	date_time[sizeStr] = '\0';
