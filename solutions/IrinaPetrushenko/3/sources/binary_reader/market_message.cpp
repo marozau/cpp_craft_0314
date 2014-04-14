@@ -38,7 +38,7 @@ binary_reader::market_message::market_message( const boost::uint32_t type, const
 	msg_ = new char[len_+1];
 	memcpy(msg_, msg, len_+1);
 }
-void binary_reader::market_message::write( std::ofstream& out ) 
+void binary_reader::market_message::write( std::ofstream& out ) const
 {
 	if(!out.write(reinterpret_cast<char *>(&type_), sizeof(type_))) {
 		cerr<<"I can not write data"<<endl;
@@ -92,7 +92,7 @@ binary_reader::market_message::market_message(const market_message & a): type_(a
 	msg_ = new char[len_+1];
 	memcpy(msg_, a.msg_, len_+1);
 }
-binary_reader::market_message & binary_reader::market_message::operator = (const market_message & a)
+const binary_reader::market_message & binary_reader::market_message::operator = (const market_message & a)
 {
 	if (this!=& a){
 		type_=a.type_;

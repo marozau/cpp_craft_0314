@@ -27,7 +27,7 @@ namespace task5{
 }
 
 
-boost::uint32_t size (market_message * l){
+boost::uint32_t size (const market_message * const l){
 	boost::uint32_t len =static_cast<boost::uint32_t> ( strlen(l->msg()));
 	return static_cast<boost::uint32_t> (sizeof(l->type())+sizeof(l->time())+sizeof(len)+len);
 }
@@ -42,13 +42,13 @@ void main_func (const boost::uint32_t i){
 		sss>>format;
 
 		string index="/input";
-		string inn_name =BINARY_DIR+index+"_"+format+".txt";		
+		const string inn_name =BINARY_DIR+index+"_"+format+".txt";		
 
 		ifstream inn (inn_name.c_str(), std::ios::binary);
 		
 		if (inn.is_open()){
 			index="/output";
-			string out_name = BINARY_DIR+index+"_"+format+".txt";
+			const string out_name = BINARY_DIR+index+"_"+format+".txt";
 			ofstream out (out_name.c_str(), std::ios::binary);
 
 			boost::uint32_t n=0;
@@ -62,7 +62,8 @@ void main_func (const boost::uint32_t i){
 					list.pop_back();
 					break;
 				}
-				if (list.back()->type()>types) types=list.back()->type();
+				if (list.back()->type()>types) 
+					types=list.back()->type();
 				n++;			
 			}
 			vector <task5::point>	ans(types+1,task5::point(0,0,0));
@@ -70,7 +71,8 @@ void main_func (const boost::uint32_t i){
 			
 			for (boost::uint32_t i=0;i<n;i++){
 				if (ans[list[i]->type()].size+size(list[i])<=task5::max_size){
-					if (ans[list[i]->type()].size==0)	ans[list[i]->type()].time++;
+					if (ans[list[i]->type()].size==0)	
+						ans[list[i]->type()].time++;
 					ans[list[i]->type()].size+=size(list[i]);
 					ans[list[i]->type()].num++;
 				}	

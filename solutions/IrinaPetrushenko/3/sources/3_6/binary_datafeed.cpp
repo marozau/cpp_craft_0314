@@ -17,7 +17,7 @@ using namespace std;
 namespace task_3_3{
 	static boost::mutex mtx_el;
 	static boost::mutex mtx_out;
-	static size_t it = 0;
+	static size_t it_for_queue = 0;
 
 	void local_write_void_for_stock_data (boost::shared_ptr<stock_data>  mm, boost::shared_ptr<ofstream> out){
 			mm->write_stock_name(*out);
@@ -43,7 +43,7 @@ namespace task_3_3{
 						boost::mutex::scoped_lock lock_out(task_3_3::mtx_out);
 						{
 							boost::mutex::scoped_lock lock(task_3_3::mtx_el);
-							ss=static_cast<string>((*qu_el)[it]->stock_name());						
+							ss=static_cast<string>((*qu_el)[it_for_queue]->stock_name());						
 						}
 
 						if (map_of_stock_names->count(ss)==0){
@@ -60,10 +60,10 @@ namespace task_3_3{
 										
 						{
 							boost::mutex::scoped_lock lock(task_3_3::mtx_el);
-							task_3_3::local_write_void_for_stock_data ((*qu_el)[it], out);	
+							task_3_3::local_write_void_for_stock_data ((*qu_el)[it_for_queue], out);	
 						}
 
-						it++;
+						it_for_queue++;
 					}
 					
 			}

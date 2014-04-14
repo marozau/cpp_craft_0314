@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <boost/cstdint.hpp>
-#include <stdlib.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
@@ -33,23 +32,25 @@ void main_func (const boost::uint32_t i){
 		sss>>format;
 
 		string index="/input";
-		string inn_name =BINARY_DIR+index+"_"+format+".txt";
+		const string inn_name =BINARY_DIR+index+"_"+format+".txt";
 
 		ifstream inn (inn_name.c_str(), std::ios::binary);
 
 		if (inn.is_open()){
 			index="/output";
-			string out_name = BINARY_DIR+index+"_"+format+".txt";
+			const string out_name = BINARY_DIR+index+"_"+format+".txt";
 
 			ofstream out (out_name.c_str(), std::ios::binary);
 
-			boost::uint32_t cur_time=task4::diff;
-		
+			boost::uint32_t cur_time = 0;
 			while (!inn.eof()){
 				market_message m(inn);
-				if (inn.eof()) break;
-				if (is_good_type(m.type()) && (m.time()>cur_time-task4::diff) )		m.write(out);
-				if (m.time()>cur_time) cur_time=m.time();
+				if (inn.eof()) 
+					break;
+				if (is_good_type(m.type()) && (m.time()+task4::diff>cur_time) )		
+					m.write(out);
+				if (m.time()>cur_time) 
+					cur_time=m.time();
 			}
 			out.close();
 		}
