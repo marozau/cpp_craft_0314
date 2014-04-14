@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <boost/lexical_cast.hpp>
 
 task4_4::b_message::b_message( std::istream& inp ):length_(0)
 {

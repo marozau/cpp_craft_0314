@@ -16,14 +16,14 @@ task4_6::solution::solution( const lines& calulator_lines )
 bool task4_6::solution::isLexical( const std::string &var ) const
 {
   for(std::string::const_iterator it = var.begin(); it != var.end(); it++)
-	  if(!isalpha(*it)) return false;
+	 if(!isalpha(*it)) return false;
   return true;
 }
 
 bool task4_6::solution::isNumber( const std::string &var ) const
 {
   for(std::string::const_iterator it = var.begin(); it != var.end(); it++)
-	  if(!isdigit(*it)) return false;
+	 if(!isdigit(*it)) return false;
   return true;
 }
 
@@ -36,7 +36,7 @@ void task4_6::solution::rpn( const std::string &line, const size_t i, expression
 	bool st = false;
 
 	nameOfexp.push_back(line[0]);
-	numberOfLine.push_back(i + '0');
+	numberOfLine = boost::lexical_cast<std::string>(i);
 
 	if(exps.find(nameOfexp) != exps.end())
 		throw std::logic_error(std::string("such variable").append("'").append(nameOfexp).append("'").append("already exists ").append(numberOfLine));
@@ -62,13 +62,13 @@ void task4_6::solution::rpn( const std::string &line, const size_t i, expression
 		}
 
 		if( isNumber(val) || isLexical(val) )
-			{
+		{
 			if( isLexical(val) && exps.find(val) == exps.end())
 				throw std::logic_error(std::string("'").append(val).append("'").append(" variable not defined at line").append(numberOfLine));
 			else if( isNumber(val) && prevVal == "/")
 				throw std::logic_error(std::string("zero div ").append(numberOfLine));
 			exps[nameOfexp].push_back( val );
-			}
+		}
 		else
 		{
 			if( (val == "+" || val =="-" || val == "*" || val =="/") &&
@@ -119,32 +119,32 @@ void task4_6::solution::make_values( expressions &exps )
 	{
 		while(it->second.size() > 1)
 		{
-		std::list< std::string >::iterator itt = it->second.begin();
-		std::list< std::string >::iterator itt1 = ++(it->second.begin());
-		std::list< std::string >::iterator itt2 = ++++(it->second.begin());
+			std::list< std::string >::iterator itt = it->second.begin();
+			std::list< std::string >::iterator itt1 = ++(it->second.begin());
+			std::list< std::string >::iterator itt2 = ++++(it->second.begin());
 
-		while( isNumber( *itt2 ) || isLexical( *itt2 ) )
-		{
-			itt++;
-			itt1++;
-			itt2++;
-		}
+			while( isNumber( *itt2 ) || isLexical( *itt2 ) )
+			{
+				itt++;
+				itt1++;
+				itt2++;
+			}
 
-		double var1 = 0.0;
-		double var2 = 0.0;
+			double var1 = 0.0;
+			double var2 = 0.0;
 
-		if( !isLexical(*itt1) )
-		var2 = boost::lexical_cast< double >( *itt1 );
-		else var2 = boost::lexical_cast< double >( exps[*itt1].back() );
+			if( !isLexical(*itt1) )
+				var2 = boost::lexical_cast< double >( *itt1 );
+			else var2 = boost::lexical_cast< double >( exps[*itt1].back() );
 
-		if( !isLexical(*itt) )
-		var1 = boost::lexical_cast< double >( *itt );
-		else var1 = boost::lexical_cast< double >( exps[*itt].back() );
+			if( !isLexical(*itt) )
+				var1 = boost::lexical_cast< double >( *itt );
+			else var1 = boost::lexical_cast< double >( exps[*itt].back() );
 
-		*itt2 = compute(var1, var2, *itt2);
+			*itt2 = compute(var1, var2, *itt2);
 
-		it->second.erase(itt);
-		it->second.erase(itt1);
+			it->second.erase(itt);
+			it->second.erase(itt1);
 		}
 		results[it->first] = static_cast< int >(round(boost::lexical_cast< double >(it->second.back())));
 	}

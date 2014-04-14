@@ -12,7 +12,7 @@ namespace task4_5
 	class solution
 	{
 		boost::mutex mutex;
-		size_t max;
+		int max;
 		int min;
 
 		void search_max(vect &v, vect &maxs);
