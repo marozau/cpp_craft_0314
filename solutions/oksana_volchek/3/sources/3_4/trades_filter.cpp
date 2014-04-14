@@ -1,3 +1,12 @@
+/*
+In my 3_4 and 3_5 CMake files, I use 
+	link_directories(${Boost_LIBRARY_DIRS})
+to ensure that the required Boost modules will be
+linked as expected. Otherwise I get error LNK1004,
+indicating that the system is unable to find some
+Boost libraries (thread, regex, and their dependencies).
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -24,7 +33,6 @@ int deleteMsg(string const& nameFilein, string const& nameFileout){
 		try {
 			binary_reader::market_message market(in);
 			if (in.good() && market.type() >= 1 && market.type() <= 4){
-				// cout << market.type() << "\t" << market.time() << "\t" << market.len() << "\t" << market.msg() << endl;
 				const boost::uint32_t this_time = market.time();
 				if (this_time + 2 <= maxTime){
 					continue;
@@ -49,7 +57,7 @@ int deleteMsg(string const& nameFilein, string const& nameFileout){
 }
 
 int main(){
-	const boost::filesystem::path fullPath = boost::filesystem::system_complete(boost::filesystem::path(".\\", boost::filesystem::native));
+	const boost::filesystem::path fullPath = boost::filesystem::system_complete(BINARY_DIR / boost::filesystem::path(".\\" , boost::filesystem::native));
 	const boost::filesystem::directory_iterator end;
 	const boost::regex templateName(".+input_(\\d){3}\\.txt$");
 	boost::filesystem::path name;

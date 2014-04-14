@@ -73,7 +73,6 @@ int getSaveMsg(string const& inputFile, string const& outputFile){
 			numerator += (inner_iter->second).first;
 		}
 		const double average = numerator / inner_map.size();
-//		cout << currentType << "\t" << average << endl;
 		fileout.write(reinterpret_cast< char* >(&currentType), sizeof(currentType));
 		fileout.write(reinterpret_cast< const char* >(&average), sizeof(average));
 	}
@@ -84,7 +83,7 @@ int getSaveMsg(string const& inputFile, string const& outputFile){
 
 int main()
 {
-	const boost::filesystem::path fullPath = boost::filesystem::system_complete(boost::filesystem::path(".\\", boost::filesystem::native));
+	const boost::filesystem::path fullPath = boost::filesystem::system_complete(BINARY_DIR / boost::filesystem::path(".\\", boost::filesystem::native));
 	const boost::filesystem::directory_iterator end;
 	boost::filesystem::path name;
 	boost::thread_group myThreads;

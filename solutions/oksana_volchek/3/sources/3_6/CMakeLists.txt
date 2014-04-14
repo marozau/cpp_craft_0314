@@ -1,12 +1,7 @@
 find_package( Boost ${SEARCH_PARAMETERS} COMPONENTS
 	system
-	thread
-	# date_time
-	# chrono
 	filesystem
 )
-
-link_directories(${Boost_LIBRARY_DIRS})
 
 find_package( binary_reader ${SEARCH_PARAMETERS} COMPONENTS
 	binary_reader
