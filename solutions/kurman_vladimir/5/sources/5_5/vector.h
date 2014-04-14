@@ -47,7 +47,7 @@ namespace task5_5
 		const_iterator end() const;
 
 	private:
-		void increase_capacity( size_t amount );
+		void increase_capacity( const size_t amount );
 		void pre_insert_check();
 	};
 
@@ -65,7 +65,7 @@ namespace task5_5
 	}
 
 	template< typename T >
-	void task5_5::vector<T>::increase_capacity(size_t amount)
+	void task5_5::vector<T>::increase_capacity( const size_t amount )
 	{
 		capacity_ = amount;
 		T * tempData = new T[capacity_];
@@ -89,6 +89,8 @@ namespace task5_5
 	template< typename T >
 	vector< T >& vector< T >::operator=( const vector< T >& copy_from )
 	{
+		if (this == &copy_from)
+			return *this;
 		if (data_)
 			delete[] data_;
 		capacity_ = copy_from.capacity();
@@ -109,16 +111,11 @@ namespace task5_5
 	void vector< T >::insert( const size_t index, const T& value )
 	{
 		pre_insert_check();
-		const size_t leftPartSize = index + 1;
 		const size_t rightPartSize = size_ - index;
-		T * leftPart = new T[leftPartSize];
 		T * rightPart = new T[rightPartSize];
-		std::uninitialized_copy(std::make_move_iterator(begin()), std::make_move_iterator(begin() + index), leftPart);
 		std::uninitialized_copy(std::make_move_iterator(begin() + index), std::make_move_iterator(end()), rightPart);
-		leftPart[index] = value;
-		std::move(leftPart, leftPart + leftPartSize, begin());
-		std::move(rightPart, rightPart + rightPartSize, begin() + leftPartSize);
-		delete[] leftPart;
+		*(begin() + index) = value;
+		std::move(rightPart, rightPart + rightPartSize, begin() + index + 1);
 		delete[] rightPart;
 		++size_;
 	}
@@ -134,7 +131,9 @@ namespace task5_5
 	template< typename T >
 	const T& vector< T >::operator[]( const size_t index ) const
 	{
-		return const_cast<vector< T > *>(this)->operator [](index);
+		if (index >= size_)
+			throw std::out_of_range("Error in vector's subscripting operator");
+		return data_[index];
 	}
 
 	template< typename T >

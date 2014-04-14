@@ -137,5 +137,12 @@ void task5_5::tests_::vector_tests()
 		BOOST_CHECK_EQUAL( iv[ 1 ], 0 );
 		BOOST_CHECK_EQUAL( iv[ 150 ], 149 );
 	}
+	{
+		vector< int > int_vector;
+		for (int i = 0; i < 10; ++i)
+			int_vector.insert(0, i);
+		for (int i = 0; i < 10; ++i)
+			BOOST_CHECK_EQUAL(int_vector[i], 9 - i);
+	}
 }
 
