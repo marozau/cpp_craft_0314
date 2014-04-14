@@ -87,14 +87,12 @@ void main_func (const boost::uint32_t i){
 
 			
 			for (boost::uint32_t i=0;i<=types;i++)
-				if (ans[i].good){
+				if (ans[i].good && ans[i].num!=0){
 					if(!out.write(reinterpret_cast<char *>(&i), sizeof(i))) {
 						cerr<<"I can not write data"<<endl;
 						return;
 					}
-					double temp=0;
-					if (ans[i].num!=0) 
-						temp = static_cast< double >(ans[i].num)/ans[i].time;
+					double temp = static_cast< double >(ans[i].num)/ans[i].time;
 					if(!out.write(reinterpret_cast<char *>(&temp), sizeof(temp))) {
 						cerr<<"I can not write data"<<endl;
 						return;
