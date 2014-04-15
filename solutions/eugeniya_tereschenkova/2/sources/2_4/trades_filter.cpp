@@ -2,6 +2,12 @@
 #include <iostream>
 using namespace std;
 
+
+bool is_good_type (const boost::uint32_t type, const boost::uint32_t type_min, const boost::uint32_t type_max)
+{
+	return ((type >= type_min) && (type <= type_max)) ;
+} 
+
 int main()
 {
 	static const char* inp_file = BINARY_DIR "/input.txt";
@@ -13,11 +19,12 @@ int main()
 		return 1;
 	}
 
-	ofstream output_file(BINARY_DIR "/output.txt", ios::binary);
+	static const char* outp_file = BINARY_DIR "/output.txt";
+	ofstream output_file(outp_file, ios::binary);
 	boost::uint32_t cur_time = 0;
 	static const boost::uint32_t type_min = 1u;
 	static const boost::uint32_t type_max = 4u;
-	static const long long int N = 10^16;
+	static const long long N = 10^16;
 	int nMesCount = 0;
 	
 	try
@@ -29,14 +36,13 @@ int main()
 			binary_reader::market_message mark_mes(input_file);
 			if (input_file.eof()) 
 				break;
-			if( mark_mes.check(cur_time, type_min, type_max) )
+			if( mark_mes.check(cur_time) && is_good_type(mark_mes.type(), type_min, type_max))
 				mark_mes.write(output_file);
 			nMesCount++;
 		}
 	}
-	catch(exception &e) 
+	catch(...) 
 	{
-		cout << e.what() << endl;
 		input_file.close();
 		output_file.close();
 		return 1;

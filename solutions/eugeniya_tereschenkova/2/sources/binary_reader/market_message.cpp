@@ -61,22 +61,16 @@ binary_reader::market_message::~market_message()
 }
 //
 
-bool binary_reader::market_message::is_good_type (const boost::uint32_t t, const boost::uint32_t type_min, const boost::uint32_t type_max) const
-{
-	return ((t >= type_min) && (t <= type_max)) ;
-} 
-
-bool binary_reader::market_message::check(boost::uint32_t& cur_time, const boost::uint32_t type_min, const boost::uint32_t type_max) const 
+bool binary_reader::market_message::check(boost::uint32_t& cur_time) const 
 {
 	if (cur_time < time_) 
 	{
 		cur_time = time_;
-		if (is_good_type(type_, type_min, type_max))  
-			return true;
+		return true;
 	}
 	else
 	{
-		if( ((time_+2) > cur_time) && is_good_type(type_, type_min, type_max) )
+		if( (time_+2) > cur_time )
 			return true;
 	} 
 	return false;

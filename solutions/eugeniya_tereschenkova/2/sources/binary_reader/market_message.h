@@ -21,8 +21,7 @@ namespace binary_reader
 		void write( std::ofstream& out );
 		~market_message();
 		//
-		bool is_good_type(const boost::uint32_t t, const boost::uint32_t type_min, const boost::uint32_t type_max) const;
-		bool check(boost:: uint32_t& cur_time, const boost:: uint32_t type_min, const boost:: uint32_t type_max) const;
+		bool check(boost:: uint32_t& cur_time) const;
 		boost::uint32_t type() const;
 		boost::uint32_t time() const;
 		const char* const msg() const;
