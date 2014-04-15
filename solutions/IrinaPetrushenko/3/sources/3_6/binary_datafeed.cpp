@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <queue>
 
 #include <boost/cstdint.hpp>
 #include <boost/shared_ptr.hpp>
@@ -14,50 +15,57 @@ using namespace binary_reader;
 using namespace std;
 
 namespace task_3_3{
-	static boost::mutex mtx;
-	static boost::condition wait_condition;
+	static boost::mutex mtx_el;
+	static boost::mutex mtx_out;
+	static size_t it_for_queue = 0;
 
-	void local_write_void_for_stock_data (stock_data * m, ofstream * out){
-		{
-			boost::mutex::scoped_lock lock(task_3_3::mtx);
-
-			m->write_stock_name(*out);
-			m->write_data(*out);
-			m->write_price(*out);
-			m->write_volume(*out);
-			m->write_f2(*out);
-			delete m;
-		}
+	void local_write_void_for_stock_data (boost::shared_ptr<stock_data>  mm, boost::shared_ptr<ofstream> out){
+			mm->write_stock_name(*out);
+			mm->write_data(*out);
+			mm->write_price(*out);
+			mm->write_volume(*out);
+			mm->write_f2(*out);
 	}
 
-	void almost_main (ifstream * inn, map <string, ofstream *> & map_of_stock_names){
-			
-			stock_data  * m;
-			while (!inn->eof()){
-				{
-					boost::mutex::scoped_lock lock(task_3_3::mtx);
-					m = new stock_data (*inn);
-				}
-			
-				if (inn->eof()) 
-					break;
+	void almost_main (ifstream * const inn, map <string, boost::shared_ptr<ofstream> > * const map_of_stock_names, vector <boost::shared_ptr<stock_data> > * const qu_el){
 
-				string ss=static_cast<string>(m->stock_name());
-				ofstream * out;
-
-				if (map_of_stock_names.count(ss)==0){
-					string index="/output_"+ss+".txt";
-					string out_name = BINARY_DIR+index;
+		boost::shared_ptr<ofstream> out;
+		string ss;
+		while (!inn->eof()){
+					
 					{
-						boost::mutex::scoped_lock lock(task_3_3::mtx);
-						out =new ofstream (out_name.c_str(),std::ios::binary);
-						map_of_stock_names.insert(make_pair(ss,out));
+						boost::mutex::scoped_lock lock(task_3_3::mtx_el);
+						qu_el->push_back (boost::shared_ptr<stock_data> (new stock_data (*inn)));						
 					}
-				}
-				else
-					out = (map_of_stock_names.find(ss))->second;
+						if (inn->eof()) 
+							break;
+					{	
+						boost::mutex::scoped_lock lock_out(task_3_3::mtx_out);
+						{
+							boost::mutex::scoped_lock lock(task_3_3::mtx_el);
+							ss=static_cast<string>((*qu_el)[it_for_queue]->stock_name());						
+						}
 
-				task_3_3::local_write_void_for_stock_data (m, out);
+						if (map_of_stock_names->count(ss)==0){
+								const string index="/output_"+ss+".txt";
+								const string out_name = BINARY_DIR+index;
+								{
+									boost::shared_ptr<ofstream> temp (new ofstream (out_name.c_str(),std::ios::binary));
+									out = temp;
+									map_of_stock_names->insert(make_pair(ss,out));
+								}
+						}
+						else
+								out = (map_of_stock_names->find(ss))->second;
+										
+						{
+							boost::mutex::scoped_lock lock(task_3_3::mtx_el);
+							task_3_3::local_write_void_for_stock_data ((*qu_el)[it_for_queue], out);	
+						}
+
+						it_for_queue++;
+					}
+					
 			}
 			
 	}
@@ -71,20 +79,21 @@ int main()
 		if (inn.is_open()){
 
 			boost::thread_group group_of_threads;
-			map <string, ofstream *> map_of_stock_names;
+			map <string, boost::shared_ptr<ofstream> > map_of_stock_names;
+			vector <boost::shared_ptr<stock_data> > qu_el;
+
 			static const size_t threads_count = 4;
 
 			for (size_t i =0; i<threads_count;i++){
-				group_of_threads.create_thread (boost::bind(& task_3_3::almost_main, & inn,  map_of_stock_names));
+				group_of_threads.create_thread (boost::bind(& task_3_3::almost_main, & inn, & map_of_stock_names, & qu_el));
 			}
 			group_of_threads.join_all();
 
-			for (map<string, ofstream *>::iterator i = map_of_stock_names.begin();i!=map_of_stock_names.end();i++)
+			for (map<string, boost::shared_ptr<ofstream>>::iterator i = map_of_stock_names.begin();i!=map_of_stock_names.end();i++)
 				i->second->close();
 			
 		}
 		else{
-			cerr<<"Input file was not opened"<<endl;
 			return 1;
 		}
 		

@@ -4,10 +4,8 @@
 
 using namespace std;
 
-binary_reader::market_message::market_message( std::ifstream& in )
+binary_reader::market_message::market_message( std::ifstream& in ):type_(0u),time_(0u),len_(0u),msg_(NULL)
 {
-	type_=0u;time_=0u;
-	len_=0u;msg_=NULL;
 	if(!in.read(reinterpret_cast<char *>(&type_), sizeof(type_))) {
 		if (in.eof()) return;
 		cerr<<"Input is incorrect type"<<endl;
@@ -34,15 +32,13 @@ binary_reader::market_message::market_message( std::ifstream& in )
 	}
 
 }
-binary_reader::market_message::market_message( const boost::uint32_t type, const boost::uint32_t time, const char* const msg )
+binary_reader::market_message::market_message( const boost::uint32_t type, const boost::uint32_t time, const char* const msg ):type_(type),time_(time)
 {
-	type_=type;
-	time_=time;
 	len_=static_cast<boost::uint32_t>(strlen(msg));
 	msg_ = new char[len_+1];
 	memcpy(msg_, msg, len_+1);
 }
-void binary_reader::market_message::write( std::ofstream& out )
+void binary_reader::market_message::write( std::ofstream& out ) const
 {
 	if(!out.write(reinterpret_cast<char *>(&type_), sizeof(type_))) {
 		cerr<<"I can not write data"<<endl;
@@ -71,9 +67,9 @@ binary_reader::market_message::~market_message()
 	}
 }
 
-size_t binary_reader::market_message::type() const
+boost::uint32_t binary_reader::market_message::type() const
 {
-	return static_cast<size_t>(type_);
+	return type_;
 }
 boost::uint32_t binary_reader::market_message::time() const
 {
@@ -96,7 +92,7 @@ binary_reader::market_message::market_message(const market_message & a): type_(a
 	msg_ = new char[len_+1];
 	memcpy(msg_, a.msg_, len_+1);
 }
-binary_reader::market_message & binary_reader::market_message::operator = (const market_message & a)
+const binary_reader::market_message & binary_reader::market_message::operator = (const market_message & a)
 {
 	if (this!=& a){
 		type_=a.type_;

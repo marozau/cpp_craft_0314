@@ -14,14 +14,14 @@ namespace binary_reader
 		const static size_t len_ = 8;
 		char stock_name_[len_];
 		char date_time_[len_];
-		double price_;
-		double vwap_;
-		boost::uint32_t volume_;
-		double f1_;
-		double t1_;
-		double f2_;
-		double f3_;
-		double f4_;
+		mutable double price_;
+		mutable double vwap_;
+		mutable boost::uint32_t volume_;
+		mutable double f1_;
+		mutable double t1_;
+		mutable double f2_;
+		mutable double f3_;
+		mutable double f4_;
 
 	public:
 		explicit stock_data( std::ifstream& in );
@@ -36,13 +36,12 @@ namespace binary_reader
 							const double f3,
 							const double f4 );		
 		~stock_data();
-		void write( std::ofstream& out );	
-		void write_raw( std::ofstream& out );
-		void write_stock_name (std::ofstream& out); 
+		void write( std::ofstream& out ) const;	
+		void write_stock_name (std::ofstream& out) const; 
 		void write_data (std::ofstream& out) const;
-		void write_price (std::ofstream& out);
-		void write_volume (std::ofstream& out);
-		void write_f2 (std::ofstream& out);
+		void write_price (std::ofstream& out) const ;
+		void write_volume (std::ofstream& out) const;
+		void write_f2 (std::ofstream& out) const;
 
 		const char * stock_name () const;
 
