@@ -12,18 +12,17 @@ namespace task4_5
 	{
         int min_;
         int max_;
-        data_type data_;
+        const data_type *data_;
         mutable boost::mutex max_mutex_;
         mutable boost::mutex min_mutex_;
 	public:
-		explicit solution( const data_type& data );
+        explicit solution( const data_type &data );
         int get_min() const;
         int get_max() const;
     private:
-        void threadStarter(void* obj);
-        void find_extremums(const int index);
-        void set_min(const int min);
-        void set_max(const int max);
+        void find_extremums_(const size_t index);
+        void set_min_(const int min);
+        void set_max_(const int max);
 	};
 }
 

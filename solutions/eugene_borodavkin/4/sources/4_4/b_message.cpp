@@ -7,14 +7,17 @@ task4_4::b_message::b_message( std::istream& inp )
         throw std::logic_error("b message cannot be readed!!!");
     char spaceChar;
     content_ = new char[ length_ + 1];
-    inp.get(spaceChar);
-    inp.read(content_,length_);
+    inp.get( spaceChar );
+    inp.read( content_, length_ );
     content_[length_] = '\0';
-    if(inp.gcount() != length_)
+    if( inp.gcount( ) != length_){
+        delete [ ] content_;
         throw std::logic_error("b message is fail");
-
-    if(inp.eof())
+    }
+    if( inp.eof( ) ){
+        delete [ ] content_;
         throw std::logic_error("b_message cannot be readed!!!");
+    }
 
 }
 

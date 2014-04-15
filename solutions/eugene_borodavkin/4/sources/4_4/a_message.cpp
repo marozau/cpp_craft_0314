@@ -4,8 +4,8 @@
 #include <boost/format.hpp>
 task4_4::a_message::a_message( std::istream& inp )
 {
-    inp.read( content_, content_size );
-    content_[16] = '\0';
+    inp.read( content_, content_size_ );
+    content_[content_size_ ] = '\0';
     if ( inp.eof() )
 		throw std::logic_error("bad input stream, a_message cannot be readed");
 }
