@@ -15,8 +15,8 @@ namespace task4_5
 		int max;
 		int min;
 
-		void search_max(vect &v, vect &maxs);
-		void search_min(vect &v, vect &mins);
+		void search_max(const vect &v, vect &maxs);
+		void search_min(const vect &v, vect &mins);
 
 	public:
 		explicit solution(const data_type& data );

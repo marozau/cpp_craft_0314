@@ -6,19 +6,8 @@ bool comp(const int a, const int b)
 	return a > b;
 }
 
-task4_5::solution::solution(const data_type& d)
+task4_5::solution::solution(const data_type& data)
 {
-	data_type data;
-
-	for (size_t i = 0; i < d.size(); ++i)
-	{
-		data.push_back(task4_5::data_type::value_type());
-		for (vect::const_iterator it = d[i].begin(); it != d[i].end(); it++)
-		{
-			data[i].push_back(*it);
-		}
-	}
-
 	boost::thread_group threads;
 
 	vect mins;
@@ -57,20 +46,32 @@ int task4_5::solution::get_max() const
 	return max;
 }
 
-void task4_5::solution::search_min(vect &subVect, vect &mins)
+void task4_5::solution::search_min(const vect &subVect, vect &mins)
 {
 	boost::mutex::scoped_lock lock(mutex);
 
-	std::sort(subVect.begin(), subVect.end());
+	if(!subVect.empty())
+	{
+		int bufMin = subVect.at(0);
 
-	mins.push_back(*(subVect.begin()));
+		for( vect::const_iterator it = subVect.begin() + 1; it != subVect.end(); ++it)
+			if(*it < bufMin) bufMin = *it;
+
+		mins.push_back(bufMin);
+	}
 }
 
-void task4_5::solution::search_max(vect &subVect, vect& maxs)
+void task4_5::solution::search_max(const vect &subVect, vect& maxs)
 {
 	boost::mutex::scoped_lock lock(mutex);
 
-	std::sort(subVect.begin(), subVect.end(), comp);
+	if(!subVect.empty())
+	{
+		int bufMax = subVect.at(0);
 
-	maxs.push_back(*(subVect.begin()));
+		for( vect::const_iterator it = subVect.begin() + 1; it != subVect.end(); ++it)
+			if(*it > bufMax) bufMax = *it;
+
+		maxs.push_back(bufMax);
+	}
 }
