@@ -9,7 +9,6 @@
 void task4_4::tests_::a_message_constructor_tests()
 {
 	std::stringstream test_stream;
-
 	BOOST_CHECK_THROW( a_message::create_message( test_stream ), std::logic_error );
 	test_stream.clear();
 

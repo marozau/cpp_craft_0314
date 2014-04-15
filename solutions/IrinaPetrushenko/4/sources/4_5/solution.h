@@ -13,16 +13,16 @@ namespace task4_5
 		mutable std::vector < int > temp_min_; 
 		mutable std::vector < int > temp_max_; 
 		const task4_5::data_type &  data_;
-		static boost::mutex mtx;
+		mutable boost::mutex mtx_data_;
+		mutable boost::mutex mtx_temp_;
 		mutable int min_;
 		mutable int max_;
+		void get_min_max_ () const;
+		void find_min_max_ (const size_t i) const;
 	public:
 		explicit solution( const data_type& data );
-		solution * operator = (solution const & sol);
 		int get_min() const;
 		int get_max() const;
-		void get_min_max () const;
-		void find_min_max (const size_t i) const;
 	};
 }
 
