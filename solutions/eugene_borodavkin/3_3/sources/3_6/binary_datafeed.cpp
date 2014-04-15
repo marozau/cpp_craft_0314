@@ -7,79 +7,22 @@
 #include <queue>
 #include <list>
 #include <boost/thread.hpp>
+#include "short_message.h"
+#include <boost/lexical_cast.hpp>
 
 
-template <class T>
-void readFromBinaryInput(std::ifstream &input, T &t, size_t len = sizeof(T)){
-    input.read(reinterpret_cast< char * >( &t ), len);
-}
-
-template <class T>
-void writeToBinaryOutput( std::ofstream &output, T &t, size_t len = sizeof(T)){
-    output.write(reinterpret_cast< char* >( &t ), len);
-}
-
-class Message{
-private:
-    char stock_name[8];
-    char date_time[8];
-    double price;
-    double vwap;
-    boost::uint32_t volume;
-    double f1;
-    double t1;
-    double f2;
-    double f3;
-    double f4;
-public:
-    Message(){}
-    Message( std::ifstream &in){
-        readFromBinaryInput(in, stock_name);
-        readFromBinaryInput(in, date_time);
-        readFromBinaryInput(in, price);
-        readFromBinaryInput(in, vwap);
-        readFromBinaryInput(in, volume);
-        readFromBinaryInput(in, f1);
-        readFromBinaryInput(in, t1);
-        readFromBinaryInput(in, f2);
-        readFromBinaryInput(in, f3);
-        readFromBinaryInput(in, f4);
-    }
-    ~Message(){
-    }
-
-    void write( std::ofstream& out )
-    {
-        boost::uint32_t date = 0;
-        int year,day,month;
-        std::sscanf( date_time, "%4d%2d%2d", &year, &month, &day );
-        date = ( year - 1 ) * 372 +  ( month  - 1 )* 31 + day;
-
-        char stock[9];
-        memcpy( stock, stock_name, sizeof( stock_name ) );
-        writeToBinaryOutput( out, stock );
-        writeToBinaryOutput( out, date );
-        writeToBinaryOutput( out, vwap );
-        writeToBinaryOutput( out, volume );
-        writeToBinaryOutput( out, f2 );
-    }
-
-    char* name(){
-        return stock_name;
-    }
-};
 
 std::queue<Message> msgQueue;
 boost::mutex queueMutex;
 boost::thread_group threads;
-const int THREADS_COUNT = 4;
+const int THREADS_COUNT = 2;
 
 
 class IO_Sync{
     mutable boost::mutex io_mut_;
     std::ofstream *out_;
 public:
-    IO_Sync(char * outFile){
+    IO_Sync(std::string &outFile){
         out_ = new std::ofstream(outFile, std::ios::binary);
     }
 
@@ -104,43 +47,50 @@ struct cmp_str
 
 
 class SyncClass{
-
     std::map<const char*, IO_Sync*, cmp_str> sync_map_ ;
     bool working_;
-
     boost::mutex map_mutex_;
+    boost::condition_variable wait_condition_;
 public:
     SyncClass():working_(true){
 
     }
 
     void writeMessage(){
-        bool doWork = true;
-        while( doWork ){
+        while( working_ ){
             Message msg;
             queueMutex.lock();
-            if(msgQueue.empty()) continue;
+            if( msgQueue.empty( ) ){
+                queueMutex.unlock();
+                wait_condition_.notify_one();
+
+                continue;
+
+            }
             msg = msgQueue.front();
             msgQueue.pop();
-            doWork = working_ || !msgQueue.empty();
             queueMutex.unlock();
             IO_Sync *info;
             {
                 boost::mutex::scoped_lock lock(map_mutex_);
-                if(sync_map_.find(msg.name()) == sync_map_.end()){
-                    char outFileName[256];
-                    char *name = new char[8];
-                    memcpy( name, msg.name(), sizeof( msg.name() ) );
-                    std::sprintf(outFileName, BINARY_DIR"/output_%s.txt",msg.name());
+                if(sync_map_.find( msg.name() ) == sync_map_.end() ){
+                    std::string outFileName;
+                    char *name = new char[ 8]();
+
+                    strncpy( name,msg.name(),sizeof(msg.name() ) );
+                   // memcpy( name, msg.name(), sizeof( msg.name() ) );
+                    outFileName = BINARY_DIR"/output_" + boost::lexical_cast< std::string >( name ) + ".txt";
                     sync_map_[name] = new IO_Sync(outFileName);
                 }
                 info = sync_map_[msg.name()];
             }
+
             info->write(msg);
         }
     }
 
     void stopWorking(){
+        wait( );
         working_ = false;
     }
 
@@ -148,6 +98,14 @@ public:
         for(auto item : sync_map_){
             delete [] (item).first;
             delete (item).second;
+        }
+        wait();
+    }
+private:
+    void wait( ) {
+        boost::mutex::scoped_lock lock ( queueMutex );
+        while( !msgQueue.empty( ) ){
+            wait_condition_.wait( lock );
         }
     }
 };
@@ -164,6 +122,8 @@ int main()
 
     while(!input.eof()){
         Message msg(input);
+        if(input.eof())
+            break;
         boost::mutex::scoped_lock lock(queueMutex);
         msgQueue.push(msg);
     }

@@ -11,8 +11,9 @@
 #include <boost/thread/condition.hpp>
 #include "message.h"
 
+const int MAX_FILE_NUMBER_SIZE = 4;
 const int THREADS_COUNT = 4;
-const int FILES_NUM = 10;
+const int FILES_NUM = 1000;
 volatile int working_threads = 0;
 boost::condition amount_cond;
 boost::mutex workThrMutex;
@@ -21,7 +22,12 @@ typedef std::unordered_set<std::uint32_t> set;
 
 const boost::uint32_t MAX_BUFFER_SIZE = 2048;
 
-void inscreadeWorkingThreads(){
+int getWorkingThreads() {
+    boost::mutex::scoped_lock lock( workThrMutex );
+    return working_threads;
+}
+
+void increaseWorkingThreads(){
     boost::mutex::scoped_lock lock(workThrMutex);
     ++working_threads;
 }
@@ -40,17 +46,17 @@ void increaseTimesMessageUsed(map& times, const set& curTime){
 
 void handleFile(int fileNum){
 
-    char inFileName[256];
-    char outFileName[256];
-    std::sprintf(inFileName, BINARY_DIR"/input_%d.txt",fileNum);
-    std::sprintf(outFileName, BINARY_DIR"/output_%d.txt",fileNum);
+    char file_number [ MAX_FILE_NUMBER_SIZE ];
 
-    std::ifstream input(inFileName, std::ios::binary);
+    std::sprintf(file_number, "03%d",fileNum);
+    std::string fileNumberString ( file_number );
+    std::ifstream input( BINARY_DIR"/input_" + fileNumberString + ".txt", std::ios::binary);
     if( !input.is_open() ){
         decreaseWorkingThreads();
         amount_cond.notify_one();
         return;
     }
+
     boost::uint32_t curTime=0;
 
     map sizeForMsgType;//msg type , size
@@ -84,12 +90,12 @@ void handleFile(int fileNum){
     }
     input.close();
 
-    std::ofstream output(outFileName, std::ios::binary);
+    std::ofstream output( BINARY_DIR"/output_" + fileNumberString + ".txt", std::ios::binary );
 
     for(auto msgType : allMsgType){
-        output.write((char*)&msgType.first, sizeof(msgType.first));
-        const double result = static_cast<double> (msgType.second) / timesMsgType[msgType.first];
-        output.write((char*)&result,sizeof(result));
+        output.write( reinterpret_cast< const char* > ( & msgType.first ), sizeof( msgType.first ) );
+        const double result = static_cast< double > ( msgType.second ) / timesMsgType [msgType.first ];
+        output.write( reinterpret_cast< const char* > ( &result ), sizeof( result ) );
     }
     decreaseWorkingThreads();
     amount_cond.notify_one();
@@ -102,13 +108,13 @@ int main()
     for(int i = 1; i < FILES_NUM; ++i){
         {
             boost::mutex::scoped_lock lock(mut);
-            while(working_threads >= THREADS_COUNT){
+            while( getWorkingThreads() >= THREADS_COUNT){
                 amount_cond.wait(mut);
             }
         }
-        if(working_threads < THREADS_COUNT){
+        if( getWorkingThreads() < THREADS_COUNT){
             threads.create_thread( boost::bind(&handleFile, i));
-            inscreadeWorkingThreads();
+            increaseWorkingThreads();
         }
 
     }
