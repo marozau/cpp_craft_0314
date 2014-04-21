@@ -1,23 +1,24 @@
 #include "solution.h"
 #include <vector>
 
-task4_5::solution::solution(const data_type& data) : min_ (0), max_ (0), dataSize_ (data.size()) {
-	if (dataSize_ != 0){
-		min_ = data[0][0];
-		max_ = data[0][0];
-		ptrData_ = &data;
-		
-		for (size_t j = 0; j < data.size(); ++j){
-			threads_.create_thread(boost::bind(&task4_5::solution::findLocalMinAndMax, this, (*ptrData_)[j]));
-		}
-		threads_.join_all();
+int task4_5::solution::findFirstNonEmpty(const data_type & myVector){
+	if (myVector.empty()){
+		return -1;
 	}
 	else {
-		std::cout << "Vector is empty" << std::endl;
+		for (int i = 0; i < myVector.size(); ++i){
+			if (!myVector[i].empty()){
+				return i;
+			}
+		}
+		return -1;
 	}
 }
 
 void task4_5::solution::findLocalMinAndMax(const std::vector<int> & myVector){
+	if (myVector.empty()){
+		return;
+	}
 	int localMin = myVector[0];
 	int localMax = myVector[0];
 	for (std::vector<int>::const_iterator iter = myVector.begin(); iter != myVector.end(); ++iter){
@@ -35,6 +36,23 @@ void task4_5::solution::findLocalMinAndMax(const std::vector<int> & myVector){
 	}
 	if (localMax > max_){
 		max_ = localMax;
+	}
+}
+
+task4_5::solution::solution(const data_type& data) : min_ (0), max_ (0), dataSize_ (data.size()), ptrData_ (&data)
+{
+	int initialIndex = findFirstNonEmpty(data);
+	if (initialIndex == -1){
+		std::cout << "Vector is empty" << std::endl;
+	}
+	else {
+		min_ = data[initialIndex][0];
+		max_ = data[initialIndex][0];
+		
+		for (size_t j = 0; j < data.size(); ++j){
+			threads_.create_thread(boost::bind(&task4_5::solution::findLocalMinAndMax, this, (*ptrData_)[j]));
+		}
+		threads_.join_all();
 	}
 }
 

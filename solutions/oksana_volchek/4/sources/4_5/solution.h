@@ -17,11 +17,12 @@ namespace task4_5
 		
 		boost::mutex mutex_;
 		boost::thread_group threads_;
-//		static const size_t threadsCount_ = 4;
+
+		int findFirstNonEmpty(const data_type & myVector);
+		void findLocalMinAndMax(const std::vector<int> & myVector);
 
 	public:
 		explicit solution( const data_type& data );
-		void findLocalMinAndMax(const std::vector<int> & myVector);
 		int get_min() const;
 		int get_max() const;
 	};
