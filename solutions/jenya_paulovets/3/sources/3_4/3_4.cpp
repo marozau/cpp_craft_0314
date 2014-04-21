@@ -77,7 +77,7 @@ void searchActualData(std::ifstream * const fileIn, std::ofstream * const fileOu
 
 	do {
 		count++;
-		if (static_cast<int>(request->time) > (time - static_cast<int>(dif)) && request->type > from && request->type < to)
+		if ((request->time + dif) > time && request->type > from && request->type < to)
 		{
 			if (static_cast<int>(request->time) > time)
 				time = request->time;
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 			delete fileOut;
 			continue;
 		}
-		threads.create_thread(boost::bind(&searchActualData, boost::ref(fileIn), boost::ref(fileOut)));
+		threads.create_thread(boost::bind(&searchActualData, fileIn, fileOut));
 	}
 
 	threads.join_all();

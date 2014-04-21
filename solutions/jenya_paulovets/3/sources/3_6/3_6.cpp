@@ -75,7 +75,8 @@ public:
 
 fileOut::fileOut(const char * const name) {
 	const std::string ext = ".txt";
-	const std::string fName = std::string(BINARY_DIR).append("/").append(name).append(ext);
+	const std::string typeOfFile = "output_";
+	const std::string fName = std::string(BINARY_DIR).append("/").append(typeOfFile).append(name).append(ext);
 
 	out = new std::ofstream(fName.c_str(), std::ios::binary);
 }
