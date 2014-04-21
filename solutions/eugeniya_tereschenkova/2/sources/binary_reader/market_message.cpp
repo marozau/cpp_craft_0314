@@ -25,7 +25,7 @@ binary_reader::market_message::market_message( std::ifstream& in )
 		return;
 	}
 	msg_[ len_ ] = '\0';
-  
+
 }
 binary_reader::market_message::market_message( const boost::uint32_t type, const boost::uint32_t time, const char* const msg )
 {	
@@ -61,7 +61,7 @@ binary_reader::market_message::~market_message()
 }
 //
 
-bool binary_reader::market_message::check(boost::uint32_t& cur_time) const 
+bool binary_reader::market_message::check_time(boost::uint32_t& cur_time) const 
 {
 	if (cur_time < time_) 
 	{

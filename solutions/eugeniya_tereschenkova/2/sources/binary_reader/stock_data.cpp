@@ -5,18 +5,18 @@ binary_reader::stock_data::stock_data( std::ifstream& in )
 	// your code
 }
 binary_reader::stock_data::stock_data( const char* stock_name,
-							const char* date_time,
-							const double price,
-							const double vwap,
-							const boost::uint32_t volume,
-							const double f1,
-							const double t1,
-							const double f2,
-							const double f3,
-							const double f4 )
+									  const char* date_time,
+									  const double price,
+									  const double vwap,
+									  const boost::uint32_t volume,
+									  const double f1,
+									  const double t1,
+									  const double f2,
+									  const double f3,
+									  const double f4 )
 {
 	// your code
- 	// don't forget about initialization list
+	// don't forget about initialization list
 }
 binary_reader::stock_data::~stock_data()
 {

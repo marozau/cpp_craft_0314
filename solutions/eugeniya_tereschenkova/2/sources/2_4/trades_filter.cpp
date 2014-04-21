@@ -24,7 +24,7 @@ int main()
 	boost::uint32_t cur_time = 0;
 	static const boost::uint32_t type_min = 1u;
 	static const boost::uint32_t type_max = 4u;
-	static const long long N = 10^16;
+	static const long long N = static_cast<long long>(pow(10.0,16.0));
 	int nMesCount = 0;
 	
 	try
@@ -36,7 +36,7 @@ int main()
 			binary_reader::market_message mark_mes(input_file);
 			if (input_file.eof()) 
 				break;
-			if( mark_mes.check(cur_time) && is_good_type(mark_mes.type(), type_min, type_max))
+			if( mark_mes.check_time(cur_time) && is_good_type(mark_mes.type(), type_min, type_max))
 				mark_mes.write(output_file);
 			nMesCount++;
 		}

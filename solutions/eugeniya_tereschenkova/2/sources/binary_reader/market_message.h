@@ -2,6 +2,7 @@
 #define _BINARY_READER_MARKET_MESSAGE_H_
 
 #include <fstream>
+#include <math.h>
 
 #include <boost/noncopyable.hpp>
 #include <boost/cstdint.hpp>
@@ -21,7 +22,7 @@ namespace binary_reader
 		void write( std::ofstream& out );
 		~market_message();
 		//
-		bool check(boost:: uint32_t& cur_time) const;
+		bool check_time(boost:: uint32_t& cur_time) const;
 		boost::uint32_t type() const;
 		boost::uint32_t time() const;
 		const char* const msg() const;
