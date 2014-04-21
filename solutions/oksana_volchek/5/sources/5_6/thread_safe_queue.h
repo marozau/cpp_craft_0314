@@ -38,17 +38,18 @@ namespace task5_6
 	template< typename T >
 	void thread_safe_queue< T >::push( const T& newElem )
 	{
-		boost::mutex::scoped_lock (qMutex_);
+		boost::unique_lock<boost::mutex> lock (qMutex_);
 		qData_.push(newElem);
 		++qSize_;
 	}
 
+
 	template< typename T >
 	bool thread_safe_queue< T >::pop( T& result )
 	{
-		boost::mutex::scoped_lock (qMutex_);
+		boost::unique_lock<boost::mutex> lock(qMutex_);
 		if (qSize_ == 0){
-			return false;
+			 return false;
 		}
 		else {
 			result = qData_.front();
@@ -61,7 +62,7 @@ namespace task5_6
 	template< typename T >
 	bool thread_safe_queue< T >::empty() const
 	{
-		boost::mutex::scoped_lock (qMutex_);
+		boost::unique_lock<boost::mutex> lock (qMutex_);
 		if (qSize_ == 0){
 			return true;
 		}
@@ -73,9 +74,10 @@ namespace task5_6
 	template< typename T >
 	size_t thread_safe_queue< T >::size() const
 	{
-		boost::mutex::scoped_lock (qMutex_);
+		boost::unique_lock<boost::mutex> lock (qMutex_);
 		return qSize_;
 	}
 }
+
 
 #endif // _TASK5_6_THREAD_SAFE_QUEUE_H_
