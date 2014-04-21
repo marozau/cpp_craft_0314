@@ -79,7 +79,7 @@ void searchActualData(std::ifstream * const fileIn, std::ofstream * const fileOu
 		count++;
 		if ((request->time + dif) > time && request->type > from && request->type < to)
 		{
-			if (static_cast<int>(request->time) > time)
+			if (request->time > time)
 				time = request->time;
 			if (!request->writeData(fileOut))
 			{
