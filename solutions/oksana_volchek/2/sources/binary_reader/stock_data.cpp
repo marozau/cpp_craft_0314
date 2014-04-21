@@ -73,3 +73,7 @@ void binary_reader::stock_data::write_raw(std::ofstream& output)
 	read_and_write::write_binary(output, f3_);
 	read_and_write::write_binary(output, f4_);
 }
+
+const char* const binary_reader::stock_data::get_stockName() const {
+	return stock_name_;
+}

@@ -46,6 +46,7 @@ namespace binary_reader
 		
 		void write( std::ofstream& output );
 		void write_raw( std::ofstream& out );
+		const char* const get_stockName() const ; 
 		
 	};
 }
