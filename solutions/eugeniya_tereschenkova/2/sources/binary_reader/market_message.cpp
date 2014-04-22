@@ -96,7 +96,7 @@ const boost::uint32_t binary_reader::market_message::msg_size() const
 {
 	return sizeof(type_) + sizeof(time_) + sizeof(len_) + sizeof(char)*len_ + 1;
 }
-const bool binary_reader::market_message::check_msg_size(boost::uint32_t& cur_msg_size) const 
+const bool binary_reader::market_message::check_msg_size(const boost::uint32_t& cur_msg_size) const 
 {
 	return ( cur_msg_size <= binary_reader:: market_message::buffer_size );
 }
