@@ -24,8 +24,7 @@ binary_reader::market_message::market_message( std::ifstream& in )
 		}
 		return;
 	}
-	msg_[ len_ ] = '\0';
-
+	msg_[ len_ ] = '\0';  
 }
 binary_reader::market_message::market_message( const boost::uint32_t type, const boost::uint32_t time, const char* const msg )
 {	
@@ -39,7 +38,7 @@ binary_reader::market_message::market_message( const boost::uint32_t type, const
 	memcpy(msg_, msg, len_);
 	msg_[ len_ ] = '\0';
 }
-void binary_reader::market_message::write( std::ofstream& out )
+void binary_reader::market_message::write( std::ofstream& out ) const
 {
 	if(!out.write(reinterpret_cast< const char*>(&type_),sizeof(type_)) )
 		throw logic_error("can't write 'type'");
@@ -85,7 +84,19 @@ boost::uint32_t binary_reader::market_message::time() const
 {
 	return time_;
 }
+boost::uint32_t binary_reader::market_message::len() const
+{
+	return len_;
+}
 const char* const binary_reader::market_message::msg() const
 {
 	return msg_;
+}
+const boost::uint32_t binary_reader::market_message::msg_size() const
+{
+	return sizeof(type_) + sizeof(time_) + sizeof(len_) + sizeof(char)*len_ + 1;
+}
+bool binary_reader::market_message::check_msg_size(boost::uint32_t& cur_msg_size) const 
+{
+	return ( cur_msg_size <= binary_reader:: market_message::buffer_size );
 }

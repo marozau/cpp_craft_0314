@@ -16,16 +16,21 @@ namespace binary_reader
 		boost::uint32_t len_;
 		char* msg_;
 
-	public:
+	public:	
+		static const boost::uint32_t buffer_size = 2048; 
+
 		explicit market_message( std::ifstream& in );
 		explicit market_message( const boost::uint32_t type, const boost::uint32_t time, const char* const msg );
-		void write( std::ofstream& out );
+		void write( std::ofstream& out ) const;
 		~market_message();
 		//
 		bool check_time(boost:: uint32_t& cur_time) const;
 		boost::uint32_t type() const;
 		boost::uint32_t time() const;
+		boost::uint32_t len() const;
 		const char* const msg() const;
+		const boost::uint32_t msg_size() const;
+		bool check_msg_size(boost::uint32_t& cur_msg_size) const;
 	};
 }
 

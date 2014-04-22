@@ -21,9 +21,9 @@ int main()
 
 	static const char* outp_file = BINARY_DIR "/output.txt";
 	ofstream output_file(outp_file, ios::binary);
-	boost::uint32_t cur_time = 0;
 	static const boost::uint32_t type_min = 1u;
 	static const boost::uint32_t type_max = 4u;
+	boost::uint32_t cur_time = 0;
 	static const long long N = static_cast<long long>(pow(10.0,16.0));
 	int nMesCount = 0;
 	

@@ -24,18 +24,18 @@ namespace binary_reader
 	public:
 		explicit stock_data( std::ifstream& in );
 		explicit stock_data( const char* stock_name,
-			const char* date_time,
-			const double price,
-			const double vwap,
-			const boost::uint32_t volume,
-			const double f1,
-			const double t1,
-			const double f2,
-			const double f3,
-			const double f4 );		
+							const char* date_time,
+							const double price,
+							const double vwap,
+							const boost::uint32_t volume,
+							const double f1,
+							const double t1,
+							const double f2,
+							const double f3,
+							const double f4 );		
 		~stock_data();
 		//
-		void write( std::ofstream& out );
+		void write( std::ofstream& out ) const;
 		void write_raw( std::ofstream& out );
 	};
 }
