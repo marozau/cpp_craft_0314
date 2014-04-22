@@ -13,7 +13,7 @@ task4_5::solution::solution( const data_type& data ): min_( 0 ), max_( 0 )
 	
 	for( auto it = data.cbegin(); it != data.cend(); ++it )
 	{
-		group_of_slave_threads.create_thread( boost::bind( &task4_5::solution::find_min_max, this, *it ));
+		group_of_slave_threads.create_thread( boost::bind( &task4_5::solution::find_min_max_, this, *it ));
 	}
 	group_of_slave_threads.join_all();
 }
@@ -27,7 +27,7 @@ int task4_5::solution::get_max() const
 	return max_;
 }
 
-void task4_5::solution::find_min_max(cont_type& cont)
+void task4_5::solution::find_min_max_(cont_type& cont)
 { 
 	boost::mutex::scoped_lock lock_min_and_max(task4_5::solution::wait_min_max_mutex_);
 	{
