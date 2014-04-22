@@ -18,16 +18,16 @@ task4_5::solution::solution( const data_type& data ): min_( 0 ), max_( 0 )
 	group_of_slave_threads.join_all();
 }
 
-int task4_5::solution::get_min() const
+const int task4_5::solution::get_min() const
 {
 	return min_;
 }
-int task4_5::solution::get_max() const
+const int task4_5::solution::get_max() const
 {
 	return max_;
 }
 
-void task4_5::solution::find_min_max_(cont_type& cont)
+void task4_5::solution::find_min_max_(const cont_type& cont)
 { 
 	boost::mutex::scoped_lock lock_min_and_max(task4_5::solution::wait_min_max_mutex_);
 	{
