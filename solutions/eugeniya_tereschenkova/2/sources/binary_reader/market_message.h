@@ -30,7 +30,7 @@ namespace binary_reader
 		const boost::uint32_t len() const;
 		const char* const msg() const;
 		const boost::uint32_t msg_size() const;
-		const bool check_msg_size(boost::uint32_t& cur_msg_size) const;
+		const bool check_msg_size(const boost::uint32_t& cur_msg_size) const;
 	};
 }
 
