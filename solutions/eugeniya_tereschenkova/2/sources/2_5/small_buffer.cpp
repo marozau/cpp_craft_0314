@@ -58,7 +58,7 @@ int main()
 		}
       
 		map <boost:: uint32_t, struct_type_param>::iterator iter;
-		for(iter = map_type_size.begin(); iter!=map_type_size.end(); iter++)
+		for(iter = map_type_size.begin(); iter!=map_type_size.end(); ++iter)
 		{
 			const boost:: uint32_t type = (*iter).first;      
 			output_file.write(reinterpret_cast<const char *>(&type), sizeof(boost:: uint32_t));
