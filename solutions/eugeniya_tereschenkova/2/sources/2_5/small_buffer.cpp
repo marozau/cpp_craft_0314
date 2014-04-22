@@ -11,7 +11,6 @@ struct struct_type_param
   };
 	int count;
 	map < boost:: uint32_t, boost:: uint32_t> map_time_size;
-//	map < boost:: uint32_t, boost:: uint32_t> map_time_count;
 };
 
 bool is_good_type (const boost::uint32_t type, const boost::uint32_t type_min, const boost::uint32_t type_max)
@@ -54,7 +53,6 @@ int main()
 			if (mark_mes.check_msg_size(new_msg_size))
 			{
 				++map_type_size[type].count;
-	//       ++map_type_size[type].map_time_count[time];
 				map_type_size[type].map_time_size[time] = new_msg_size;
 			}
 		}
