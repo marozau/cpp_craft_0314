@@ -60,7 +60,7 @@ binary_reader::market_message::~market_message()
 }
 //
 
-bool binary_reader::market_message::check_time(boost::uint32_t& cur_time) const 
+const bool binary_reader::market_message::check_time(boost::uint32_t& cur_time) const 
 {
 	if (cur_time < time_) 
 	{
@@ -76,15 +76,15 @@ bool binary_reader::market_message::check_time(boost::uint32_t& cur_time) const
 
 }
 
-boost::uint32_t binary_reader::market_message::type() const
+const boost::uint32_t binary_reader::market_message::type() const
 {
 	return type_;
 }
-boost::uint32_t binary_reader::market_message::time() const
+const boost::uint32_t binary_reader::market_message::time() const
 {
 	return time_;
 }
-boost::uint32_t binary_reader::market_message::len() const
+const boost::uint32_t binary_reader::market_message::len() const
 {
 	return len_;
 }
@@ -96,7 +96,7 @@ const boost::uint32_t binary_reader::market_message::msg_size() const
 {
 	return sizeof(type_) + sizeof(time_) + sizeof(len_) + sizeof(char)*len_ + 1;
 }
-bool binary_reader::market_message::check_msg_size(boost::uint32_t& cur_msg_size) const 
+const bool binary_reader::market_message::check_msg_size(boost::uint32_t& cur_msg_size) const 
 {
 	return ( cur_msg_size <= binary_reader:: market_message::buffer_size );
 }
