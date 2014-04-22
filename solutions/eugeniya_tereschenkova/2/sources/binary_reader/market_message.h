@@ -24,13 +24,13 @@ namespace binary_reader
 		void write( std::ofstream& out ) const;
 		~market_message();
 		//
-		bool check_time(boost:: uint32_t& cur_time) const;
-		boost::uint32_t type() const;
-		boost::uint32_t time() const;
-		boost::uint32_t len() const;
+		const bool check_time(boost:: uint32_t& cur_time) const;
+		const boost::uint32_t type() const;
+		const boost::uint32_t time() const;
+		const boost::uint32_t len() const;
 		const char* const msg() const;
 		const boost::uint32_t msg_size() const;
-		bool check_msg_size(boost::uint32_t& cur_msg_size) const;
+		const bool check_msg_size(boost::uint32_t& cur_msg_size) const;
 	};
 }
 
