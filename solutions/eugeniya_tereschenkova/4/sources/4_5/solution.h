@@ -18,7 +18,7 @@ namespace task4_5
 		int min_;
 		int max_;
 		
-		void find_min_max(cont_type& cont);
+		void find_min_max_(cont_type& cont);
 	
 	public:
 		explicit solution( const data_type& data );
