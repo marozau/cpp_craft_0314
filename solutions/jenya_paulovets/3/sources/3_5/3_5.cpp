@@ -198,7 +198,7 @@ int main(int argc, char **argv)
 			delete fileOut;
 			continue;
 		}
-		threads.create_thread(boost::bind(&functionsShell, boost::ref(fileIn), boost::ref(fileOut)));
+		threads.create_thread(boost::bind(&functionsShell, fileIn, fileOut));
 	}
 
 	threads.join_all();
