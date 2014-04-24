@@ -111,7 +111,7 @@ class solution
 				{
 					kolv[message.type()] = 0;
 				}
-				ofstream out(BINARY_DIR+get_outfilename(id_-1) );
+				ofstream out(BINARY_DIR+get_outfilename(curr_id) );
 				for( map <boost:: uint32_t, int>::const_iterator it = kolv.begin();it!=kolv.end(); ++it)
 				{
 					if (it->second!=0)
