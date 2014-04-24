@@ -52,14 +52,15 @@ public:
 		{
 			binary_reader:: binR in;
 			binary_reader:: binW out;
+			int curr_id;
 			{
 				boost::mutex::scoped_lock lock( mtx_ );
 		
 				while(!in.is_open() && id_<files_count)
 				{
+					in.close();
 					in.open( (BINARY_DIR+get_infilename(id_) ).c_str() );
-					if (in.is_open())
-						out.open( (BINARY_DIR+get_outfilename(id_)).c_str() );
+					curr_id = id_;
 					id_++;
 				}
 
@@ -69,6 +70,8 @@ public:
 						return ;
 					}
 			}
+
+			out.open( (BINARY_DIR+get_outfilename(curr_id)).c_str() );
 			boost:: uint32_t curr_time=0;
 			while ( in.good() )
 			{
