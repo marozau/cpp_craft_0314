@@ -11,7 +11,7 @@ using namespace std;
 
 class solution
 {
-	static int id;
+	static int id_;
 	static const size_t threads_count = 4;
 	static const int files_count = 1000;              //
 	boost::mutex mtx_;
@@ -19,16 +19,16 @@ class solution
 
 	string get_infilename(const int id)
 	{
-	char c[4];
-	sprintf( c,"%03d", id);
-	return  "/input_"+ boost:: lexical_cast<string>(c)+".txt";
+		char c[4];
+		sprintf( c,"%03d", id);
+		return  "/input_"+ boost:: lexical_cast<string>(c)+".txt";
 	}
 
 	string get_outfilename(const int id)
 	{
-	char c[4];
-	sprintf( c,"%03d", id);
-	return  "/output_"+ boost:: lexical_cast<string>(c)+".txt";
+		char c[4];
+		sprintf( c,"%03d", id);
+		return  "/output_"+ boost:: lexical_cast<string>(c)+".txt";
 	}
 
 public:
@@ -48,18 +48,19 @@ public:
 	void process()
 	{
 		
-		while (id<files_count)
+		while (id_<files_count)
 		{
 			binary_reader:: binR in;
 			binary_reader:: binW out;
 			{
 				boost::mutex::scoped_lock lock( mtx_ );
 		
-				while(!in.is_open() && id<files_count)
+				while(!in.is_open() && id_<files_count)
 				{
-					in.open( (BINARY_DIR+get_infilename(id) ).c_str() );
-					out.open( (BINARY_DIR+get_outfilename(id)).c_str() );
-					id++;
+					in.open( (BINARY_DIR+get_infilename(id_) ).c_str() );
+					if (in.is_open())
+						out.open( (BINARY_DIR+get_outfilename(id_)).c_str() );
+					id_++;
 				}
 
 				if(!in.is_open())
@@ -85,7 +86,7 @@ public:
 	}
 };
 
-int solution:: id=1;
+int solution:: id_=1;
 
 int main(int argc, char* argv[]) 
 {
