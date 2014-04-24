@@ -52,7 +52,7 @@ public:
 		{
 			binary_reader:: binR in;
 			binary_reader:: binW out;
-			int curr_id;
+			int curr_id = id_;
 			{
 				boost::mutex::scoped_lock lock( mtx_ );
 		

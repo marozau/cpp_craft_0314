@@ -48,6 +48,7 @@ class solution
 
 	void process()
 	{
+		int curr_id = id_;
 		while (id_<files_count)
 		{
 			binary_reader:: binR in;
@@ -57,6 +58,7 @@ class solution
 				while(!in.is_open() && id_<files_count)
 				{
 					in.open( (BINARY_DIR+get_infilename(id_) ).c_str() );
+					curr_id = id_;
 					id_++;
 				}
 
@@ -110,7 +112,7 @@ class solution
 					kolv[message.type()] = 0;
 				}
 				ofstream out(BINARY_DIR+get_outfilename(id_-1) );
-				for( map <boost:: uint32_t, int>::const_iterator it = kolv.begin();it!=kolv.end();it++)
+				for( map <boost:: uint32_t, int>::const_iterator it = kolv.begin();it!=kolv.end(); ++it)
 				{
 					if (it->second!=0)
 					{

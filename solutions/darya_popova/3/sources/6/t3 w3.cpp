@@ -10,13 +10,13 @@
 #include "stock_data.h"
 
 using namespace std;
+typedef map <std:: string, boost::shared_ptr <binary_reader::binW> > m_s_shp;
 
 class solution
 {
 	binary_reader::binR in_;
 	static int id;
-	//static const size_t threads_count = 4;
-	//boost::mutex mtx_;
+	m_s_shp data;
 
 	string get_outfilename(const string stock_name)
 	{
@@ -36,35 +36,29 @@ public:
 		in_.close(); 
 	}
 
-	//void create_thr()
-	//{
-	//	boost::thread_group tg;
-	//	for( size_t i = 0; i < threads_count; ++i )
-	//		tg.create_thread( boost::bind( &solution::process, this ) );
-
-	//	tg.join_all();
-
-	//}
-
 	void process()
 	{
-			while ( in_.good() )
+		string stock_name;
+		while ( in_.good() )
+		{
+			binary_reader:: stock_data message(in_);
+			if(!in_.good()) 
 			{
-				//boost::mutex::scoped_lock lock( mtx_ );
-				binary_reader:: stock_data message(in_);
-				if(!in_.good()) 
-				{
-					break;
-				}
-				cout<< message.get_stock_name()<< endl;
-				string a= boost:: lexical_cast <string> (message.get_stock_name());
-
-				binary_reader:: binW out;
-				out.open(   ( BINARY_DIR+get_outfilename( a ) ).c_str() , true );
-
-				message.write( out );
-				out.close();
+				break;
 			}
+			stock_name = boost:: lexical_cast <string> (message.get_stock_name());
+			if(data.find(stock_name) == data.end())
+			{
+				boost::shared_ptr< binary_reader::binW > binw_ptr( new binary_reader::binW );
+				binw_ptr->open(( BINARY_DIR+get_outfilename( stock_name ) ).c_str() , true );
+				data[stock_name] = binw_ptr;
+			}
+
+			message.write(*data[stock_name]);
+			
+		}
+		for (m_s_shp:: const_iterator im = data.begin(); im!= data.end(); ++im)
+			(im->second)->close();
 	}
 
 };
