@@ -1,8 +1,8 @@
 @echo off
 
 set SOLUTION_NAME=puzzle_3_week_solutions
-set BOOST_ROOT=D:/boost_1_55_0
-set BINARY_READER_ROOT=D:/CppCraft/cpp_craft_0314/solutions/eugeniya_tereschenkova/2/
+set BOOST_ROOT=D:/Eugenia/zh/raznoe/boost_1_55_0
+set BINARY_READER_ROOT=D:/Eugenia/zh/raznoe/cppCraft/eugeniya_tereschenkova/2/
 
 set BUILD_TYPE=Debug
 if [%1]==[Release] (
