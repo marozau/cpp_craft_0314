@@ -5,10 +5,10 @@ using namespace std;
 
 struct struct_type_param
 {
-  struct_type_param()
-  {
-    count = 0;
-  };
+	struct_type_param()
+	{
+		count = 0;
+	};
 	int count;
 	map < boost:: uint32_t, boost:: uint32_t> map_time_size;
 };
@@ -49,7 +49,7 @@ int main()
 			
 			const boost:: uint32_t time = mark_mes.time();
 			const boost:: uint32_t msg_size = mark_mes.msg_size();
-			boost:: uint32_t new_msg_size = msg_size + map_type_size[type].map_time_size[time];
+			const boost:: uint32_t new_msg_size = msg_size + map_type_size[type].map_time_size[time];
 			if (mark_mes.check_msg_size(new_msg_size))
 			{
 				++map_type_size[type].count;
@@ -60,11 +60,14 @@ int main()
 		map <boost:: uint32_t, struct_type_param>::iterator iter;
 		for(iter = map_type_size.begin(); iter!=map_type_size.end(); ++iter)
 		{
-			const boost:: uint32_t type = (*iter).first;      
-			output_file.write(reinterpret_cast<const char *>(&type), sizeof(boost:: uint32_t));
 			const double sec_count = static_cast<double>((*iter).second.map_time_size.size());
 			const double mean_mes_for_all_time = static_cast<double>((*iter).second.count)/sec_count;
-			output_file.write(reinterpret_cast<const char *>(&mean_mes_for_all_time), sizeof(double));
+			if(mean_mes_for_all_time !=0)
+			{
+				const boost:: uint32_t type = (*iter).first;      
+				output_file.write(reinterpret_cast<const char *>(&type), sizeof(boost:: uint32_t));
+				output_file.write(reinterpret_cast<const char *>(&mean_mes_for_all_time), sizeof(double));
+			}
 		}	
 	}
 	catch(...) 
