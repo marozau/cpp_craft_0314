@@ -62,6 +62,7 @@ binary_reader::market_message::~market_message()
 
 const bool binary_reader::market_message::check_time(boost::uint32_t& cur_time) const 
 {
+	const boost::uint32_t time_increment = 2;
 	if (cur_time < time_) 
 	{
 		cur_time = time_;
@@ -69,7 +70,7 @@ const bool binary_reader::market_message::check_time(boost::uint32_t& cur_time) 
 	}
 	else
 	{
-		if( (time_+2) > cur_time )
+		if( (time_+ time_increment) > cur_time )
 			return true;
 	} 
 	return false;
