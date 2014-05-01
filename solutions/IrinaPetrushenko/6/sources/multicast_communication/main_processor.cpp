@@ -6,10 +6,7 @@
 namespace multicast_communication{
 
 	main_processor::main_processor( const std::string & name ){
-		out_.open ( boost::lexical_cast<std::string>(BINARY_DIR) + "/"  + name );
-		if (!out_.is_open()) 
-			throw std::logic_error( "Output file was not opened");
-
+		out_name_ = name;
 		callback_q = boost::bind ( & multicast_communication::main_processor::new_quote, this, _1 );
 		callback_t = boost::bind ( & multicast_communication::main_processor::new_trade, this, _1 );
 	}
@@ -24,11 +21,17 @@ namespace multicast_communication{
 
 	void main_processor::new_trade( const trade_message_ptr & m ){
 		boost::mutex::scoped_lock lock( mtx_out_ );
+		out_.open ( boost::lexical_cast<std::string>(BINARY_DIR) + "/"  + out_name_ );
+		if (!out_.is_open()) 
+			throw std::logic_error( "Output file was not opened");
 		out_  <<"T "<<m->security_symbol()<<" "<<m->price()<<" "<<m->volume()<<std::endl;
 	}
 
 	void main_processor::new_quote( const quote_message_ptr& m ){
 		boost::mutex::scoped_lock lock( mtx_out_ );
+		out_.open ( boost::lexical_cast<std::string>(BINARY_DIR) + "/"  + out_name_ );
+		if (!out_.is_open()) 
+			throw std::logic_error( "Output file was not opened");
 		out_<<"Q "<<m->security_symbol()<<" "<<m->bid_price()<<" "<<m->bid_volume()<<" "<<m->offer_price()<<" "<<m->offer_volume()<<std::endl;
 	}
 }

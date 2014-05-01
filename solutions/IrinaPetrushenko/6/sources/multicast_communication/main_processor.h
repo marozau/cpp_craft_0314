@@ -28,6 +28,7 @@ namespace multicast_communication{
 		private:
 			boost::mutex mtx_out_;
 			std::ofstream out_;
+			std::string out_name_;
 	
 		public:
 			trade_call callback_t;
