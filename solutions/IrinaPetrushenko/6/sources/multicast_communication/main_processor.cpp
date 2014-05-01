@@ -15,8 +15,6 @@ namespace multicast_communication{
 	}
 
 	main_processor::~main_processor(){
-		if( out_.is_open() )
-			out_.close();
 	}
 
 	void main_processor::new_trade( const trade_message_ptr & m ){
@@ -25,6 +23,7 @@ namespace multicast_communication{
 		if (!out_.is_open()) 
 			throw std::logic_error( "Output file was not opened");
 		out_  <<"T "<<m->security_symbol()<<" "<<m->price()<<" "<<m->volume()<<std::endl;
+		out_.close();
 	}
 
 	void main_processor::new_quote( const quote_message_ptr& m ){
@@ -33,5 +32,6 @@ namespace multicast_communication{
 		if (!out_.is_open()) 
 			throw std::logic_error( "Output file was not opened");
 		out_<<"Q "<<m->security_symbol()<<" "<<m->bid_price()<<" "<<m->bid_volume()<<" "<<m->offer_price()<<" "<<m->offer_volume()<<std::endl;
+		out_.close();
 	}
 }
