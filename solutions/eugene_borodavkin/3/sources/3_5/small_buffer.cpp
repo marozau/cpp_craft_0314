@@ -48,7 +48,7 @@ void handleFile(int fileNum){
 
     char file_number [ MAX_FILE_NUMBER_SIZE ];
 
-    std::sprintf(file_number, "03%d",fileNum);
+    std::sprintf(file_number, "%03d",fileNum);
     std::string fileNumberString ( file_number );
     std::ifstream input( BINARY_DIR"/input_" + fileNumberString + ".txt", std::ios::binary);
     if( !input.is_open() ){
