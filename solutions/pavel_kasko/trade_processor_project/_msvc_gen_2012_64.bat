@@ -1,7 +1,7 @@
 @echo off
 
 set SOLUTION_NAME=trade_processor_project
-set BOOST_ROOT=d:/usr/boost_1_55_0
+set BOOST_ROOT=c:/boost
 
 set BUILD_TYPE=Debug
 if [%1]==[Release] (
@@ -18,3 +18,4 @@ cmake -DBOOST_STATIC=ON -DBOOST_STAGE_FOLDER_WITH_ADDRESS_MODEL=ON -DCMAKE_BUILD
 cd ../
 
 echo "%BUILD_FOLDER%/%SOLUTION_NAME%.sln" > _start_msvc.bat
+Pause
