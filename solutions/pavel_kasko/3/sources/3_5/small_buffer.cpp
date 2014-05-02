@@ -6,7 +6,7 @@
 #include <boost\thread\thread.hpp>
 #include <boost\thread\xtime.hpp>
 
-int GetMessageSize(const binary_reader::market_message& message);
+boost::uint32_t GetMessageSize(const binary_reader::market_message& message);
 
 struct TypesAndSeconds
 {
@@ -47,7 +47,7 @@ void MultyBuffer::DoWork(const int i)
 	std::ifstream inputStream(inputFile , std::ios::binary);
 
 	Statistic statistic;
-	Sizes _Sizes;
+	Sizes sizes;
 
 	if(!inputStream.good())
 	{
@@ -58,7 +58,7 @@ void MultyBuffer::DoWork(const int i)
 	const std::string outputFile = BINARY_DIR + std::string("/output_") + num_part;
 	std::ofstream outputStream(outputFile, std::ios::out | std::ios::binary);
 
-	const std::size_t treshold = 2048;
+	const boost::uint32_t treshold = 2048;
 	boost::uint32_t currentTime = -1;
 	int currentSize = 0;
 	
@@ -70,24 +70,24 @@ void MultyBuffer::DoWork(const int i)
 			break;
 
 		const boost::uint32_t type = message.type();
-		if(_Sizes.find(type) == _Sizes.end())
-			_Sizes[type] = 0;
+		if (sizes.find(type) == sizes.end())
+			sizes[type] = 0;
 
-		const int messageSize = GetMessageSize(message);
+		const boost::uint32_t messageSize = GetMessageSize(message);
 
-		if(message.time() == currentTime && ((_Sizes[type] + messageSize) <= treshold))
+		if (message.time() == currentTime && ((sizes[type] + messageSize) <= treshold))
 		{
-			_Sizes[type] += messageSize;
+			sizes[type] += messageSize;
 
 			const bool incr_sec = std::find(curentTypes.begin(), curentTypes.end(), type) == curentTypes.end();
 			StatisticUp(type, incr_sec, statistic);
 
 		}
-		else if((_Sizes[type] + messageSize) <= treshold)
+		else if ((sizes[type] + messageSize) <= treshold)
 		{
 			curentTypes.clear();
 			currentTime = message.time();
-			_Sizes[type] = messageSize;
+			sizes[type] = messageSize;
 			StatisticUp(type, true, statistic);
 		}
 		else
@@ -103,8 +103,6 @@ void MultyBuffer::DoWork(const int i)
 
 void MultyBuffer::StatisticUp(boost::uint32_t type, const bool increase_sec, Statistic& statistic)
 {
-	//boost::mutex::scoped_lock lock(_mutex);
-	
 	if(increase_sec)
 		statistic[type].seconds++;
 
@@ -122,7 +120,7 @@ void MultyBuffer::ShowStatictics(Statistic& statistic, std::ofstream& resFile)
 	}
 }
 
-int GetMessageSize(const binary_reader::market_message& message)
+boost::uint32_t GetMessageSize(const binary_reader::market_message& message)
 {
 	return sizeof(boost::uint32_t) * 3 + message.len();
 }

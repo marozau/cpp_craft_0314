@@ -26,8 +26,6 @@ void MultyTradesFilter::Start(const int count)
 
 void MultyTradesFilter::DoWork(const int i)
 {
-	//boost::mutex::scoped_lock lock(_mutex);
-
 	const std::string num_part = boost::str(boost::format("%03u.txt") % i);
 	const std::string inputFile = BINARY_DIR + std::string("/input_") + num_part;
 	const std::string outputFile = BINARY_DIR + std::string("/output_") + num_part;
@@ -43,8 +41,8 @@ void MultyTradesFilter::DoWork(const int i)
 
 	boost::uint32_t maxTime = 0;
 	const boost::uint32_t diff = 2;
-	const boost::uint16_t minType = 1;
-	const boost::uint16_t maxType = 4;
+	const boost::uint32_t minType = 1;
+	const boost::uint32_t maxType = 4;
 
 	while (true)
 	{
