@@ -7,7 +7,7 @@ set BUILD_TYPE=Debug
 if [%1]==[Release] (
 	set BUILD_TYPE=Release
 )
-set BUILD_FOLDER=_build_%BUILD_TYPE%_64
+set BUILD_FOLDER=_build_%BUILD_TYPE%_32
 
 if not exist %BUILD_FOLDER% (
 	mkdir %BUILD_FOLDER%
