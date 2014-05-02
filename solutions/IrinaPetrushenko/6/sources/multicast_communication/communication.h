@@ -69,7 +69,7 @@ namespace multicast_communication{
 			~main_communication();
 
 			void go();		
-			void push_message( const std::string&, message_type );
+			void push_message( const std::string & m, const message_type t);
 
 	};
 }

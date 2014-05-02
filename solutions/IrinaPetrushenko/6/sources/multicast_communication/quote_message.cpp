@@ -7,7 +7,7 @@
 
 namespace multicast_communication{
 
-	quote_message::quote_message(const std::string & str, const quote_type t, quote_callback_func c ):call( c ),test_(false){
+	quote_message::quote_message(const std::string & str, const quote_type t, const quote_callback_func c ):call( c ),test_(false){
 	}
 
 	quote_message::quote_message( const std::string & str, const quote_type t ):test_(true){

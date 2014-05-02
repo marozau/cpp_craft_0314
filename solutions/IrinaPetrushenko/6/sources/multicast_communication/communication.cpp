@@ -1,4 +1,4 @@
-#include "communication.h"
+#include "communication.h" 
 #include "separator.h"
 #include "udp_listener.h"
 
@@ -67,12 +67,12 @@ void multicast_communication::main_communication::go(){
 	main_communication::read();
 }
 
-void multicast_communication::main_communication::push_message (const std::string & msg, message_type t){
+void multicast_communication::main_communication::push_message (const std::string & m, const message_type t){
 	if (t == QUOTE)
-		queue_q_.push (msg);
+		queue_q_.push (m);
 	else
 	if (t == TRADE)
-		queue_t_.push (msg);
+		queue_t_.push (m);
 	
 }
 
@@ -85,7 +85,7 @@ void multicast_communication::main_communication::pop_trade(){
 				return ;
 		}
 		if ( queue_t_.pop (str) )
-			separator_ptr s = separator_ptr ( new separator (str, TRADE, processor_ ));
+			const separator_ptr s = separator_ptr ( new separator (str, TRADE, processor_ ));
 	}
 }
 
@@ -98,7 +98,7 @@ void multicast_communication::main_communication::pop_quote(){
 				return ;
 		}
 		if ( queue_q_.pop( str ) )
-			separator_ptr s = separator_ptr ( new separator (str, QUOTE, processor_ ));
+			const separator_ptr s = separator_ptr ( new separator (str, QUOTE, processor_ ));
 	}
 }
 

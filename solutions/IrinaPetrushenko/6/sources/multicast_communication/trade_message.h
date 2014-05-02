@@ -33,7 +33,7 @@ namespace multicast_communication{
 
 			typedef boost::function< void( const trade_message_ptr& ) > trade_callback_func;
 
-			bool test_;
+			const bool test_;
 			std::string security_symbol_;
 			std::string	volume_;
 			std::string	price_den_ind_;
@@ -43,7 +43,7 @@ namespace multicast_communication{
 			void get (const std::string & str_from, std::string & str_to, const size_t len, size_t & it);
 			const trade_callback_func call;
 		public:
-			explicit trade_message( const std::string & str, const trade_type t, trade_callback_func c );
+			explicit trade_message( const std::string & str, const trade_type t, const trade_callback_func c );
 			explicit trade_message( const std::string & str, const trade_type t);
 			explicit trade_message ();
 			std::string security_symbol() const;

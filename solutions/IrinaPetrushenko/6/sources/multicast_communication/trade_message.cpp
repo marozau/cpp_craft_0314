@@ -3,7 +3,7 @@
 
 namespace multicast_communication{
 
-	trade_message::trade_message( const std::string & str, const trade_type t, trade_callback_func c ): call( c ), test_(false){
+	trade_message::trade_message( const std::string & str, const trade_type t, const trade_callback_func c ): call( c ), test_(false){
 	}
 
 	trade_message::trade_message( const std::string & str, const trade_type t ): test_(true){

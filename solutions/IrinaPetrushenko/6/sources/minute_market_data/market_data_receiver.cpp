@@ -39,8 +39,8 @@ void market_data_receiver::go(){
 		in_>>ip>>port;
 		quote_ports_.push_back(make_pair(ip, port));
 	}
-	calculator_ptr cc = calculator_ptr (new minute_calculator::calculator (boost::bind (&market_data_receiver::print, this, _1)));
-	main_communication_ptr c = main_communication_ptr (new multicast_communication::main_communication (trade_thread_size_, 
+	const calculator_ptr cc = calculator_ptr (new minute_calculator::calculator (boost::bind (&market_data_receiver::print, this, _1)));
+	const main_communication_ptr c = main_communication_ptr (new multicast_communication::main_communication (trade_thread_size_, 
 																										quote_thread_size_, 
 																										trade_ports_, 
 																										quote_ports_, 
@@ -54,7 +54,7 @@ void market_data_receiver::print (const minute_calculator::minute_datafeed_ptr &
 		boost::mutex::scoped_lock lock (mtx_print_);
 		ofstream out;
 		const string name = boost::lexical_cast<std::string> ("/") + boost::lexical_cast<std::string> (m->stock_name)+ ".dat";
-		out.open (boost::lexical_cast<std::string>(BINARY_DIR) + name , ios_base::binary );
+		out.open (boost::lexical_cast<std::string>(BINARY_DIR) + name , ios::binary );
 		out.write (reinterpret_cast <char*> (&(*m)), sizeof (*m));
 		out.close ();
 }

@@ -28,14 +28,14 @@ namespace multicast_communication{
 		private:
 			boost::mutex mtx_out_;
 			std::ofstream out_;
-			std::string out_name_;
+			const std::string out_name_;
 	
 		public:
 			trade_call callback_t;
 			quote_call callback_q;
 
 			explicit main_processor( const std::string& filename );
-			explicit main_processor( quote_call callback_q_, trade_call callback_t_);
+			explicit main_processor( const quote_call callback_q_, const trade_call callback_t_);
 			virtual ~main_processor();
 
 			virtual void new_trade( const trade_message_ptr& );

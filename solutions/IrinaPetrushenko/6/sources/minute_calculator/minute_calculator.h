@@ -17,6 +17,7 @@ namespace minute_calculator{
 
 	class minute_datafeed{
 	public:
+
 		boost::uint32_t minute;
 		char stock_name[16];
 		double open_price;
@@ -66,12 +67,14 @@ namespace minute_calculator{
 	};
 
 	typedef boost::shared_ptr< minute_datafeed > minute_datafeed_ptr;
-	typedef boost::function< void( const minute_datafeed_ptr& datafeed ) > calc_call;
 
-	enum full_datafeed { only_quote, only_trade, full};
+	
 	class calculator: public multicast_communication::market_data_processor{
 		private:
 			
+			typedef boost::function< void ( const minute_datafeed_ptr& datafeed ) > calc_call;
+			enum full_datafeed { only_quote, only_trade, full};
+
 			calc_call callback_ñ;
 			std::map < std::string, minute_datafeed_ptr > data_all;
 			std::map < std::string, full_datafeed>  data_full;

@@ -5,13 +5,12 @@
 
 namespace multicast_communication{
 
-	main_processor::main_processor( const std::string & name ){
-		out_name_ = name;
+	main_processor::main_processor( const std::string & name ):out_name_ (name){
 		callback_q = boost::bind ( & multicast_communication::main_processor::new_quote, this, _1 );
 		callback_t = boost::bind ( & multicast_communication::main_processor::new_trade, this, _1 );
 	}
 
-	main_processor::main_processor( quote_call callback_q_, trade_call callback_t_ ):callback_q ( callback_q_ ),callback_t ( callback_t_ ){
+	main_processor::main_processor( const quote_call callback_q_, const trade_call callback_t_ ):callback_q ( callback_q_ ),callback_t ( callback_t_ ){
 	}
 
 	main_processor::~main_processor(){

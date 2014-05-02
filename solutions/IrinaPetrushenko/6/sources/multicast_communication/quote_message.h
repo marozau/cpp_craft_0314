@@ -62,7 +62,7 @@ namespace multicast_communication{
 
 		public:
 
-			explicit quote_message( const std::string & str, const quote_type t, quote_callback_func c );
+			explicit quote_message( const std::string & str, const quote_type t, const quote_callback_func c );
 			explicit quote_message( const std::string & str, const quote_type t);
 			explicit quote_message();
 

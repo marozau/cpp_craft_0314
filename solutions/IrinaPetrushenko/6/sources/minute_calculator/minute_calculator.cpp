@@ -1,4 +1,4 @@
-#include "minute_calculator.h"
+#include "minute_calculator.h"  
 
 #include <climits>
 
@@ -25,7 +25,7 @@ minute_calculator::calculator::~calculator(){
 
 void minute_calculator::calculator::new_trade( const multicast_communication::trade_message_ptr& m )
 {
-	std::string stock_name = m->security_symbol();
+	const std::string stock_name = m->security_symbol();
 
 	if ( data_all.count ( stock_name ) == 0 ) {
 		data_full.insert ( std::make_pair( stock_name, only_trade));
@@ -42,7 +42,6 @@ void minute_calculator::calculator::new_trade( const multicast_communication::tr
 	if( m->minute() < data_all[stock_name]->minute )
 		return;
 
-	double price = m->price();
 
 	if (  m->minute() > data_all[stock_name]->minute ){
 
@@ -59,10 +58,10 @@ void minute_calculator::calculator::new_trade( const multicast_communication::tr
 		data_full[stock_name] = only_trade;
 		data_all[stock_name] = minute_datafeed_ptr( new minute_datafeed( stock_name ) );
 
-		data_all[stock_name]->open_price = price;
-		data_all[stock_name]->high_price = price;
-		data_all[stock_name]->low_price = price;
-		data_all[stock_name]->close_price = price;
+		data_all[stock_name]->open_price = m->price();
+		data_all[stock_name]->high_price = m->price();
+		data_all[stock_name]->low_price = m->price();
+		data_all[stock_name]->close_price = m->price();
 		data_all[stock_name]->volume = m->volume();
 		data_all[stock_name]->minute = m ->minute();
 
@@ -71,17 +70,17 @@ void minute_calculator::calculator::new_trade( const multicast_communication::tr
 
 	if( m->minute() == data_all[stock_name]->minute ){
 		if (data_full[stock_name] == only_quote) {
-			data_all[stock_name]->open_price = price;
-			data_all[stock_name]->high_price = price;
-			data_all[stock_name]->low_price = price;
-			data_all[stock_name]->close_price = price;
+			data_all[stock_name]->open_price = m->price();
+			data_all[stock_name]->high_price = m->price();
+			data_all[stock_name]->low_price = m->price();
+			data_all[stock_name]->close_price = m->price();
 			data_all[stock_name]->volume = 0;
 			data_full[stock_name] = full;
 		}
 		else{
-			data_all[stock_name]->high_price = std::max( data_all[stock_name]->high_price, price );
-			data_all[stock_name]->low_price = std::min( data_all[stock_name]->low_price, price );
-			data_all[stock_name]->close_price = price;
+			data_all[stock_name]->high_price = std::max( data_all[stock_name]->high_price, m->price() );
+			data_all[stock_name]->low_price = std::min( data_all[stock_name]->low_price, m->price() );
+			data_all[stock_name]->close_price = m->price();
 		}
 		data_all[stock_name]->volume += m->volume();
 	}
@@ -89,7 +88,7 @@ void minute_calculator::calculator::new_trade( const multicast_communication::tr
 
 void minute_calculator::calculator::new_quote( const multicast_communication::quote_message_ptr& m ){
 	
-	std::string stock_name = m->security_symbol();
+	const std::string stock_name = m->security_symbol();
 
 	if ( data_all.count( stock_name ) == 0) {
 		data_full.insert (std::make_pair(stock_name, only_quote));
