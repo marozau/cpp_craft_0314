@@ -1,5 +1,6 @@
 #include "market_message.h"
 #include <iostream>
+#include <algorithm>
 
 int main()
 {
@@ -14,8 +15,8 @@ int main()
 
 	boost::uint32_t maxTime = 0;
 	const boost::uint32_t diff = 2;
-	const boost::uint16_t minType = 1;
-	const boost::uint16_t maxType = 4;
+	const boost::uint32_t minType = 1;
+	const boost::uint32_t maxType = 4;
 
 	while (true)
 	{

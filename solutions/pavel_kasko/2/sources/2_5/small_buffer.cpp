@@ -17,7 +17,7 @@ typedef std::map<boost::uint32_t, TypesAndSeconds> Statistic;
 typedef std::map<boost::uint32_t, boost::int32_t> Sizes;
 
 void ShowStatictics(Statistic& statistic, std::ofstream& resFile);
-int GetMessageSize(const binary_reader::market_message& message);
+uint32_t GetMessageSize(const binary_reader::market_message& message);
 
 int main()
 {
@@ -30,10 +30,10 @@ int main()
 
 	std::ofstream outputStream(BINARY_DIR "/output.txt", std::ios::out | std::ios::binary);
 
-	const std::size_t treshold = 2048;
+	const uint32_t treshold = 2048;
 	Statistic statistic;
 	boost::int32_t currentTime = -1;
-	Sizes _Sizes;
+	Sizes sizes;
 	std::vector<uint32_t> curentTypes;
 
 	while (true)
@@ -44,23 +44,23 @@ int main()
 			break;
 
 		const boost::uint32_t type = message.type();
-		if(_Sizes.find(type) == _Sizes.end())
-			_Sizes[type] = 0;
+		if (sizes.find(type) == sizes.end())
+			sizes[type] = 0;
 
-		int messageSize = GetMessageSize(message);
+		uint32_t messageSize = GetMessageSize(message);
 		
-		if(message.time() == currentTime && ((_Sizes[type] + messageSize) <= treshold))
+		if (message.time() == currentTime && ((sizes[type] + messageSize) <= treshold))
 		{
-			_Sizes[type] += messageSize;
+			sizes[type] += messageSize;
 			
 			if(std::find(curentTypes.begin(), curentTypes.end(), message.type()) == curentTypes.end())
 				statistic[message.type()].seconds++;
 		}
-		else if((_Sizes[type] + messageSize) <= treshold)
+		else if ((sizes[type] + messageSize) <= treshold)
 		{
 			curentTypes.clear();
 			currentTime = message.time();
-			_Sizes[type] = messageSize;
+			sizes[type] = messageSize;
 			statistic[message.type()].seconds++;
 		}
 		else
@@ -87,7 +87,7 @@ void ShowStatictics(Statistic& statistic, std::ofstream& resFile)
 	}
 }
 
-int GetMessageSize(const binary_reader::market_message& message)
+uint32_t GetMessageSize(const binary_reader::market_message& message)
 {
 	return sizeof(boost::uint32_t) * 3 + message.len();
 }

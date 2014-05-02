@@ -27,8 +27,8 @@ namespace binary_reader
 		boost::uint32_t time() const;
 		boost::uint32_t len() const;
 		const char* const msg() const;
-		bool checkValidType(const boost::uint32_t& min, const boost::uint16_t& max);
-		bool checkValidTime(const boost::uint32_t& maxtime, const boost::uint32_t& diff);
+		bool checkValidType(const boost::uint32_t min, const boost::uint16_t max) const;
+		bool checkValidTime(const boost::uint32_t maxtime, const boost::uint32_t diff) const;
 	};
 }
 
