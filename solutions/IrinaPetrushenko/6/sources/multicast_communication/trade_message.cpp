@@ -39,19 +39,21 @@ namespace multicast_communication{
 		size_t it = 16;
 		get (str,time_,6,it);
 		if(t == SHORT_T){
-			get(str, security_symbol_, 3, it);
+			using namespace const_size_short_trade;
+			get(str, security_symbol_, s_security_symbol, it);
 			++it;
-			get(str, volume_, 4, it);
-			get(str, price_den_ind_, 1, it);
-			get(str, price_, 8, it);
+			get(str, volume_, s_volume, it);
+			get(str, price_den_ind_, s_price_den_ind , it);
+			get(str, price_, s_price , it);
 			it+=3;
 		}
 		else{
-			get(str, security_symbol_, 11, it);
+			using namespace const_size_long_trade;
+			get(str, security_symbol_, s_security_symbol , it);
 			it+=21;
-			get(str, price_den_ind_, 1, it);
-			get(str, price_, 12, it);
-			get(str, volume_, 9, it);
+			get(str, price_den_ind_, s_price_den_ind , it);
+			get(str, price_, s_price , it);
+			get(str, volume_, s_volume , it);
 			it+=4;
 		}
 		if (!test_)

@@ -8,14 +8,30 @@
 
 namespace multicast_communication{
 
-	class trade_message;
 	enum trade_type { SHORT_T, LONG_T };
 
+	class trade_message;
 	typedef boost::shared_ptr< trade_message > trade_message_ptr;
-	typedef boost::function< void( const trade_message_ptr& ) > trade_callback_func;
+
+	namespace const_size_short_trade{
+		static const size_t s_security_symbol = 3;
+		static const size_t s_volume = 4;
+		static const size_t s_price_den_ind = 1;
+		static const size_t s_price = 8;
+	}
+
+	namespace const_size_long_trade{
+		static const size_t s_security_symbol = 11;
+		static const size_t s_volume = 9;
+		static const size_t s_price_den_ind = 1;
+		static const size_t s_price = 12;
+	}
 
 	class trade_message : public boost::enable_shared_from_this< trade_message >{
 		private:
+			
+
+			typedef boost::function< void( const trade_message_ptr& ) > trade_callback_func;
 
 			bool test_;
 			std::string security_symbol_;
@@ -25,7 +41,7 @@ namespace multicast_communication{
 			std::string time_;
 
 			void get (const std::string & str_from, std::string & str_to, const size_t len, size_t & it);
-			trade_callback_func call;
+			const trade_callback_func call;
 		public:
 			explicit trade_message( const std::string & str, const trade_type t, trade_callback_func c );
 			explicit trade_message( const std::string & str, const trade_type t);

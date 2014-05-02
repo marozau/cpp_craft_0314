@@ -8,18 +8,17 @@
 
 namespace multicast_communication{
 
-	typedef boost::function< void( const trade_message_ptr & ) > trade_call;
-	typedef boost::function< void( const quote_message_ptr & ) > quote_call;	
-
 	class separator{
+		typedef boost::function< void( const trade_message_ptr & ) > trade_call;
+		typedef boost::function< void( const quote_message_ptr & ) > quote_call;	
 		private:
-			std::string message_;
+			const std::string message_;
 			const message_type type_;
 			const main_processor_ptr proc;
 
 
-			trade_call callback_t;
-			quote_call callback_q;
+			const trade_call callback_t;
+			const quote_call callback_q;
 
 			static const char SOH = 0x01;
 			static const char US = 0x1F;

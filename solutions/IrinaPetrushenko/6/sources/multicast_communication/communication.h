@@ -17,12 +17,13 @@
 
 namespace multicast_communication{
 
-	typedef std::pair< std::string, unsigned short > IP_port;
 	namespace async_udp{
 		class udp_listener;
 	}
+
 	class main_communication{
 
+		typedef std::pair< std::string, unsigned short > IP_port;
 		typedef boost::shared_ptr< boost::asio::io_service > service_ptr;
 
 		private:

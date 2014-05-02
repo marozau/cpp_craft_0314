@@ -10,9 +10,7 @@
 
 using namespace std;
 
-multicast_communication::separator::separator (const string & s, const message_type t, const main_processor_ptr p):message_(s), type_(t),proc (p){
-	callback_q = proc->callback_q;
-	callback_t = proc->callback_t;
+multicast_communication::separator::separator (const string & s, const message_type t, const main_processor_ptr p):message_(s), type_(t),proc (p), callback_q( p->callback_q),callback_t( p->callback_t){
 	block();
 }
 

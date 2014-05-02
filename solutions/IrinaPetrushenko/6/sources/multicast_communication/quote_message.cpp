@@ -60,27 +60,29 @@ namespace multicast_communication{
 		size_t it = 16;
 		get (str,time_,6,it);
 		if (t == SHORT_Q){
-			get(str, security_symbol_, 3, it);
+			using namespace const_size_short_quote;
+			get(str, security_symbol_,s_security_symbol , it);
 			it+=3;
-			get(str, bid_price_den_ind_, 1, it);
-			get(str, bid_price_, 8, it);
-			get(str, bid_size_in_units_of_trade_, 3, it);
+			get(str, bid_price_den_ind_, s_bid_price_den_ind , it);
+			get(str, bid_price_, s_bid_price, it);
+			get(str, bid_size_in_units_of_trade_, s_bid_size_in_units_of_trade, it);
 			++it;
-			get(str, offer_price_den_ind_, 1, it);
-			get(str, offer_price_, 8, it);
-			get(str, offer_size_in_units_of_trade_, 3, it);
+			get(str, offer_price_den_ind_, s_offer_price_den_ind, it);
+			get(str, offer_price_, s_offer_price, it);
+			get(str, offer_size_in_units_of_trade_, s_offer_size_in_units_of_trade, it);
 			it+=3;
 		}
 		else
 		if ( t == LONG_Q ){
-			get(str, security_symbol_, 11, it);
+			using namespace const_size_long_quote;
+			get(str, security_symbol_, s_security_symbol, it);
 			it+=16;
-			get(str, lower_band_den_ind_, 1, it);
-			get(str, bid_price_, 12, it);
-			get(str, bid_size_in_units_of_trade_, 7, it);
-			get(str, upper_band_den_ind_, 1, it);
-			get(str, offer_price_, 12, it );
-			get(str, offer_size_in_units_of_trade_, 7, it);
+			get(str, lower_band_den_ind_, s_lower_band_den_ind, it);
+			get(str, bid_price_, s_bid_price, it);
+			get(str, bid_size_in_units_of_trade_, s_bid_size_in_units_of_trade, it);
+			get(str, upper_band_den_ind_, s_upper_band_den_ind, it);
+			get(str, offer_price_, s_offer_price, it );
+			get(str, offer_size_in_units_of_trade_, s_offer_size_in_units_of_trade, it);
 			it+=11;
 		}
 		if (!test_)
