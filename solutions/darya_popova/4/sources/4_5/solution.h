@@ -13,11 +13,10 @@ namespace task4_5
 	{
 		boost::mutex mtx_;
 		int min_, max_;
-		std:: vector <int> vmax_, vmin_;
-	public:
-		explicit solution( const data_type& data );
 		void create_thr( const data_type& data );
 		void process(const std::vector<int>&);
+	public:
+		explicit solution( const data_type& data );
 		int get_min() const;
 		int get_max() const;
 	};

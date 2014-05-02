@@ -10,7 +10,7 @@ task4_4::b_message::b_message( std::istream& inp )
 	inp >> content_;
 	if (content_.length()!=length_)
 		throw std::logic_error("bad input stream, b_message cannot be readed");
-	content_[length_]='\0';
+
 }
 
 task4_4::message_ptr task4_4::b_message::create_message( std::istream& inp )
@@ -28,5 +28,5 @@ const char task4_4::b_message::type() const
 }
 const std::string task4_4::b_message::str() const
 {
-	return "b_message("+ boost::lexical_cast<std::string>(length_)+ "|"+ std::string(content_)+")";
+	return "b_message("+ boost::lexical_cast<std::string>(length_)+ "|"+ content_+")";
 }
