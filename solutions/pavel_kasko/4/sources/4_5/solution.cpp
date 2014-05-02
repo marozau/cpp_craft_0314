@@ -10,7 +10,7 @@ task4_5::solution::solution( const data_type& data ) : data_size(data.size())
 
 	for(int i = 0; i < data_size; ++i)
 	{
-		threads.create_thread(boost::bind(&task4_5::solution::DoWork, this, data[i]));
+		threads.create_thread(boost::bind(&task4_5::solution::DoWork, this, boost::ref(data[i])));
 	}
 
 	threads.join_all();
