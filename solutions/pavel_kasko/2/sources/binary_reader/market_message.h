@@ -11,7 +11,7 @@ namespace binary_reader
 	class market_message
 	{
 		boost::uint32_t type_;
-		boost::uint32_t time_;
+		boost::int32_t time_;
 		boost::uint32_t len_;
 		char* msg_;
 
@@ -24,10 +24,10 @@ namespace binary_reader
 		~market_message();
 		//
 		boost::uint32_t type() const;
-		boost::uint32_t time() const;
+		boost::int32_t time() const;
 		boost::uint32_t len() const;
 		const char* const msg() const;
-		bool checkValidType(const boost::uint32_t min, const boost::uint16_t max) const;
+		bool checkValidType(const boost::uint32_t min, const boost::uint32_t max) const;
 		bool checkValidTime(const boost::uint32_t maxtime, const boost::uint32_t diff) const;
 	};
 }

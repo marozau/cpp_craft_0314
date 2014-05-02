@@ -13,7 +13,7 @@ int main()
 
 	std::ofstream outputStream(BINARY_DIR "/output.txt", std::ios::out | std::ios::binary);
 
-	boost::uint32_t maxTime = 0;
+	boost::int32_t maxTime = 0;
 	const boost::uint32_t diff = 2;
 	const boost::uint32_t minType = 1;
 	const boost::uint32_t maxType = 4;

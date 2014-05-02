@@ -44,7 +44,7 @@ boost::uint32_t binary_reader::market_message::type() const
 {
 	return type_;
 }
-boost::uint32_t binary_reader::market_message::time() const
+boost::int32_t binary_reader::market_message::time() const
 {
 	return time_;
 }
@@ -58,7 +58,7 @@ boost::uint32_t binary_reader::market_message::len() const
 	return len_;
 }
 
-bool binary_reader::market_message::checkValidType(const boost::uint32_t min, const boost::uint16_t max) const
+bool binary_reader::market_message::checkValidType(const boost::uint32_t min, const boost::uint32_t max) const
 {
 	return (type_ >= min && type_ <=max);
 }
