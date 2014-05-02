@@ -55,9 +55,9 @@ void minute_calculator::tests_::calculator_tests(){
 
 		ifstream inn;
 		string message;
-		calculator_ptr calc = calculator_ptr ( new minute_calculator::calculator ( &minute_calculator::tests_::print_to ) );
-		main_processor_ptr proc = main_processor_ptr (new main_processor (	boost::bind( &minute_calculator::calculator::new_quote, *calc, _1 ),
-																			boost::bind( &minute_calculator::calculator::new_trade, *calc, _1 )));
+		const calculator_ptr calc = calculator_ptr ( new minute_calculator::calculator ( &minute_calculator::tests_::print_to ) );
+		const main_processor_ptr proc = main_processor_ptr (new main_processor (	boost::bind( &minute_calculator::calculator::new_quote, *calc, _1 ),
+																					boost::bind( &minute_calculator::calculator::new_trade, *calc, _1 )));
 		for (size_t i = 0; i<8; ++i){
 			inn.open(boost::lexical_cast<string>(SOURCE_DIR)+"/tests/data/233.200.79."+boost::lexical_cast<string>(i)+".udp", ios_base::in);
 			getline(inn,message);
@@ -77,11 +77,11 @@ void minute_calculator::tests_::calculator_tests(){
 	BOOST_CHECK_NO_THROW(
 
 		std::string ss("EO A  003759032T:3_073BGSR  B00004147006 B00004148004 12");
-		quote_message_ptr qm =quote_message_ptr(new quote_message (ss,SHORT_Q));
+		const quote_message_ptr qm =quote_message_ptr(new quote_message (ss,SHORT_Q));
 		qm->segmentation(ss, SHORT_Q);
 
 		ss = ("AO A  000140208P:3\\806BGS@0100D00330400DF ");
-		trade_message_ptr tm =trade_message_ptr(new trade_message (ss,SHORT_T));		
+		const trade_message_ptr tm =trade_message_ptr(new trade_message (ss,SHORT_T));		
 		tm->segmentation(ss, SHORT_T);
 
 		minute_calculator::minute_datafeed_ptr md = minute_calculator::minute_datafeed_ptr(new minute_calculator::minute_datafeed("BGS")) ;
@@ -91,9 +91,9 @@ void minute_calculator::tests_::calculator_tests(){
 		md->bid = 6;
 		md->minute = 603;
 
-		minute_calculator_test_helper_ptr help = minute_calculator_test_helper_ptr(new minute_calculator_test_helper());
+		const minute_calculator_test_helper_ptr help = minute_calculator_test_helper_ptr(new minute_calculator_test_helper());
 		{
-			calculator_ptr calc = calculator_ptr (new minute_calculator::calculator (boost::bind (&minute_calculator_test_helper::check, &(*help), _1)));
+			const calculator_ptr calc = calculator_ptr (new minute_calculator::calculator (boost::bind (&minute_calculator_test_helper::check, &(*help), _1)));
 			calc->new_quote(qm);
 			calc->new_trade(tm);
 		}

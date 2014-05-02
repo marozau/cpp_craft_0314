@@ -6,7 +6,7 @@ void multicast_communication::tests_::trade_message_tests()
 {
 	BOOST_CHECK_NO_THROW
 	(
-		trade_message tm;
+		const trade_message tm;
 
 		BOOST_CHECK_EQUAL( tm.security_symbol(), "" );
 		BOOST_CHECK_EQUAL( tm.price(), 0.0 );
@@ -15,10 +15,10 @@ void multicast_communication::tests_::trade_message_tests()
 	
 	BOOST_CHECK_NO_THROW
 	(
-		std::string ss("AO A  000140208P:3\\806BGS@0100D00330400DF ");
+		const std::string ss("AO A  000140208P:3\\806BGS@0100D00330400DF ");
 						
 	
-		trade_message_ptr tm =trade_message_ptr(new trade_message (ss,SHORT_T));
+		const trade_message_ptr tm =trade_message_ptr(new trade_message (ss,SHORT_T));
 		
 		tm->segmentation(ss, SHORT_T);
 		
@@ -30,9 +30,9 @@ void multicast_communication::tests_::trade_message_tests()
 	
 		BOOST_CHECK_NO_THROW
 	(
-		std::string ss("AO A  000146235T:3]008ACN@0100B00007790DD ");
+		const std::string ss("AO A  000146235T:3]008ACN@0100B00007790DD ");
 	
-		trade_message_ptr tm =trade_message_ptr(new trade_message (ss,SHORT_T));
+		const trade_message_ptr tm =trade_message_ptr(new trade_message (ss,SHORT_T));
 		
 		tm->segmentation(ss, SHORT_T);
 		
@@ -43,9 +43,9 @@ void multicast_communication::tests_::trade_message_tests()
 	)
 	BOOST_CHECK_NO_THROW
 	(
-		std::string ss("AO A  000146234N:3]004ACN             0     000 F  1  D000000779000000000100DD 0");
+		const std::string ss("AO A  000146234N:3]004ACN             0     000 F  1  D000000779000000000100DD 0");
 						
-		trade_message_ptr tm =trade_message_ptr(new trade_message (ss,LONG_T));
+		const trade_message_ptr tm =trade_message_ptr(new trade_message (ss,LONG_T));
 		
 		tm->segmentation(ss, LONG_T);
 	

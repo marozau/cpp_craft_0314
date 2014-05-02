@@ -10,7 +10,7 @@ void multicast_communication::tests_::separator_processor_tests(){
 	using namespace std;
 	ifstream inn;
 	string message;
-	main_processor_ptr proc = main_processor_ptr (new main_processor ("market_data.dat"));
+	const main_processor_ptr proc = main_processor_ptr (new main_processor ("market_data.dat"));
 	for (size_t i = 0; i<8; ++i){
 		inn.open(boost::lexical_cast<string>(SOURCE_DIR)+"/tests/data/233.200.79."+boost::lexical_cast<string>(i)+".udp", ios_base::in);
 		getline(inn,message);
