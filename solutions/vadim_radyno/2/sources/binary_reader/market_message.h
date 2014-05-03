@@ -11,7 +11,6 @@ namespace binary_reader
 {
     class market_message : virtual protected boost::noncopyable
     {
-        typedef std::vector<char> tMessage;
         enum class  eMarketType 
         {
             BEGIN = 1u,
@@ -25,7 +24,7 @@ namespace binary_reader
         boost::uint32_t   m_type;
         boost::uint32_t   m_time;
         boost::uint32_t   m_len;
-        tMessage          m_msg;
+        char* m_msg;
 
     public:
         explicit market_message( std::ifstream& _in );
@@ -36,9 +35,12 @@ namespace binary_reader
         boost::uint32_t type() const;
         boost::uint32_t time() const;
         const char* const msg() const;
+        boost::uint32_t size() const 
+        {
+            return sizeof(m_type) + sizeof(m_time) + sizeof(m_len) + m_len;
+        }
 
         bool isValidType() const;
-        bool isValidTime( const boost::uint32_t _max_time );
 
     private:
         template<typename T> T readValue(std::ifstream& _in)

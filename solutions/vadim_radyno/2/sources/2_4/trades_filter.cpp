@@ -2,8 +2,6 @@
 #include <string>
 
 #include "market_message.h"
-#include <list>
-#include <deque>
 #include <xutility>
 #include <iostream>
 
@@ -16,14 +14,15 @@ namespace Constants
         const string input_file = BINARY_DIR "/input.txt";
         const string output_file = BINARY_DIR "/output.txt";
     }
-
-    namespace Results
-    {
-        const string good = "YES";
-        const string bad  = "NO";
-    }
 }
 
+
+bool isValidTimeForMessage(const boost::uint32_t _max_time, const binary_reader::market_message& _message)
+{
+    static const boost::uint32_t time_delay = 2;
+
+    return time_delay + _message.time() > _max_time;
+}
 
 int main()
 {
@@ -35,16 +34,15 @@ int main()
     }
 
     std::ofstream output_file(Constants::Paths::output_file, std::ios::out | std::ios::binary);
-    boost::int32_t max_time = 0;
+    boost::uint32_t max_time = 0;
 
     while (!input_file.eof())
     {
         binary_reader::market_message message(input_file);
 
-        if (message.isValidTime(max_time) && message.isValidType())
+        if (isValidTimeForMessage(max_time, message) && message.isValidType())
         {
-            //cout << message.type() << " " << message.time() << " " << strlen(message.msg()) << " " << message.msg() << endl;
-            max_time = std::max<boost::int32_t>(message.time(), max_time);
+            max_time = std::max(message.time(), max_time);
             message.write(output_file);
         }
     }
