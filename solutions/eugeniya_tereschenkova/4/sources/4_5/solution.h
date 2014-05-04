@@ -13,7 +13,8 @@ namespace task4_5
 	class solution
 	{
 	private:
-		boost::mutex wait_min_max_mutex_;
+		mutable boost::mutex wait_min_mutex_;
+		mutable boost::mutex wait_max_mutex_;
 		
 		int min_;
 		int max_;
