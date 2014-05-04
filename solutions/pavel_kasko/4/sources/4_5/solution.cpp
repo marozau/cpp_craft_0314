@@ -41,9 +41,6 @@ void task4_5::solution::SaveMinMax(int min_, int max_)
 
 	min = std::min(min, min_);
 	max = std::max(max, max_);
-
-	min_res.push_back(min);
-	max_res.push_back(max);
 }
 
 int task4_5::solution::get_min()

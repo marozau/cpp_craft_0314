@@ -13,11 +13,8 @@ namespace task4_5
 		boost::mutex mtx;
 
 		const std::size_t data_size;
-		std::vector<int> min_res;
-		std::vector<int> max_res;
 		int min;
 		int max;
-
 		void DoWork(const std::vector<int>& inputVector);
 		void SaveMinMax(int min, int max);
 	public:
