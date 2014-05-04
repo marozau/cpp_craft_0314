@@ -4,6 +4,8 @@
 #include <functional>
 #include <algorithm> 
 #include <stdio.h>
+#include <fstream>
+#include <iostream>
 
 namespace task5_4
 {
@@ -31,11 +33,13 @@ namespace task5_4
 		for_clear_container (Container& v){
 			if (delete_first) {
 				for( typename Container::iterator it = v.begin(); it != v.end(); ++it )
-					delete reinterpret_cast<typename Container::value_type::first_type *>(it->first);
+						delete (*it).first;
+					
 			}
 			if (delete_second) {
 				for( typename Container::iterator it = v.begin(); it != v.end(); ++it )
-					delete reinterpret_cast<typename Container::value_type::second_type *>(it->second);
+						delete (*it).second;
+					
 			}
 			v.clear();
 		}
@@ -43,10 +47,10 @@ namespace task5_4
 	template< typename Container >
 	struct for_clear_container<true, true,typename Container>{
 			for_clear_container(Container& v){
-					for( typename Container::iterator it = v.begin(); it != v.end(); ++it )
-						delete reinterpret_cast<typename Container::value_type::first_type *>(it->first);
-					for( typename Container::iterator it = v.begin(); it != v.end(); ++it )
-						delete reinterpret_cast<typename Container::value_type::second_type *>(it->second);
+					for( typename Container::iterator it = v.begin(); it != v.end(); ++it ){
+						delete (*it).first;
+						delete (*it).second;
+					}
 					v.clear();
 			}
 	};
@@ -54,7 +58,8 @@ namespace task5_4
 	struct for_clear_container<true, false,typename Container>{
 			for_clear_container(Container& v){
 					for( typename Container::iterator it = v.begin(); it != v.end(); ++it )
-						delete reinterpret_cast<typename Container::value_type::first_type *>(it->first);
+						delete (*it).first;
+					
 					v.clear();
 			}
 	};
@@ -62,7 +67,7 @@ namespace task5_4
 	struct for_clear_container<false, true,typename Container>{
 			for_clear_container(Container& v){
 					for( typename Container::iterator it = v.begin(); it != v.end(); ++it )
-						delete reinterpret_cast<typename Container::value_type::second_type *>(it->second);
+						delete (*it).second;
 					v.clear();
 			}
 	};

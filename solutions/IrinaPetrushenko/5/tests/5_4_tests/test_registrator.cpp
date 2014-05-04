@@ -12,9 +12,9 @@ boost::unit_test_framework::test_suite* init_unit_test_suite( int , char* [] )
 	using namespace task5_4::tests_;
 
 	ts1->add( BOOST_TEST_CASE( &template_functions_vector_tests ) );	
-	//ts1->add( BOOST_TEST_CASE( &template_functions_map_tests ) );	
-	//ts1->add( BOOST_TEST_CASE( &template_functions_list_tests ) );	
-	//ts1->add( BOOST_TEST_CASE( &template_functions_set_tests ) );	
+	ts1->add( BOOST_TEST_CASE( &template_functions_map_tests ) );	
+	ts1->add( BOOST_TEST_CASE( &template_functions_list_tests ) );	
+	ts1->add( BOOST_TEST_CASE( &template_functions_set_tests ) );	
 
 #ifdef RUN_PERFORMANCE_TESTS
 #endif

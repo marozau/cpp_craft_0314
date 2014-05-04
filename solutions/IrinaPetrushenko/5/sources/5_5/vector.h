@@ -15,8 +15,8 @@ namespace task5_5
 		size_t capacity_;
 		const static size_t min_capacity_ = 4;
 	public:
-		typedef T* iterator ; // you could change this
-		typedef const T* const_iterator; // you could change this
+		typedef T* iterator ; 
+		typedef const T* const_iterator; 
 	public:
 		explicit vector();
 		vector( const vector& copy );
@@ -43,7 +43,6 @@ namespace task5_5
 		~vector();
 	};
 
-	// TODO, please realise the rest methods according to the tests
 
 	template< typename T >
 	vector< T >::vector():size_(0),capacity_(min_capacity_),vec_(new T[min_capacity_])
@@ -60,13 +59,13 @@ namespace task5_5
 	template< typename T >
 	vector< T >& vector< T >::operator=( const vector< T >&  v)
 	{
-		if (&v == this) return *this;
+		if (&v == this) 
+			return *this;
 		delete [] vec_;
 		capacity_ = v.capacity_;
 		vec_ = new T[capacity_];
 		size_ = v.size_;
-		for( size_t i = 0; i < size_; ++i)
-			vec_[i] = v[i];
+		std::copy (v.begin(), v.end(), vec_);
 		return *this;
 	}
 

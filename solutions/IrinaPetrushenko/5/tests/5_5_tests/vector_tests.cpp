@@ -12,18 +12,15 @@ void task5_5::tests_::vector_tests()
 		BOOST_CHECK_EQUAL( int_vector.size(), 0ul );
 		BOOST_CHECK_EQUAL( int_vector.capacity(), 4ul ); // default capacity is 4ul
 	}
-	
 	{
 		vector< int > int_vector;
 		BOOST_CHECK_EQUAL( int_vector.begin() == int_vector.end(), true );
 	}
-	
 	{
 		vector< int > int_vector;
 		const vector< int >& ref = int_vector;
 		BOOST_CHECK_EQUAL( ref.begin() == ref.end(), true );
 	}
-	
 	{
 		vector< int > iv;
 		BOOST_CHECK_THROW( iv[ 0 ], std::out_of_range );
@@ -47,7 +44,6 @@ void task5_5::tests_::vector_tests()
 		vector< int > iv_copy;
 		BOOST_CHECK_NO_THROW( iv_copy = iv );
 	}
-	
 	{
 		vector< int > iv;
 		for( int i = 0; i < 10; ++i )
