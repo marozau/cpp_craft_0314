@@ -3,6 +3,7 @@
 #include <boost\regex.hpp>
 #include <boost\algorithm\string\replace.hpp>
 #include <boost\algorithm\string\split.hpp>
+#include <boost\range\algorithm\find.hpp>
 #include <boost\algorithm\string\classification.hpp>
 #include <boost\lexical_cast.hpp>
 #include <exception>
@@ -38,9 +39,14 @@ void task4_6::solution::Handle(std::string& expression)
 
 		std::string op[] = { "+", "-", "/", "*" , "(", ")"};
 		int length = sizeof(op) / sizeof(*op);
+		
 		for (int i = 0; i < length; ++i)
 			boost::replace_all(exp_body, op[i], (op[i] == "(" ? std::string("") : std::string(" ")) + std::string(op[i]) + (op[i] == ")" ? std::string("") : std::string(" ")));
-
+		
+		if(exp_body.find("  ") != std::string::npos)
+			throw std::logic_error("Incorrect expression");
+		
+		boost::replace_all(exp_body, "  ", " ");
 		std::vector<std::string> splitted;
 		boost::split(splitted, exp_body, boost::is_any_of(" "));
 
