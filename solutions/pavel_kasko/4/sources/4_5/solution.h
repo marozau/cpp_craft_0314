@@ -15,13 +15,15 @@ namespace task4_5
 		const std::size_t data_size;
 		std::vector<int> min_res;
 		std::vector<int> max_res;
+		int min;
+		int max;
 
 		void DoWork(const std::vector<int>& inputVector);
 		void SaveMinMax(int min, int max);
 	public:
 		explicit solution( const data_type& data );
-		int get_min() const;
-		int get_max() const;
+		int get_min();
+		int get_max();
 	};
 }
 
