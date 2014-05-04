@@ -70,7 +70,7 @@ boost::uint32_t getCountDayFromStringTime( const char *_date_time)
 
 
 
-void binary_reader::stock_data::write( std::ofstream& out )
+void binary_reader::stock_data::write( std::ofstream& out ) const
 {
     char stock_name[ms_new_stock_name_max_size];
     memset(stock_name, 0, sizeof(stock_name));
@@ -81,15 +81,15 @@ void binary_reader::stock_data::write( std::ofstream& out )
     const boost::uint32_t count_day = getCountDayFromStringTime(m_date_time_);
     out.write(reinterpret_cast<const char*>(&count_day), sizeof(count_day));
 
-    out.write(reinterpret_cast<char*>(&m_vwap_), sizeof(m_vwap_));
+    out.write(reinterpret_cast<const char*>(&m_vwap_), sizeof(m_vwap_));
 
-    out.write(reinterpret_cast<char*>(&m_volume_), sizeof(m_volume_));
+    out.write(reinterpret_cast<const char*>(&m_volume_), sizeof(m_volume_));
 
-    out.write(reinterpret_cast<char*>(&m_f2_), sizeof(m_f2_));
+    out.write(reinterpret_cast<const char*>(&m_f2_), sizeof(m_f2_));
 }
 
 
-void binary_reader::stock_data::write_raw( std::ofstream& out )
+void binary_reader::stock_data::write_raw( std::ofstream& out ) const
 {	
 	// your code. Can be emty
 	// this method is used for testing. It writes data to the binary file without convertion.

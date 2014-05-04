@@ -39,11 +39,11 @@ namespace binary_reader
             const double f4 );		
         ~stock_data();
 
-        void write( std::ofstream& out );
-        void write_raw( std::ofstream& out );
+        void write( std::ofstream& out ) const;
+        void write_raw( std::ofstream& out ) const;
 
     private:
-        template<typename T> T readValue(std::ifstream& _in)
+        template<typename T> T readValue(std::ifstream& _in) const
         {
             T result = 0;
             _in.read(reinterpret_cast<char*>(&result), sizeof(T));
@@ -51,7 +51,7 @@ namespace binary_reader
             return result;
         }
 
-        template<typename T> void readArray(std::ifstream& _in, T* _array, boost::uint32_t _size_array)
+        template<typename T> void readArray(std::ifstream& _in, T* _array, boost::uint32_t _size_array) const
         {
             _in.read(_array, sizeof(T) * _size_array);
         }

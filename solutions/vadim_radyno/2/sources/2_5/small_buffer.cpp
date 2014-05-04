@@ -50,6 +50,11 @@ int main()
     {
         binary_reader::market_message message(input_file);
 
+        if (input_file.eof())
+        {
+            break;
+        }
+
         sMessagesAttributies& message_attributies = attrs[message.type()];
 
         const boost::uint32_t new_message_size = message_attributies.m_seconds_and_message_size[message.time()] + message.size();
