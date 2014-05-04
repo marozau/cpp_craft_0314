@@ -26,11 +26,11 @@ binary_reader::market_message::market_message( const boost::uint32_t _type, cons
 }
 
 
-void binary_reader::market_message::write( std::ofstream& out )
+void binary_reader::market_message::write( std::ofstream& out ) const
 {
-    out.write(reinterpret_cast<char*>(&m_type), sizeof(m_type));
-    out.write(reinterpret_cast<char*>(&m_time), sizeof(m_time));
-    out.write(reinterpret_cast<char*>(&m_len), sizeof(m_len));
+    out.write(reinterpret_cast<const char*>(&m_type), sizeof(m_type));
+    out.write(reinterpret_cast<const char*>(&m_time), sizeof(m_time));
+    out.write(reinterpret_cast<const char*>(&m_len), sizeof(m_len));
     out.write(m_msg, m_len);
 }
 

@@ -84,7 +84,7 @@ private:
 
                 if (!input_file.is_open())
                 {
-                    return;
+                    continue;
                 }
 
                 const string& output_file_name = getPathToFileByIndex(Constants::Paths::begin_output_file_name, index_of_file);
@@ -94,13 +94,18 @@ private:
 
                 while (!input_file.eof())
                 {
-                    binary_reader::market_message message(input_file);
-
-                    if (isValidTimeForMessage(max_time, message))
-                    {
-                        max_time = std::max<boost::int32_t>(message.time(), max_time);
-                        message.write(output_file);
-                    }
+					binary_reader::market_message message(input_file);
+						
+					if( input_file.eof() )
+					{
+						break;
+					}
+					
+					if (isValidTimeForMessage(max_time, message))
+					{
+						max_time = std::max<boost::int32_t>(message.time(), max_time);
+						message.write(output_file);
+					}
                 }
 
                 output_file.close();

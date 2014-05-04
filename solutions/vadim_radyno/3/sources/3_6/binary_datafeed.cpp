@@ -82,7 +82,7 @@ private:
                 boost::mutex::scoped_lock lock_files(m_wait_files);
 
                 std::stringstream output_path;
-                output_path << BINARY_DIR << "/" << message->getStockName() << ".txt";
+                output_path << BINARY_DIR << "/" << "output_" << message->getStockName() << ".txt";
 
                 auto it = m_files.find(output_path.str());
                 if (it == m_files.end())
