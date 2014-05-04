@@ -3,7 +3,6 @@
 #include <boost\regex.hpp>
 #include <boost\algorithm\string\replace.hpp>
 #include <boost\algorithm\string\split.hpp>
-#include <boost\range\algorithm\find.hpp>
 #include <boost\algorithm\string\classification.hpp>
 #include <boost\lexical_cast.hpp>
 #include <exception>
