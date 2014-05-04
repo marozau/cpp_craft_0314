@@ -23,18 +23,24 @@ void task4_5::solution::DoWork(const std::vector<int>& inputVector)
 {
 	const std::size_t size = inputVector.size();
 	
+	int local_max = std::numeric_limits<int>::min();
+	int local_min = std::numeric_limits<int>::max();
+
 	for(int i = 0; i < size; ++i)
 	{
-		max = std::max(max, inputVector[i]);
-		min = std::min(min, inputVector[i]);
+		local_max = std::max(local_max, inputVector[i]);
+		local_min = std::min(local_min, inputVector[i]);
 	}
 
-	SaveMinMax(min, max);
+	SaveMinMax(local_min, local_max);
 }
 
-void task4_5::solution::SaveMinMax(int min, int max)
+void task4_5::solution::SaveMinMax(int min_, int max_)
 {
 	boost::mutex::scoped_lock lock(mtx);
+
+	min = std::min(min, min_);
+	max = std::max(max, max_);
 
 	min_res.push_back(min);
 	max_res.push_back(max);
@@ -42,27 +48,9 @@ void task4_5::solution::SaveMinMax(int min, int max)
 
 int task4_5::solution::get_min()
 {
-	if(data_size != 0)
-	{
-		std::size_t size = min_res.size();
-		
-		for (int i = 0; i < size; ++i)
-			min = std::min(min, min_res[i]);
-
-		return min;
-	}
-	return 0;
+	return data_size != 0 ? min : 0;
 }
 int task4_5::solution::get_max()
 {
-	if(data_size != 0)
-	{
-		std::size_t size = max_res.size();
-		
-		for (int i = 0; i < size; ++i)
-			max = std::max(max, max_res[i]);
-
-		return max;
-	}
-	return 0;
+	return data_size != 0 ? max : 0;
 }
