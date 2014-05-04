@@ -122,7 +122,7 @@ int task4_6::solution::Count(std::vector<std::string>& expression)
 	}
 
 	double result = CountStack(nums, operators);
-	return round(result);
+	return std::floor(result + 0.5);
 }
 
 std::string task4_6::solution::CountTwo(std::string& first, std::string& second, std::string& op)
