@@ -22,8 +22,6 @@ task4_5::solution::solution( const data_type& data ) : data_size(data.size())
 void task4_5::solution::DoWork(const std::vector<int>& inputVector)
 {
 	const std::size_t size = inputVector.size();
-	//int max = std::numeric_limits<int>::min();
-	//int min = std::numeric_limits<int>::max();
 	
 	for(int i = 0; i < size; ++i)
 	{
@@ -47,7 +45,6 @@ int task4_5::solution::get_min()
 	if(data_size != 0)
 	{
 		std::size_t size = min_res.size();
-		//int min = std::numeric_limits<int>::max();
 		
 		for (int i = 0; i < size; ++i)
 			min = std::min(min, min_res[i]);
@@ -61,7 +58,6 @@ int task4_5::solution::get_max()
 	if(data_size != 0)
 	{
 		std::size_t size = max_res.size();
-		//int max = std::numeric_limits<int>::min();
 		
 		for (int i = 0; i < size; ++i)
 			max = std::max(max, max_res[i]);
