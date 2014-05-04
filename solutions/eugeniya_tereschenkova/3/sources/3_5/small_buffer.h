@@ -10,40 +10,40 @@ namespace task3_5
 	static const boost::uint32_t type_min = 0u;
 	static const boost::uint32_t type_max = 100000u;
   
-  struct struct_type_param
-  {
-	  struct_type_param()
-	  {
-		  count = 0;
-	  };
-	  int count;
-	  map < boost:: uint32_t, boost:: uint32_t > map_time_size;
-  };
+  	struct struct_type_param
+  	{
+		struct_type_param()
+	  	{
+			count = 0;
+	  	};
+	  	int count;
+	  	map < boost:: uint32_t, boost:: uint32_t > map_time_size;
+  	};
 
-  struct struct_out
-  {
-	  struct_out()
-	  {
-		  count_mes = 0;
-      count_sec = 0;
-	  };
-	  int count_mes;
-	  int count_sec;
-  };
+  	struct struct_out
+  	{
+		struct_out()
+	  	{
+		  	count_mes = 0;
+      			count_sec = 0;
+	  	};
+	  	int count_mes;
+	  	int count_sec;
+  	};
 
 	class solution
 	{
 	private:
 		boost::mutex wait_file_;
 		boost::mutex wait_out_param_;
-    int files_count_;
-    map < boost:: uint32_t, struct_out >  map_struct_out_param_;
+    		int files_count_;
+    		map < boost:: uint32_t, struct_out >  map_struct_out_param_;
 				
 		void process_file_();
 	
 	public:
 		explicit solution( const int files_count );
-    void start();
+    		void start();
 	};
 }
 
