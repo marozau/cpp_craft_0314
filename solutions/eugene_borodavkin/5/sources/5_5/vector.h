@@ -19,7 +19,8 @@ namespace task5_5
 	public:
 		explicit vector();
 		vector( const vector& copy );
-		vector& operator=( const vector& copy_from );
+        vector& operator=( const vector& copy_from );
+        ~vector();
 
 		void push_back( const T& value );
 		void insert( const size_t index, const T& value );
@@ -44,6 +45,10 @@ namespace task5_5
         void capacity_check() ;
 	};
 
+    template < typename T >
+    vector< T >::~vector(){
+        delete [] data_;
+    }
     template < typename T >
     void vector< T >::expand_capacity( const size_t new_capacity )
     {
@@ -70,7 +75,7 @@ namespace task5_5
     {
 	}
 	template< typename T >
-    vector< T >::vector( const vector< T >&  vec)
+    vector< T >::vector( const vector< T >&  vec):data_(NULL),capacity_( default_capacity_),size_(0)
     {
         *this = vec;
 	}
