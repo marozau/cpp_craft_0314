@@ -94,8 +94,7 @@ namespace task5_5
 			return;
 		}
 		T * temp = new T [capacity_ * 2];
-		for (size_t i = 0;i < pos;++i)
-			temp[i] = vec_[i];
+		std::copy (vec_, vec_+pos,temp);
 		for (size_t i = pos+1;i < size_;++i)
 			temp[i] = vec_[i-1];
 		temp[pos] = el;
@@ -145,8 +144,7 @@ namespace task5_5
 	{
 		if (new_capacity <= capacity_) return;
 		T * temp = new T [new_capacity];
-		for (size_t i = 0;i < size_;++i)
-			temp[i] = vec_[i];
+		std::copy (vec_, vec_+size_, temp);
 		delete [] vec_;
 		vec_ = temp;
 		capacity_ = new_capacity;
