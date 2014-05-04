@@ -6,12 +6,12 @@ int main()
 
   	try
   	{
-    		task3_5::solution s( file_count );
-    		s.start();
+    	task3_5::solution s( file_count );
+    	s.start();
   	}
 	catch(...) 
 	{
-    		return 1;
+    	return 1;
   	}
 
 	return 0;

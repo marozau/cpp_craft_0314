@@ -13,13 +13,13 @@ namespace task3_4
 	{
 	private:
 		boost::mutex wait_file_;
-    		int files_count_;
+		int files_count_;
 				
 		void process_file_();
 	
 	public:
 		explicit solution( const int files_count );
-    		void start();
+		void start();
 	};
 }
 

@@ -36,7 +36,7 @@ namespace binary_reader
 		~stock_data();
 		//
 		void write( std::ofstream& out ) const;
-		void write_raw( std::ofstream& out );
+		const char* stock_data::stock_name() const;
 	};
 }
 

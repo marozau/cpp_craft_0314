@@ -11,54 +11,58 @@ bool is_good_type (const boost::uint32_t type, const boost::uint32_t type_min, c
 
 string get_infilename(const int file_number)
 {
-	char id[4];
-	sprintf_s( id, 4, "%03d", file_number);
-	return  "/input_"+ boost:: lexical_cast<string>(id)+".txt";
+	stringstream strstream;
+	strstream.width(3);
+	strstream<<setfill('0');
+	strstream<<file_number;
+	string id;
+	strstream>>id;
+	return "/input_" + id + ".txt";
 }
 
 string get_outfilename(const int file_number)
 {
-	char id[4];
-	sprintf_s( id, 4, "%03d", file_number);
-	return  "/output_"+ boost::lexical_cast<string>(id)+".txt";
+	stringstream strstream;
+	strstream.width(3);
+	strstream<<setfill('0');
+	strstream<<file_number;
+	string id;
+	strstream>>id;
+	return "/output_" + id + ".txt";
 }
 
 task3_4::solution::solution( const int files_count ):files_count_(files_count)
 {
-	if(files_count < 1)
-	{
-		return;
-	}
 }
 
 void task3_4::solution::process_file_()
 {  
   	while(true)
   	{
-    		boost::mutex::scoped_lock lock_file_(task3_4::solution::wait_file_);
-    		if(files_count_ < 1)
-    		{
-      			lock_file_.unlock();
-      			break;
-    		}
+		boost::mutex::scoped_lock lock_file_(task3_4::solution::wait_file_);
+		if(files_count_ < 1)
+		{
+  			lock_file_.unlock();
+  			break;
+		}
 	  	const string inp_file = BINARY_DIR + get_infilename(files_count_);
 	  	const string outp_file = BINARY_DIR + get_outfilename(files_count_);
 
-    		--files_count_;
-    		lock_file_.unlock();
+		--files_count_;
+		lock_file_.unlock();
 
 	  	ifstream input_file(inp_file.c_str(), ios::binary);
 	  	if (!input_file.is_open())
 	  	{
-      			continue;
+  			continue;
 	  	}
 
 	  	ofstream output_file(outp_file.c_str(), ios::binary);
 
 	  	try
 	  	{    
-	    		boost::uint32_t cur_time = 0;
-	    		int mes_count = 0;
+    		boost::uint32_t cur_time = 0;
+    		int mes_count = 0;
 		  	while (!input_file.eof())
 		  	{
 			  	if(mes_count > task3_4::N)

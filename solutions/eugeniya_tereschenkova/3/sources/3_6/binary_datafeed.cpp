@@ -1,8 +1,21 @@
+#include "binary_datafeed.h"
 #include <iostream>
-#include "stock_data.h"
-using namespace std;
+#include <boost/lexical_cast.hpp>
 
-int main()
+string get_outfilename(const string file)
+{
+	return "/output_" + file + ".txt";
+}
+
+void task3_6::solution::close_all_ofstreams_in_map_(map_type& map_name)
+{
+	for(map_type::iterator iter = map_name.begin(); iter != map_name.end(); ++iter)
+	{
+		(*(*iter).second).close();
+	}
+}
+
+void task3_6::solution::start()
 {
 	static const char* inp_file = BINARY_DIR "/input.txt";
 	ifstream input_file(inp_file, ios::binary);
@@ -10,11 +23,9 @@ int main()
 	if (!input_file.is_open())
 	{
 		cout << "Could not open input file" << endl;
-		return 1;
+		return;
 	}
 
-	static const char* outp_file = BINARY_DIR "/output.txt";
-	ofstream output_file(outp_file, ios::binary);
 	try
 	{    
 		while (!input_file.eof())
@@ -22,18 +33,22 @@ int main()
 			binary_reader::stock_data st_data(input_file);
 			if (input_file.eof()) 
 				break;
-			st_data.write(output_file);
+			const string stock_name = boost:: lexical_cast<string>(st_data.stock_name());
+			if(map_name_stream_.count(stock_name) == 0)
+			{
+				const string outp_file = BINARY_DIR + get_outfilename(boost:: lexical_cast<string>(stock_name));
+				map_name_stream_[stock_name] = boost::make_shared<std::ofstream>(outp_file.c_str(), std::ios::binary);
+			}
+			st_data.write(*map_name_stream_[stock_name]);
 		}
 	}
 	catch(...) 
 	{
 		input_file.close();
-		output_file.close();
-		return 1;
-	};
+		close_all_ofstreams_in_map_(map_name_stream_);
+	}
 
 	input_file.close();
-	output_file.close();
-	return 0;
+	close_all_ofstreams_in_map_(map_name_stream_);
 }
 
