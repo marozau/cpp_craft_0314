@@ -14,8 +14,8 @@ namespace task5_5
         size_t capacity_;
         size_t size_;
 	public:
-		typedef T* iterator ; // you could change this
-		typedef const T* const_iterator; // you could change this
+        typedef T* iterator ;
+        typedef const T* const_iterator;
 	public:
 		explicit vector();
 		vector( const vector& copy );
@@ -82,6 +82,8 @@ namespace task5_5
 	template< typename T >
     vector< T >& vector< T >::operator=( const vector< T >& vec )
     {
+        if( &vec == this)
+            return *this;
         capacity_ = vec.capacity();
         size_ = vec.size();
         if(data_)
@@ -178,12 +180,12 @@ namespace task5_5
 	template< typename T >
 	typename vector< T >::const_iterator vector< T >::begin() const
 	{
-        return const_cast<const_iterator>(data_) ;
+        return data_ ;
 	}
 	template< typename T >
 	typename vector< T >::const_iterator vector< T >::end() const
 	{
-        return const_cast<const_iterator>(data_ + size_ );
+        return data_ + size_ ;
 	}
 }
 
