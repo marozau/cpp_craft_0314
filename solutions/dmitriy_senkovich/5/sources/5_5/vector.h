@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <stdexcept>
+#include <algorithm>
 
 namespace task5_5
 {
@@ -44,29 +45,26 @@ namespace task5_5
 	// TODO, please realise the rest methods according to the tests
 
 	template< typename T >
-	vector< T >::vector()
+	vector< T >::vector(): size_( 0ul ), data_( new T[4] ), capacity_( 4ul )
 	{
-		size_ = 0ul;
-		data_ = new T[4];
-		capacity_ = 4ul;
 	}
 	template< typename T >
 	vector< T >::vector( const vector< T >& copy_from )
 	{
 		data_ = new T[copy_from.capacity_];
 		capacity_ = copy_from.capacity_;
-		for( size_t i = 0; i < copy_from.size_; i++ )
-			data_[i] = copy_from[i];
+		std::copy( copy_from.begin(), copy_from.end(), this->begin() );
 		size_ = copy_from.size_;
 	}
 	template< typename T >
 	vector< T >& vector< T >::operator=( const vector< T >& copy_from  )
 	{
+		if( data_ == copy_from.data_ )
+			return *this;
 		delete []data_;
 		data_ = new T[copy_from.capacity_];
 		capacity_ = copy_from.capacity_;
-		for( size_t i = 0; i < copy_from.size_; i++ )
-			data_[i] = copy_from[i];
+		std::copy( copy_from.begin(), copy_from.end(), this->begin() );
 		size_ = copy_from.size_;
 		return *this;
 	}
@@ -79,14 +77,13 @@ namespace task5_5
 		else
 		{
 			T* buff_data = new T[capacity_];
-			for( size_t i = 0; i < size_; i++ )
-				buff_data[i] = data_[i];
+			std::copy( data_, data_ + size_, buff_data );
 			delete data_;
-			data_ = new T[2*capacity_];
-			for( size_t i = 0; i < size_; i++ )
-				data_[i] = buff_data[i];
+			size_t double_capacity = 2*capacity_;
+			data_ = new T[double_capacity];
+			std::copy( buff_data, buff_data + size_, data_ );
 			data_[size_++] = value;
-			capacity_ = 2*capacity_;
+			capacity_ = double_capacity;
 			delete buff_data;
 		}
 	}
@@ -99,18 +96,16 @@ namespace task5_5
 		if( size_ == capacity_ )
 		{
 			T* buff_data = new T[capacity_];
-			for( size_t i = 0; i < size_; i++ )
-				buff_data[i] = data_[i];
+			std::copy( data_, data_ + size_, buff_data );
 			delete data_;
-			data_ = new T[2*capacity_];
-			for( size_t i = 0; i < index; i++ )
-				data_[i] = buff_data[i];
+			size_t double_capacity = 2*capacity_;
+			data_ = new T[double_capacity];
+			std::copy( buff_data, buff_data + index, data_ );
 			data_[index] = value;
-			for( size_t i = index + 1; i < size_ + 1; i++ )
-				data_[i] = buff_data[i-1];
+			std::copy( buff_data + index, buff_data + size_, data_ + index + 1 );
 			delete buff_data;
 			size_++;
-			capacity_ = 2*capacity_;
+			capacity_ = double_capacity;
 		}
 		else
 		{ 
@@ -145,12 +140,10 @@ namespace task5_5
 		if( new_size < size_ )
 		{
 			T* buff_data = new T[size_];
-			for( size_t i = 0; i < size_; i++ )
-				buff_data[i] = data_[i];
+			std::copy( data_, data_ + size_, buff_data );
 			delete data_;
 			data_ = new T[capacity_];
-			for( size_t i = 0; i < new_size; i++ )
-				data_[i] = buff_data[i];
+			std::copy( buff_data, buff_data + new_size, data_ );
 			delete buff_data;
 			size_ = new_size;
 		}
@@ -163,13 +156,12 @@ namespace task5_5
 		}
 		if( new_size > capacity_ )
 		{
-			T* buff_data = new T[2*capacity_];
-			for( size_t i = 0; i < size_; i++ )
-				buff_data[i] = data_[i];
+			size_t double_capacity = 2*capacity_;
+			T* buff_data = new T[double_capacity];
+			std::copy( data_, data_ + size_, buff_data );
 			delete data_;
 			data_ = new T[new_size];
-			for( size_t i = 0; i < size_; i++ )
-				data_[i] = buff_data[i];
+			std::copy( buff_data, buff_data + size_, data_ );
 			for( size_t i = size_; i < new_size; i++ )
 				data_[i] = static_cast< T >( 0 );
 			delete buff_data;
@@ -183,12 +175,10 @@ namespace task5_5
 		if( new_capacity <= capacity_ )
 			return;
 		T* buff_data = new T[capacity_];
-		for( size_t i = 0; i < size_; i++ )
-			buff_data[i] = data_[i];
+		std::copy( data_, data_ + size_, buff_data );
 		delete data_;
 		data_ = new T[new_capacity];
-		for( size_t i = 0; i < size_; i++ )
-			data_[i] = buff_data[i];
+		std::copy( buff_data, buff_data + size_, data_ );
 		delete buff_data;
 		capacity_ = new_capacity;
 	}

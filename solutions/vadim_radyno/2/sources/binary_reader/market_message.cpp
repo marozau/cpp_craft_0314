@@ -8,9 +8,9 @@ binary_reader::market_message::market_message( std::ifstream& _in )
     , m_time(readValue<boost::uint32_t>(_in))
     , m_len(readValue<boost::uint32_t>(_in))
 {
-    m_msg.resize(m_len + 1);
+    m_msg = new char[m_len + 1];
     _in.read(&m_msg[0], m_len);
-    m_msg[m_msg.size() - 1] = '\0';
+    m_msg[m_len] = '\0';
 }
 
 
@@ -18,10 +18,11 @@ binary_reader::market_message::market_message( const boost::uint32_t _type, cons
     : m_type(_type)
     , m_time(_time)
     , m_len(static_cast<boost::uint32_t>(strlen(_msg)))
+    , m_msg(nullptr)
 {
-    m_msg.resize(m_len + 1);
-    memmove(&m_msg[0], _msg, m_len);
-    m_msg[m_msg.size() - 1] = '\0';
+    m_msg = new char[m_len + 1];
+    memmove(m_msg, _msg, m_len);
+    m_msg[m_len] = '\0';
 }
 
 
@@ -30,12 +31,17 @@ void binary_reader::market_message::write( std::ofstream& out )
     out.write(reinterpret_cast<char*>(&m_type), sizeof(m_type));
     out.write(reinterpret_cast<char*>(&m_time), sizeof(m_time));
     out.write(reinterpret_cast<char*>(&m_len), sizeof(m_len));
-    out.write(&m_msg[0], m_len);
+    out.write(m_msg, m_len);
 }
 
 
 binary_reader::market_message::~market_message()
 {
+    if (m_msg)
+    {
+        delete [] m_msg;
+        m_msg = nullptr;
+    }
 }
 
 
@@ -53,12 +59,7 @@ boost::uint32_t binary_reader::market_message::time() const
 
 const char* const binary_reader::market_message::msg() const
 {
-    if (m_msg.empty())
-    {
-        return nullptr;
-    }
-
-    return &m_msg[0];
+    return m_msg;
 }
 
 
@@ -72,8 +73,3 @@ bool binary_reader::market_message::isValidType() const
     return false;
 }
 
-
-bool binary_reader::market_message::isValidTime( const boost::uint32_t _max_time )
-{
-    return time() + 2 > _max_time;
-}
