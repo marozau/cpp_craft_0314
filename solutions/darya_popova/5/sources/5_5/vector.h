@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <exception>
+#include <algorithm>
 
 namespace task5_5
 {
@@ -17,8 +18,8 @@ namespace task5_5
 		void check() ;
 
 	public:
-		typedef T* iterator ; // you could change this
-		typedef const T* const_iterator; // you could change this
+		typedef T* iterator ; 
+		typedef const T* const_iterator; 
 	public:
 		explicit vector();
 		~vector();
@@ -46,7 +47,7 @@ namespace task5_5
 		
 	};
 	
-	// TODO, please realise the rest methods according to the tests
+
 	template< typename T >
 	void vector< T >:: check() 
 	{
@@ -58,10 +59,7 @@ namespace task5_5
 	void vector< T >::  reallocate(const size_t new_capacity )
 	{
 		T * new_data = new T[new_capacity];
-		for(size_t i = 0; i < size_; ++i)
-		{
-			new_data[i] = data_[i];
-		}
+		std::copy(data_, (data_+size_), new_data);
 		capacity_ = new_capacity;
 		delete []data_;
 		data_ = new_data;
@@ -78,20 +76,21 @@ namespace task5_5
 	vector< T >::vector( const vector< T >&  v2)
 	{
 		data_= new T[v2.capacity_];
-		for (size_t i = 0; i< v2.size_; ++i)
-			data_[i]=v2[i];
+		std:: copy(v2.begin(), v2.end(), data_);
 		size_= v2.size_;
 		capacity_ = v2.capacity_;
 	}
 	template< typename T >
 	vector< T >& vector< T >::operator=( const vector< T >& v2 )
 	{
-		delete [] data_;
-		data_ = new T[v2.capacity_];
-		for (size_t i = 0; i< v2.size_; ++i)
-			data_[i]=v2[i];
-		size_ = v2.size_;
-		capacity_ = v2.capacity_;
+		if (size_ != v2.size_ || capacity_!=v2.capacity_)
+		{
+			delete [] data_;
+			size_ = v2.size_;
+			capacity_ = v2.capacity_;
+			data_ = new T[v2.capacity_];
+		}
+		std:: copy(v2.begin(), v2.end(), data_);
 		return *this;
 	}
 	template< typename T >

@@ -45,7 +45,9 @@ namespace task5_6
 	{
 		boost::mutex::scoped_lock lock(mtx_);
 		if (queue_.empty())
+		{
 			return false;
+		}
 		else
 		{
 			result = queue_.front();
@@ -58,9 +60,7 @@ namespace task5_6
 	bool thread_safe_queue< T >::empty() const
 	{
 		boost::mutex::scoped_lock lock(mtx_);
-		if (queue_.empty()) 
-			return true;
-		return false;
+		return queue_.empty();
 	}
 
 	template< typename T >
