@@ -83,13 +83,12 @@ namespace task5_5
 	template< typename T >
 	vector< T >& vector< T >::operator=( const vector< T >& v2 )
 	{
-		if (size_ != v2.size_ || capacity_!=v2.capacity_)
-		{
-			delete [] data_;
-			size_ = v2.size_;
-			capacity_ = v2.capacity_;
-			data_ = new T[v2.capacity_];
-		}
+		if ( &v2 == this )
+			return *this;
+		delete [] data_;
+		size_ = v2.size_;
+		capacity_ = v2.capacity_;
+		data_ = new T[v2.capacity_];
 		std:: copy(v2.begin(), v2.end(), data_);
 		return *this;
 	}
