@@ -69,8 +69,8 @@ void binary_reader::stock_data::write( std::ofstream& out ) const
 	if(!out.write(reinterpret_cast<const char*>(&f2_), sizeof( double)) )
 		throw logic_error("can't write 'f2'");
 }
-void binary_reader::stock_data::write_raw( std::ofstream& out )
-{	
-	// your code. Can be emty
-	// this method is used for testing. It writes data to the binary file without convertion.
+
+const char* binary_reader::stock_data::stock_name() const
+{
+	return stock_name_;
 }
