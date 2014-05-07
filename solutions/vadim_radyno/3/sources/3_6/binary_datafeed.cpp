@@ -11,6 +11,7 @@ namespace Constants
     namespace Paths
     {
         const string input_file = BINARY_DIR "/input.txt";
+		const string begin_output_file =  BINARY_DIR "/output_";
     }
 }
 
@@ -82,7 +83,7 @@ private:
                 boost::mutex::scoped_lock lock_files(m_wait_files);
 
                 std::stringstream output_path;
-                output_path << BINARY_DIR << "/" << "output_" << message->getStockName() << ".txt";
+                output_path << Constants::Paths::begin_output_file << message->getStockName() << ".txt";
 
                 auto it = m_files.find(output_path.str());
                 if (it == m_files.end())
