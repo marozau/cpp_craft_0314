@@ -62,6 +62,7 @@ void market_data_receiver::Start()
 	}
 	threads.join_all();
 }
+
 void market_data_receiver::Stop() const
 {
 	for (auto i = listeners.begin(); i != listeners.end(); ++i)

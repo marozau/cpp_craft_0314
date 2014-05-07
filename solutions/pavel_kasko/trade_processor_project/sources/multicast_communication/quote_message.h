@@ -2,12 +2,23 @@
 #define _MULTICAST_COMMUNICATION_QUOTE_MESSAGE_H_
 
 #include <boost/shared_ptr.hpp>
+#include "message_types.h"
 
 namespace multicast_communication
 {
 	class quote_message
 	{
+		const std::string _security_symbol;
+		double _bid_price;
+		double _bid_volume;
+		double _offer_price;
+		double _offer_volume;
+
 	public:
+		explicit quote_message(std::string _security_symbol, double _bid_price, double _bid_volume, 
+			double _offer_price, double _offer_volume);
+		explicit quote_message();
+
 		std::string security_symbol() const;
 		double bid_price() const;
 		double bid_volume() const;
