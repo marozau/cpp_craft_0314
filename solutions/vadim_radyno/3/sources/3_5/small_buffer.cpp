@@ -17,7 +17,7 @@ namespace Constants
     namespace Paths
     {
         const string begin_input_file_name = BINARY_DIR "/input_";
-        const string output_file = BINARY_DIR "/output.txt";
+		const string begin_output_file_name = BINARY_DIR "/output_";
     }
 
     const int count_files = 999;
@@ -55,98 +55,114 @@ string getPathToFileByIndex(const string& _begin_path, const int _index)
     return file_name.str() ; 
 }
 
+
 class cMessagesReader final
 {
 public:
-    explicit cMessagesReader(){}
-    void readMessages()
-    {
-        boost::thread_group group_of_slave_threads;
+	explicit cMessagesReader(const int _count_messages)
+	: m_message_counter(_count_messages)
+	{
+		createThreads();
+	}
 
-        for (int i = 1; i <= Constants::count_files; ++i)
-        {
-            group_of_slave_threads.create_thread( boost::bind(&cMessagesReader::readMessage, this, i));
-        }
+	void createThreads()
+	{
+		boost::thread_group group_of_slave_threads;
+		static int count_threads = 4;
 
-        group_of_slave_threads.join_all();
-    }
+		for (int i = 1; i <= count_threads; ++i)
+		{
+			group_of_slave_threads.create_thread( boost::bind(&cMessagesReader::readMessage, this));
+		}
 
-    void write()
-    {
-        std::ofstream output_file(Constants::Paths::output_file, std::ios::out | std::ios::binary);
+		group_of_slave_threads.join_all();
+	}
 
-        for (const auto& attr : m_attrs)
-        {
-            const double mean = static_cast<double>(attr.second.m_count) / static_cast<double>(attr.second.m_seconds_and_message_size.size());
-            if (mean != 0.0)
-            {
-                output_file.write(reinterpret_cast<const char*>(&(attr.first)), sizeof(attr.first));
-                output_file.write(reinterpret_cast<const char*>(&(mean)), sizeof(mean));
-            }
-        }
+	void write(const tAttributies& _attrs, const int _message_index) const
+	{
+		const string& output_file_name = getPathToFileByIndex(Constants::Paths::begin_output_file_name, _message_index);
+		std::ofstream output_file(output_file_name, std::ios::out | std::ios::binary);
 
-        output_file.close();
-    }
+		for (const auto& attr : _attrs)
+		{
+			const double mean = static_cast<double>(attr.second.m_count) / static_cast<double>(attr.second.m_seconds_and_message_size.size());
+			if (mean != 0.0)
+			{
+				output_file.write(reinterpret_cast<const char*>(&(attr.first)), sizeof(attr.first));
+				output_file.write(reinterpret_cast<const char*>(&(mean)), sizeof(mean));
+			}
+		}
 
-private:
-    cMessagesReader(cMessagesReader&);
-    cMessagesReader operator=(cMessagesReader&);
-
-    void readMessage(const int _message_index)
-    {
-        const string& path_to_message = getPathToFileByIndex(Constants::Paths::begin_input_file_name, _message_index);
-
-        std::ifstream input_file(path_to_message, std::ios::in | ios::binary);
-
-        if (!input_file.is_open())
-        {
-            return;
-        }
-
-        while (!input_file.eof())
-        {
-            binary_reader::market_message message(input_file);
-
-            if (input_file.eof())
-            {
-                break;
-            }
-
-            if (!message.isValidType())
-            {
-                continue;
-            }
-
-            boost::mutex::scoped_lock lock(m_wait);
-
-            sMessagesAttributies& message_attributies = m_attrs[message.type()];
-
-            const boost::uint32_t new_message_size = message_attributies.m_seconds_and_message_size[message.time()] + message.size();
-
-            if (new_message_size <= Constants::max_message_size)
-            {
-                message_attributies.m_seconds_and_message_size[message.time()] = new_message_size;
-
-                ++message_attributies.m_count;
-            }
-        }
-
-        input_file.close();
-    }
+		output_file.close();
+	}
 
 private:
-    boost::mutex m_wait;
-    tAttributies m_attrs;
+	cMessagesReader(cMessagesReader&);
+	cMessagesReader operator=(cMessagesReader&);
+
+	void readMessage()
+	{
+		while (true)
+		{
+			boost::mutex::scoped_lock lock_message_counter(m_counter_wait);			
+			if (m_message_counter == 0)
+			{
+				break;
+			}
+			const int message_index = m_message_counter--;
+
+			lock_message_counter.unlock();
+
+			const string& path_to_message = getPathToFileByIndex(Constants::Paths::begin_input_file_name, message_index);
+
+			std::ifstream input_file(path_to_message, std::ios::in | ios::binary);
+
+			if (!input_file.is_open())
+			{
+				continue;
+			}
+			
+			tAttributies attrs;
+			while (!input_file.eof())
+			{
+				binary_reader::market_message message(input_file);
+
+				if (input_file.eof())
+				{
+					break;
+				}
+
+				sMessagesAttributies& message_attributies = attrs[message.type()];
+
+				const boost::uint32_t new_message_size = message_attributies.m_seconds_and_message_size[message.time()] + message.size();
+
+				if (new_message_size <= Constants::max_message_size)
+				{
+					message_attributies.m_seconds_and_message_size[message.time()] = new_message_size;
+					++message_attributies.m_count;
+				}
+			}
+
+			input_file.close();
+
+			if (!attrs.empty())
+			{
+				write(attrs, message_index);
+			}
+
+		}
+	}
+
+private:
+	boost::mutex m_counter_wait;
+	int m_message_counter;
 };
+
 
 
 int main()
 {
-    cMessagesReader messages_reader;
-
-    messages_reader.readMessages();
-    messages_reader.write();
-
+    cMessagesReader messages_reader(Constants::count_files);
     return 0;
 }
 
