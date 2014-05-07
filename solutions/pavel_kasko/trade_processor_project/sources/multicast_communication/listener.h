@@ -3,6 +3,8 @@
 
 #include "message_types.h"
 #include <boost/asio.hpp>
+#include "aggregator.h"
+
 namespace multicast_communication
 {
 	
@@ -13,6 +15,7 @@ namespace multicast_communication
 		std::string ip;
 		unsigned short port;
 		message_type type;
+		aggregator& _aggregator;
 
 		boost::asio::io_service io_service_;
 		boost::asio::ip::udp::endpoint listen_endpoint_;
@@ -24,8 +27,9 @@ namespace multicast_communication
 		void listen_handler_(buffer_type bt, const boost::system::error_code& error, const size_t bytes_received);
 		static void enlarge_buffer_(buffer_type& bt);
 	public:
-		listener(std::string ip, unsigned short port, message_type type);
+		listener(std::string ip, unsigned short port, aggregator& _agregator, message_type type);
 		void Start();
+		void Stop();
 	};
 }
 #endif //_LISTENER_

@@ -7,18 +7,28 @@
 template<class T>
 class  thread_safe_queue
 {
-	boost::mutex locker;
+	mutable boost::mutex locker;
 	std::queue<T> _queue;
+
 public:
+	explicit thread_safe_queue();
+	~thread_safe_queue();
+
 	void push(const T& element);
 	T& pop();
 	bool IsEmpty();
 };
 
+template< typename T >
+thread_safe_queue< T >::thread_safe_queue() { }
+
+template< typename T >
+thread_safe_queue< T >::~thread_safe_queue() { }
+
 template<class T>
 void thread_safe_queue<T>::push(const T& element)
 {
-	boost::mutex::scoped_lock(locker);
+	boost::mutex::scoped_lock lock(locker);
 
 	_queue.push(element);
 }
@@ -26,7 +36,7 @@ void thread_safe_queue<T>::push(const T& element)
 template<class T>
 T& thread_safe_queue<T>::pop()
 {
-	boost::mutex::scoped_lock(locker);
+	boost::mutex::scoped_lock lock(locker);
 	if (!IsEmpty)
 		return _queue.front();
 }

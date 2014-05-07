@@ -5,8 +5,8 @@ namespace multicast_communication
 {
 	const size_t listener::default_buffer_size = 16ul;
 
-	listener::listener(std::string ip, unsigned short port, message_type type) :
-		ip(ip), port(port), type(type), socket_(io_service_),
+	listener::listener(std::string ip, unsigned short port, aggregator& _aggregator, message_type type) :
+		ip(ip), port(port), type(type), socket_(io_service_), _aggregator(_aggregator),
 		listen_endpoint_(boost::asio::ip::address::from_string("0.0.0.0"), port)
 	{}
 
@@ -15,6 +15,11 @@ namespace multicast_communication
 		socket_reload();
 		register_listener();
 		io_service_.run();
+	}
+
+	void listener::Stop()
+	{
+		io_service_.stop();
 	}
 
 	void listener::socket_reload()
@@ -64,14 +69,11 @@ namespace multicast_communication
 		}
 		else
 		{
-			//{
-			//	boost::mutex::scoped_lock lock(protect_messages_);
-			//	messages_.push_back(std::string(bt->c_str(), bytes_received));
-			//}
 			register_listener();
 		}
 
-		std::cout << *bt << std::endl;
+		_aggregator.SaveOne(*bt, type);
+		//std::cout << *bt << std::endl;
 	}
 
 	void listener::enlarge_buffer_(buffer_type& bt)
