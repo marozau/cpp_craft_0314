@@ -2,7 +2,9 @@
 #include <fstream>
 #include <string>
 #include "listener.h"
-#include "market_data_processor.h"
+#include "message_types.h"
+#include <boost\thread\thread.hpp>
+#include <boost\thread\xtime.hpp>
 
 bool market_data_receiver::LoadSettings(std::string config_file_path)
 {
@@ -34,7 +36,34 @@ bool market_data_receiver::LoadSettings(std::string config_file_path)
 	return true;
 }
 
-void market_data_receiver::Start() const
+void market_data_receiver::Start()
 {
-	listener
+	using multicast_communication::listener;
+	using multicast_communication::message_type;
+
+	boost::thread_group threads;
+
+	for (int i = 0; i < trade_ports_.size(); ++i)
+	{	
+		listener_ptr listener_p(new listener(trade_ports_[i].first, trade_ports_[i].second, message_type::TRADE));
+		threads.create_thread(boost::bind(&listener::Start, listener_p));
+		//listener_p->Start();
+		listeners.push_back(listener_p);
+	}
+
+	for (int i = 0; i < quote_ports_.size(); ++i)
+	{
+		listener_ptr listener_p(new listener(quote_ports_[i].first, quote_ports_[i].second, message_type::QUOTE));
+		threads.create_thread(boost::bind(&listener::Start, listener_p));
+		//listener_p->Start();
+		listeners.push_back(listener_p);
+	}
+	threads.join_all();
+}
+void market_data_receiver::Stop() const
+{
+	for (auto i = listeners.begin(); i != listeners.end(); ++i)
+	{
+
+	}
 }
