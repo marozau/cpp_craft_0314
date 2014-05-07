@@ -80,33 +80,29 @@ private:
                 files_lock.unlock();
 
                 const string& input_file_name = getPathToFileByIndex(Constants::Paths::begin_input_file_name, index_of_file);
-                std::ifstream input_file(input_file_name, std::ios::in | ios::binary);
-
-                if (!input_file.is_open())
-                {
-                    continue;
-                }
-
                 const string& output_file_name = getPathToFileByIndex(Constants::Paths::begin_output_file_name, index_of_file);
-                std::ofstream output_file(output_file_name, std::ios::out | std::ios::binary);
 
-                boost::uint32_t max_time = 0;
 
-                while (!input_file.eof())
-                {
+				std::ifstream input_file(input_file_name, std::ios::in | ios::binary);
+				
+				if (!input_file.is_open())
+				{
+					continue;
+				}
+				
+				std::ofstream output_file(output_file_name, std::ios::out | std::ios::binary);
+				boost::uint32_t max_time = 0;
+				
+				while (!input_file.eof())
+				{
 					binary_reader::market_message message(input_file);
-						
-					if( input_file.eof() )
-					{
-						break;
-					}
 					
-					if (isValidTimeForMessage(max_time, message))
+					if (isValidTimeForMessage(max_time, message) && message.isValidType())
 					{
-						max_time = std::max<boost::int32_t>(message.time(), max_time);
+						max_time = std::max(message.time(), max_time);
 						message.write(output_file);
 					}
-                }
+				}
 
                 output_file.close();
                 input_file.close();
@@ -121,8 +117,6 @@ private:
 private:
     boost::thread_group m_group_of_slave_threads;
     boost::mutex m_wait_files;
-    boost::mutex m_wait_fill_filles_or_stop_thread;
-    boost::condition m_wait_condition;
     bool m_is_run_threads;
     int  m_file_counter;
 
