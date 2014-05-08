@@ -42,9 +42,9 @@ void market_data_receiver::Start()
 	using namespace multicast_communication;
 
 	boost::thread_group threads;
-
 	aggregator ag;
-	ag.StartOutput();
+
+	threads.create_thread(boost::bind(&aggregator::StartOutput, &ag));
 
 	for (int i = 0; i < trade_ports_.size(); ++i)
 	{	
@@ -59,6 +59,7 @@ void market_data_receiver::Start()
 		threads.create_thread(boost::bind(&listener::Start, listener_p));
 		listeners.push_back(listener_p);
 	}
+
 	threads.join_all();
 }
 

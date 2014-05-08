@@ -22,8 +22,8 @@ namespace multicast_communication
 	public:
 		converter();
 
-		void ConvertToQuote(std::string);
-		void ConvertToTrade(std::string);
+		void ConvertToQuote(std::string&);
+		void ConvertToTrade(std::string&);
 	};
 
 }

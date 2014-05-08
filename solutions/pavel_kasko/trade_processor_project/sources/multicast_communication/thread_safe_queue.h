@@ -15,7 +15,7 @@ public:
 	~thread_safe_queue();
 
 	void push(const T& element);
-	T& pop();
+	T pop();
 	bool IsEmpty();
 };
 
@@ -34,16 +34,15 @@ void thread_safe_queue<T>::push(const T& element)
 }
 
 template<class T>
-T& thread_safe_queue<T>::pop()
+T thread_safe_queue<T>::pop()
 {
 	boost::mutex::scoped_lock lock(locker);
-	if (!IsEmpty())
+	if (!_queue.empty())
 	{
 		T elem = _queue.front();
 		_queue.pop();
 		return elem;
 	}
-		
 }
 
 template<class T>

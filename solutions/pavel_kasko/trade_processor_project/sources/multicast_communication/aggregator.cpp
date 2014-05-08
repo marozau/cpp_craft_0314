@@ -21,7 +21,7 @@ namespace multicast_communication
 
 		threads.create_thread(boost::bind(&aggregator::QuoteOutput, this));
 		threads.create_thread(boost::bind(&aggregator::TradeOutput, this));
-		threads.join_all();
+		//threads.join_all();
 	}
 
 	void aggregator::StopOutput()
@@ -34,7 +34,12 @@ namespace multicast_communication
 		converter conv;
 		while (!end || !quote_data.IsEmpty())
 		{
-			conv.ConvertToQuote(quote_data.pop());
+			if (!quote_data.IsEmpty())
+			{
+				std::string tmp = quote_data.pop();
+				conv.ConvertToQuote(tmp);
+			}
+				
 		}
 	}
 
@@ -43,7 +48,8 @@ namespace multicast_communication
 		converter conv;
 		while (!end || !trade_data.IsEmpty())
 		{
-			conv.ConvertToTrade(trade_data.pop());
+			if (!trade_data.IsEmpty())
+				conv.ConvertToTrade(trade_data.pop());
 		}
 	}
 }
