@@ -12,15 +12,15 @@ namespace multicast_communication
 	public:
 		explicit market_data_processor_derived();
 		virtual ~market_data_processor_derived();
-		void write_data(std::stringstream&);
-
+			
+		void new_trade(const trade_message_ptr&);
+		void new_quote(const quote_message_ptr&);
+	
 	private:
 		boost::mutex locker;
 		std::string file_name;
 		std::ofstream output;
-
-		void new_trade(const trade_message_ptr&);
-		void new_quote(const quote_message_ptr&);
+		void write_data(std::stringstream&);
 	};
 }
 

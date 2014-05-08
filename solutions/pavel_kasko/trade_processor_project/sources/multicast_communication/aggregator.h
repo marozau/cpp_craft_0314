@@ -16,11 +16,13 @@ namespace multicast_communication
 
 		thread_safe_queue<std::string> quote_data;
 		thread_safe_queue<std::string> trade_data;
+
+		market_data_processor_derived& md;
 		
 		void QuoteOutput();
 		void TradeOutput();
 	public:
-		aggregator();
+		aggregator(market_data_processor_derived&);
 
 		void SaveOne(std::string, message_type);
 		void StartOutput();

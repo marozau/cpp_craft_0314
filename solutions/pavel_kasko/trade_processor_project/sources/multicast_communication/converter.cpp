@@ -5,7 +5,7 @@ namespace multicast_communication
 {
 	converter::converter(){}
 
-	void converter::ConvertToQuote(std::string& input)
+	void converter::ConvertToQuote(std::string& input, boost::function<void(quote_message_ptr)>)
 	{
 		size_t pos = 0;
 
@@ -37,7 +37,7 @@ namespace multicast_communication
 
 
 
-	void converter::ConvertToTrade(std::string& input)
+	void converter::ConvertToTrade(std::string& input, boost::function<void(trade_message_ptr)>)
 	{
 	}
 }

@@ -42,7 +42,8 @@ void market_data_receiver::Start()
 	using namespace multicast_communication;
 
 	boost::thread_group threads;
-	aggregator ag;
+	market_data_processor_derived md;
+	aggregator ag(md);
 
 	threads.create_thread(boost::bind(&aggregator::StartOutput, &ag));
 
