@@ -15,8 +15,6 @@ namespace multicast_communication
 	private:
 		virtual void new_trade( const trade_message_ptr& ) = 0;
 		virtual void new_quote( const quote_message_ptr& ) = 0;
-		virtual void new_trade(const std::string) = 0;
-		virtual void new_quote(const std::string) = 0;
 	};
 }
 

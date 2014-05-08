@@ -37,7 +37,7 @@ template<class T>
 T& thread_safe_queue<T>::pop()
 {
 	boost::mutex::scoped_lock lock(locker);
-	if (!IsEmpty)
+	if (!IsEmpty())
 	{
 		T elem = _queue.front();
 		_queue.pop();

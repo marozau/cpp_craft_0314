@@ -44,12 +44,12 @@ void market_data_receiver::Start()
 	boost::thread_group threads;
 
 	aggregator ag;
+	ag.StartOutput();
 
 	for (int i = 0; i < trade_ports_.size(); ++i)
 	{	
 		listener_ptr listener_p(new listener(trade_ports_[i].first, trade_ports_[i].second, ag, message_type::TRADE));
 		threads.create_thread(boost::bind(&listener::Start, listener_p));
-		//listener_p->Start();
 		listeners.push_back(listener_p);
 	}
 
@@ -57,7 +57,6 @@ void market_data_receiver::Start()
 	{
 		listener_ptr listener_p(new listener(quote_ports_[i].first, quote_ports_[i].second, ag, message_type::QUOTE));
 		threads.create_thread(boost::bind(&listener::Start, listener_p));
-		//listener_p->Start();
 		listeners.push_back(listener_p);
 	}
 	threads.join_all();

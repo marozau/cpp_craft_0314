@@ -3,6 +3,8 @@
 
 namespace multicast_communication
 {
+	converter::converter(){}
+
 	void converter::ConvertToQuote(std::string input)
 	{
 		size_t pos = 0;

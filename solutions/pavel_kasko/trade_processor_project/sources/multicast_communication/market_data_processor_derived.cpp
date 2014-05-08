@@ -6,6 +6,9 @@ namespace multicast_communication
 {
 	std::string file_name = "market_data.dat";
 
+	market_data_processor_derived::~market_data_processor_derived(){}
+	market_data_processor_derived::market_data_processor_derived(){}
+	
 	void market_data_processor_derived::new_quote(const quote_message_ptr& quote_ptr)
 	{
 		std::stringstream ss;

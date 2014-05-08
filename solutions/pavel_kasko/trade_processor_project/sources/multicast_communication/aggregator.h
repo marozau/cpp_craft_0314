@@ -6,22 +6,25 @@
 #include "message_types.h"
 #include <boost\function.hpp>
 #include "converter.h"
+#include "boost\thread.hpp"
 
 namespace multicast_communication
 {
 	class aggregator
 	{
+		bool end;
+
 		thread_safe_queue<std::string> quote_data;
 		thread_safe_queue<std::string> trade_data;
-
+		
+		void QuoteOutput();
+		void TradeOutput();
 	public:
+		aggregator();
+
 		void SaveOne(std::string, message_type);
-
-		template<class T> 
-		void StartOutput(boost::function<void(T)> output_f)
-		{
-
-		}
+		void StartOutput();
+		void StopOutput();
 	};
 }
 
