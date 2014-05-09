@@ -1,11 +1,12 @@
-#include "market_data_receiver.h"
 #include <fstream>
 #include <string>
 #include "listener.h"
 #include "message_types.h"
 #include <boost\thread\thread.hpp>
 #include <boost\thread\xtime.hpp>
-#include "aggregator.h"
+#include "market_data_receiver.h"
+
+market_data_receiver::market_data_receiver() : ag (md){}
 
 bool market_data_receiver::LoadSettings(std::string config_file_path)
 {
@@ -42,8 +43,6 @@ void market_data_receiver::Start()
 	using namespace multicast_communication;
 
 	boost::thread_group threads;
-	market_data_processor_derived md;
-	aggregator ag(md);
 
 	threads.create_thread(boost::bind(&aggregator::StartOutput, &ag));
 
@@ -61,13 +60,15 @@ void market_data_receiver::Start()
 		listeners.push_back(listener_p);
 	}
 
-	threads.join_all();
+	//threads.join_all();
 }
 
-void market_data_receiver::Stop() const
+void market_data_receiver::Stop()
 {
 	for (auto i = listeners.begin(); i != listeners.end(); ++i)
 	{
-
+		(**i).Stop();
 	}
+
+	ag.StopOutput();
 }

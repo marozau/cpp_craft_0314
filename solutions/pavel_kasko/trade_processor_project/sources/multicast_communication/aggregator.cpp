@@ -27,6 +27,11 @@ namespace multicast_communication
 	void aggregator::StopOutput()
 	{
 		end = true;
+
+		while (!quote_data.IsEmpty() || !trade_data.IsEmpty())
+		{
+			boost::this_thread::sleep(boost::posix_time::milliseconds(250));
+		}
 	}
 
 	void aggregator::QuoteOutput()

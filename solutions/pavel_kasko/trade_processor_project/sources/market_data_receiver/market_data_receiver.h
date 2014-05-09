@@ -4,6 +4,7 @@
 #include <list>
 #include <listener.h>
 #include <boost\shared_ptr.hpp>
+#include "aggregator.h"
 
 typedef std::pair <std::string, unsigned short> ip_port;
 class market_data_receiver
@@ -16,12 +17,16 @@ class market_data_receiver
 	size_t trade_ports_amount_;
 	size_t quote_ports_amount_;
 	typedef boost::shared_ptr<multicast_communication::listener> listener_ptr;
+	
 	std::vector<listener_ptr> listeners;
+	multicast_communication::market_data_processor_derived md;
+	multicast_communication::aggregator ag;
 
 public:
+	market_data_receiver();
 	bool LoadSettings(std::string);
 	void Start();
-	void Stop() const;
+	void Stop();
 };
 #define _MARKET_DATA_RECEIVER
 #endif //_MARKET_DATA_RECEIVER
