@@ -17,8 +17,9 @@ namespace multicast_communication
 		void new_quote(const quote_message_ptr&);
 	
 	private:
+		const std::string file_name;
+
 		boost::mutex locker;
-		std::string file_name;
 		std::ofstream output;
 		void write_data(std::stringstream&);
 	};

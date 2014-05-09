@@ -73,7 +73,7 @@ namespace multicast_communication
 		}
 
 		_aggregator.SaveOne(*bt, type);
-		std::cout << *bt << std::endl;
+		//std::cout << *bt << std::endl;
 	}
 
 	void listener::enlarge_buffer_(buffer_type& bt)

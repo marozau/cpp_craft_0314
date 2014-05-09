@@ -11,14 +11,16 @@ namespace multicast_communication
 {
 	class converter
 	{
-		const char SOH = 0x01;
-		const char US = 0x1F;
-		const char ETX = 0x03;
+		const char SOH;
+		const char US;
+		const char ETX;
 
 		market_data_processor_derived dp;
 
-		void QuoteOut(boost::function<void(quote_message_ptr)>);
-		void TradeOut(boost::function<void(trade_message_ptr)>);
+		quote_message* GetShortQuoteMessage(std::string&, size_t&);
+		quote_message* GetLongQuoteMessage(std::string&, size_t&);
+		trade_message* GetShortTradeMessage(std::string&, size_t&);
+		trade_message* GetLongTradeMessage(std::string&, size_t&);
 	public:
 		converter();
 

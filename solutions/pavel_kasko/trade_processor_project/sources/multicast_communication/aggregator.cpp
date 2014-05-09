@@ -37,10 +37,17 @@ namespace multicast_communication
 			if (!quote_data.IsEmpty())
 			{
 				std::string tmp = quote_data.pop();
-				conv.ConvertToQuote(tmp, boost::bind(&market_data_processor_derived::new_quote, &md, _1));
+				try
+				{
+					conv.ConvertToQuote(tmp, boost::bind(&market_data_processor_derived::new_quote, &md, _1));
+				}
+				catch(std::logic_error e)
+				{
+					std::cout << e.what() << std::endl;
+				}
 			}
 			else
-				boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+				boost::this_thread::sleep(boost::posix_time::milliseconds(250));
 		}
 	}
 
@@ -50,9 +57,18 @@ namespace multicast_communication
 		while (!end || !trade_data.IsEmpty())
 		{
 			if (!trade_data.IsEmpty())
-				conv.ConvertToTrade(trade_data.pop(), boost::bind(&market_data_processor_derived::new_trade, &md, _1));
+			{
+				try
+				{
+					conv.ConvertToTrade(trade_data.pop(), boost::bind(&market_data_processor_derived::new_trade, &md, _1));
+				}
+				catch(std::logic_error e)
+				{
+					std::cout << e.what() << std::endl;
+				}
+			}
 			else
-				boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+				boost::this_thread::sleep(boost::posix_time::milliseconds(250));
 		}
 	}
 }

@@ -4,10 +4,10 @@
 
 namespace multicast_communication
 {
-	std::string file_name = "market_data.dat";
+	
 
 	market_data_processor_derived::~market_data_processor_derived(){}
-	market_data_processor_derived::market_data_processor_derived(){}
+	market_data_processor_derived::market_data_processor_derived() : file_name("market_data.dat"){}
 	
 	void market_data_processor_derived::new_quote(const quote_message_ptr& quote_ptr)
 	{
@@ -30,7 +30,7 @@ namespace multicast_communication
 	{
 		boost::mutex::scoped_lock lock(locker);
 
-		output.open(BINARY_DIR + std::string("/") + file_name);
+		output.open(BINARY_DIR + std::string("/") + file_name, std::ios::out | std::ios::app);
 		
 		if (!output.good())
 			throw std::logic_error("Cannot open output file.");
