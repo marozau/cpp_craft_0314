@@ -3,6 +3,7 @@
 #include <boost\thread.hpp>
 #include <csignal>
 #include <iostream>
+#include <vld.h>
 
 void interrupt_handler(int s);
 
@@ -30,6 +31,7 @@ int main()
 			boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
 		}
 
+		std::cout << "Finising...\n";
 		_market_data_receiver.Stop();
 		std::cout << "Finished.\n";
 	}

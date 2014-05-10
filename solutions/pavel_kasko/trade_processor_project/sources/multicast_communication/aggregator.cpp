@@ -1,4 +1,5 @@
 #include "aggregator.h"
+#include <vld.h>
 
 namespace multicast_communication
 {
@@ -21,7 +22,6 @@ namespace multicast_communication
 
 		threads.create_thread(boost::bind(&aggregator::QuoteOutput, this));
 		threads.create_thread(boost::bind(&aggregator::TradeOutput, this));
-		//threads.join_all();
 	}
 
 	void aggregator::StopOutput()

@@ -5,6 +5,7 @@
 #include <boost\thread\thread.hpp>
 #include <boost\thread\xtime.hpp>
 #include "market_data_receiver.h"
+#include <vld.h>
 
 market_data_receiver::market_data_receiver() : ag (md){}
 
@@ -50,6 +51,8 @@ void market_data_receiver::Start()
 	{	
 		listener* lsn_tmp = new listener(trade_ports_[i].first, trade_ports_[i].second, message_type::TRADE);
 		(*lsn_tmp).AddHandler(boost::bind(&aggregator::SaveOne, &ag, _1, _2));
+		(*lsn_tmp).AddHandler(boost::bind(&minute_calculator::SaveOne, &mc, _1, _2));
+
 		listener_ptr listener_p(lsn_tmp);
 		threads.create_thread(boost::bind(&listener::Start, listener_p));
 		listeners.push_back(listener_p);
@@ -59,6 +62,8 @@ void market_data_receiver::Start()
 	{
 		listener* lsn_tmp = new listener(quote_ports_[i].first, quote_ports_[i].second, message_type::QUOTE);
 		(*lsn_tmp).AddHandler(boost::bind(&aggregator::SaveOne, &ag, _1, _2));
+		(*lsn_tmp).AddHandler(boost::bind(&minute_calculator::SaveOne, &mc, _1, _2));
+
 		listener_ptr listener_p(lsn_tmp);
 		threads.create_thread(boost::bind(&listener::Start, listener_p));
 		listeners.push_back(listener_p);

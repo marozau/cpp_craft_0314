@@ -5,6 +5,7 @@
 #include <listener.h>
 #include <boost\shared_ptr.hpp>
 #include "aggregator.h"
+#include "minute_calculator.h"
 
 typedef std::pair <std::string, unsigned short> ip_port;
 class market_data_receiver
@@ -21,6 +22,7 @@ class market_data_receiver
 	std::vector<listener_ptr> listeners;
 	multicast_communication::market_data_processor_derived md;
 	multicast_communication::aggregator ag;
+	multicast_communication::minute_calculator mc;
 
 public:
 	market_data_receiver();
