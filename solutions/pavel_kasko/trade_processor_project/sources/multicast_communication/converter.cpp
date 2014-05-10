@@ -8,6 +8,93 @@ namespace multicast_communication
 	{		
 	}
 
+	std::vector<quote_message_ptr>* converter::ConvertToQuote(std::string& input)
+	{
+		size_t pos = 0;
+
+		if (input[pos++] != SOH)
+			throw std::logic_error("Invalid input message: " + input);
+
+		char message_category = input[pos++];
+		char message_type = input[pos++];
+		
+		std::vector<quote_message_ptr>* res = new std::vector<quote_message_ptr>();
+		
+		if (message_category == 'E')
+		{
+			pos += 16; // timestamp position (need 5 more);
+			std::string timestamp = input.substr(pos, 6);
+
+			pos += 6; //message first position security symbol
+
+			while (pos < input.length() && input[pos] != ETX)
+			{
+				if (message_type == 'B') //B = long
+				{
+					quote_message_ptr message = quote_message_ptr(GetLongQuoteMessage(input, pos, timestamp));
+					(*res).push_back(message);
+				}
+				else if (message_type == 'D') //D = short
+				{
+					quote_message_ptr message = quote_message_ptr(GetShortQuoteMessage(input, pos, timestamp));
+					(*res).push_back(message);
+				}
+			
+				char tmp = input[pos];
+
+				if(input[pos] == US)
+					pos++; //first position of next message
+				else
+					break;
+			}
+		}
+
+		return res;
+	}
+
+	std::vector<trade_message_ptr>* converter::ConvertToTrade(std::string& input)
+	{
+		size_t pos = 0;
+
+		if (input[pos++] != SOH)
+			throw std::logic_error("Invalid input message: " + input);
+
+		char message_category = input[pos++];
+		char message_type = input[pos++];
+
+		std::vector<trade_message_ptr>* res = new std::vector<trade_message_ptr>();
+		
+		if (message_category == 'E')
+		{
+			pos += 16; // timestamp position (need 5 more);
+			std::string timestamp = input.substr(pos, 6);
+			pos += 6; //message first position security symbol
+
+			while (pos < input.length() && input[pos] != ETX)
+			{
+				if (message_type == 'B') //B = long
+				{
+					trade_message_ptr message = trade_message_ptr(GetLongTradeMessage(input, pos, timestamp));
+					(*res).push_back(message);
+				}
+				else if (message_type == 'I') //I = short
+				{
+					trade_message_ptr message = trade_message_ptr(GetShortTradeMessage(input, pos, timestamp));
+					(*res).push_back(message);
+				}
+
+				char tmp = input[pos];
+
+				if(input[pos] == US)
+					pos++; //first position of next message
+				else
+					break;
+			}	
+		}
+		
+		return res;
+	}
+
 	void converter::ConvertToQuote(std::string& input, boost::function<void(quote_message_ptr)> out_f)
 	{
 		size_t pos = 0;
@@ -22,19 +109,19 @@ namespace multicast_communication
 			return;
 
 		pos += 16; // timestamp position (need 5 more);
-
+		std::string timestamp = input.substr(pos, 6);
 		pos += 6; //message first position security symbol
 
 		while (pos < input.length() && input[pos] != ETX)
 		{
 			if (message_type == 'B') //B = long
 			{
-				quote_message_ptr message = quote_message_ptr(GetLongQuoteMessage(input, pos));
+				quote_message_ptr message = quote_message_ptr(GetLongQuoteMessage(input, pos, timestamp));
 				out_f(message);
 			}
 			else if (message_type == 'D') //D = short
 			{
-				quote_message_ptr message = quote_message_ptr(GetShortQuoteMessage(input, pos));
+				quote_message_ptr message = quote_message_ptr(GetShortQuoteMessage(input, pos, timestamp));
 				out_f(message);
 			}
 			
@@ -61,19 +148,19 @@ namespace multicast_communication
 			return;
 
 		pos += 16; // timestamp position (need 5 more);
-
+		std::string timestamp = input.substr(pos, 6);
 		pos += 6; //message first position security symbol
 
 		while (pos < input.length() && input[pos] != ETX)
 		{
 			if (message_type == 'B') //B = long
 			{
-				trade_message_ptr message = trade_message_ptr(GetLongTradeMessage(input, pos));
+				trade_message_ptr message = trade_message_ptr(GetLongTradeMessage(input, pos, timestamp));
 				out_f(message);
 			}
 			else if (message_type == 'I') //I = short
 			{
-				trade_message_ptr message = trade_message_ptr(GetShortTradeMessage(input, pos));
+				trade_message_ptr message = trade_message_ptr(GetShortTradeMessage(input, pos, timestamp));
 				out_f(message);
 			}
 
@@ -86,7 +173,7 @@ namespace multicast_communication
 		}
 	}
 
-	trade_message* converter::GetShortTradeMessage(std::string& input, size_t& pos)
+	trade_message* converter::GetShortTradeMessage(std::string& input, size_t& pos, std::string& timestamp)
 	{
 		try
 		{
@@ -105,7 +192,7 @@ namespace multicast_communication
 			pos += 8;
 			pos += 3;
 
-			return new trade_message(security_symbol, trade_price, trade_vol);
+			return new trade_message(timestamp, security_symbol, trade_price, trade_vol);
 		}
 		catch(boost::bad_lexical_cast)
 		{
@@ -113,7 +200,7 @@ namespace multicast_communication
 		}
 	}
 
-	trade_message* converter::GetLongTradeMessage(std::string& input, size_t& pos)
+	trade_message* converter::GetLongTradeMessage(std::string& input, size_t& pos, std::string& timestamp)
 	{
 		try
 		{
@@ -131,7 +218,7 @@ namespace multicast_communication
 			pos += 9;
 			pos += 4;
 
-			return new trade_message(security_symbol, trade_price, trade_vol);
+			return new trade_message(timestamp, security_symbol, trade_price, trade_vol);
 		}
 		catch(boost::bad_lexical_cast)
 		{
@@ -139,7 +226,7 @@ namespace multicast_communication
 		}
 	}
 
-	quote_message* converter::GetLongQuoteMessage(std::string& input, size_t& pos)
+	quote_message* converter::GetLongQuoteMessage(std::string& input, size_t& pos, std::string& timestamp)
 	{
 		try
 		{
@@ -164,7 +251,7 @@ namespace multicast_communication
 			pos += 7;
 			pos += 11;
 			
-			return new quote_message(sequrity_symbol, bid_price, bid_size, offer_price, offer_size);
+			return new quote_message(timestamp, sequrity_symbol, bid_price, bid_size, offer_price, offer_size);
 		}
 		catch(boost::bad_lexical_cast)
 		{
@@ -172,7 +259,7 @@ namespace multicast_communication
 		}
 	}
 
-	quote_message* converter::GetShortQuoteMessage(std::string& input, size_t& pos)
+	quote_message* converter::GetShortQuoteMessage(std::string& input, size_t& pos, std::string& timestamp)
 	{
 		try
 		{
@@ -197,13 +284,11 @@ namespace multicast_communication
 			pos += 3;
 			pos += 3;
 			
-			return new quote_message(sequrity_symbol, bid_price, bid_size, offer_price, offer_size);
+			return new quote_message(timestamp, sequrity_symbol, bid_price, bid_size, offer_price, offer_size);
 		}
 		catch(boost::bad_lexical_cast)
 		{
 			throw std::logic_error("Invalid input message: " + input);
 		}		
 	}
-
-
 }

@@ -7,13 +7,16 @@ namespace multicast_communication
 {
 	class trade_message
 	{
+		std::string _timestamp;
 		std::string _security_symbol;
 		double _price;
 		double _volume;
 
 	public:
 		trade_message();
-		trade_message(std::string _security_symbol, double _price, double _volume);
+		trade_message(std::string _timestamp, std::string _security_symbol, double _price, double _volume);
+		
+		std::string timestamp() const;
 		std::string security_symbol() const;
 		double price() const;
 		double volume() const;

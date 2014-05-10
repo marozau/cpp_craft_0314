@@ -8,6 +8,7 @@ namespace multicast_communication
 {
 	class quote_message
 	{
+		std::string _timestamp;
 		const std::string _security_symbol;
 		double _bid_price;
 		double _bid_volume;
@@ -15,10 +16,11 @@ namespace multicast_communication
 		double _offer_volume;
 
 	public:
-		explicit quote_message(std::string _security_symbol, double _bid_price, double _bid_volume, 
+		explicit quote_message(std::string _timestamp, std::string _security_symbol, double _bid_price, double _bid_volume, 
 			double _offer_price, double _offer_volume);
 		explicit quote_message();
 
+		std::string timestamp() const;
 		std::string security_symbol() const;
 		double bid_price() const;
 		double bid_volume() const;
