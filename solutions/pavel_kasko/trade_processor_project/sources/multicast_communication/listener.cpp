@@ -1,6 +1,5 @@
 #include "listener.h"
 #include <boost\bind.hpp>
-#include <vld.h>
 
 namespace multicast_communication
 {

@@ -3,7 +3,6 @@
 #include <boost\thread.hpp>
 #include <csignal>
 #include <iostream>
-#include <vld.h>
 
 void interrupt_handler(int s);
 
@@ -26,12 +25,9 @@ int main()
 		signal(SIGINT,interrupt_handler);
 		
 		while(!end)
-		{
-			//std::cin.get();
 			boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
-		}
 
-		std::cout << "Finising...\n";
+		std::cout << "Finising... Please, wait until all the data will be flushed.\n";
 		_market_data_receiver.Stop();
 		std::cout << "Finished.\n";
 	}

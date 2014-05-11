@@ -1,5 +1,4 @@
 #include "aggregator.h"
-#include <vld.h>
 
 namespace multicast_communication
 {

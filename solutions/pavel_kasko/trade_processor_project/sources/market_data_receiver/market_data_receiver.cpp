@@ -5,7 +5,6 @@
 #include <boost\thread\thread.hpp>
 #include <boost\thread\xtime.hpp>
 #include "market_data_receiver.h"
-#include <vld.h>
 
 market_data_receiver::market_data_receiver() : ag (md){}
 

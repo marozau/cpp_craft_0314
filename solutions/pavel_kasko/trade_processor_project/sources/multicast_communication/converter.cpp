@@ -178,6 +178,7 @@ namespace multicast_communication
 		try
 		{
 			std::string security_symbol = input.substr(pos, 3);
+			security_symbol.erase(std::remove(security_symbol.begin(), security_symbol.end(), ' '), security_symbol.end());
 
 			pos += 3;
 			pos += 1;
@@ -205,6 +206,7 @@ namespace multicast_communication
 		try
 		{
 			std::string security_symbol = input.substr(pos, 11);
+			security_symbol.erase(std::remove(security_symbol.begin(), security_symbol.end(), ' '), security_symbol.end());
 
 			pos += 11;
 			pos += 22;
