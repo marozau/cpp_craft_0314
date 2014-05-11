@@ -72,7 +72,7 @@ void tests_::minute_calculator_tests()
 			curr_datafeed = ( processor.datafeed_queue.front() );
 			processor.datafeed_queue.pop();
 			output << std::fixed << "SEC " << std::setprecision( 2 ) << curr_datafeed.seconds << std::setprecision( 2 ) << " MIN " << std::setprecision( 2 ) << curr_datafeed.minute;
-			output << " STK " << curr_datafeed.stock_name.c_str() << " OPE " << std::setprecision( 2 ) << curr_datafeed.open_price;
+			output << " STK " << curr_datafeed.stock_name << " OPE " << std::setprecision( 2 ) << curr_datafeed.open_price;
 			output << " HIG " << std::setprecision( 2 ) << curr_datafeed.high_price << " LOW " << std::setprecision( 2 ) << curr_datafeed.low_price;
 			output << " CLO " << std::setprecision( 2 ) << curr_datafeed.close_price << " VOL " << std::setprecision( 2 ) << curr_datafeed.volume;
 			output << " BID " << std::setprecision( 2 ) << curr_datafeed.bid << " ASK " << std::setprecision( 2 ) << curr_datafeed.ask << "\n";

@@ -67,10 +67,8 @@ void tests_::minute_market_data_tests()
 		{
 			std::string curr_datafeed_name = SOURCE_DIR"/minute_market_data_output/" + *files_to_delete_iter + ".dat";
 			std::string curr_datafeed_name_to_compare = SOURCE_DIR"/tests/data/datafeed_to_compare/" + *files_to_delete_iter + ".dat";
-			std::ifstream curr_datafeed;
-			BOOST_CHECK_NO_THROW( curr_datafeed.open( curr_datafeed_name.c_str() ) );
-			std::ifstream curr_datafeed_to_compare;
-			BOOST_CHECK_NO_THROW( curr_datafeed_to_compare.open( curr_datafeed_name_to_compare.c_str() ) );
+			std::ifstream curr_datafeed( curr_datafeed_name.c_str() );
+			std::ifstream curr_datafeed_to_compare( curr_datafeed_name_to_compare.c_str() );
 			std::string buffer;
 			std::string buffer_to_compare;
 			while( getline( curr_datafeed, buffer ) )

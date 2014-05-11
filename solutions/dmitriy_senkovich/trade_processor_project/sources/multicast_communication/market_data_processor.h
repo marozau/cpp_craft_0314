@@ -26,7 +26,8 @@ namespace trade_processor_project
 		{
 			boost::uint32_t seconds;
 			boost::uint32_t minute;
-			std::string stock_name;
+			char* stock_name;
+			size_t length;
 			double open_price;
 			double high_price;
 			double low_price;
@@ -35,6 +36,9 @@ namespace trade_processor_project
 			double bid;
 			double ask;
 			explicit datafeed();
+			explicit datafeed( const datafeed& );
+			const datafeed& operator=( const datafeed& );
+			~datafeed();
 		};
 
 		std::queue<union_message>& union_message_queue;

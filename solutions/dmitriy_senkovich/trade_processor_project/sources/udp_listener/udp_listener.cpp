@@ -14,7 +14,7 @@ udp_listener::udp_listener( boost::asio::io_service& io_service, const std::stri
 	,socket_( io_service_ )
 	,multicast_address_( multicast_address )
 	,trade_( trade )
-	,buffer_( new std::string( default_buffer_size_, '\0' ) )
+	,buffer_( new std::string( default_buffer_size, '\0' ) )
 	,block_message_queue_( block_message_queue )
 {  
 	socket_reload_();
@@ -45,7 +45,7 @@ void udp_listener::register_listen_()
 	char* const buffer_start = &(*buffer_->begin());
 
 	using namespace boost::asio::placeholders;
-	socket_.async_receive( boost::asio::buffer( buffer_start, default_buffer_size_ ), 
+	socket_.async_receive( boost::asio::buffer( buffer_start, default_buffer_size ), 
 		boost::bind( &udp_listener::listen_handler_, this, buffer_, error, bytes_transferred ) );
 }
 

@@ -15,7 +15,7 @@ namespace trade_processor_project
 		typedef boost::shared_ptr< std::string > buffer_type;
 		typedef boost::shared_ptr< boost::asio::io_service > io_service_ptr;
 
-		static const size_t default_buffer_size_ = 1000ul;
+		static const size_t default_buffer_size = 1000ul;
 
 		const bool trade_;
 

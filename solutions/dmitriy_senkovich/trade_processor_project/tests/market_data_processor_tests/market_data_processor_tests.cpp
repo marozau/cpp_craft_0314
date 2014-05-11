@@ -22,7 +22,7 @@ void tests_::market_data_processor_tests()
 
 		BOOST_CHECK_EQUAL( datafeed.seconds, -1 );
 		BOOST_CHECK_EQUAL( datafeed.minute, -1 );
-		BOOST_CHECK_EQUAL( strcmp( datafeed.stock_name.c_str(), "\0" ), 0 );
+		BOOST_CHECK_EQUAL( strcmp( datafeed.stock_name, "\0" ), 0 );
 		BOOST_CHECK_EQUAL( datafeed.open_price, 0 );
 		BOOST_CHECK_EQUAL( datafeed.high_price, 0 );
 		BOOST_CHECK_EQUAL( datafeed.low_price, 0 );
@@ -70,7 +70,10 @@ void tests_::market_data_processor_tests()
 		market_data_processor::datafeed d;
 		d.seconds = 2014;
 		d.minute = 2014;
-		d.stock_name = "cpp";
+		d.stock_name[0] = 'c';
+		d.stock_name[0] = 'p';
+		d.stock_name[0] = 'p';
+		d.stock_name[0] = '\0';
 		d.open_price = 2014.00;
 		d.high_price = 2014.00;
 		d.low_price = 2014.00;

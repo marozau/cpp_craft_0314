@@ -60,14 +60,20 @@ void minute_market_data::create_data()
 }
 void minute_market_data::write_datafeed( market_data_processor::datafeed& data )
 {
-	std::string output_name = SOURCE_DIR"/minute_market_data_output/" + data.stock_name + ".dat";
+	std::string output_name = SOURCE_DIR"/minute_market_data_output/";
+	char* stock = new char[data.length + 1];
+	memcpy( stock, data.stock_name, data.length );
+	stock[data.length] = '\0';
+	output_name += stock;
+	output_name += ".dat";
+	delete []stock;
 	files_to_delete.insert( data.stock_name );
 	std::ofstream output( output_name.c_str(), std::ios_base::binary|std::ios_base::app );
 	if( !output.is_open() )
 		return;
 	if( !output.write( reinterpret_cast< char* >( &data.seconds ), sizeof( boost::uint32_t ) ) )
 		return;
-	if( !output.write( data.stock_name.c_str(), data.stock_name.size() ) )
+	if( !output.write( data.stock_name, 16 ) )
 		return;
 	if( !output.write( reinterpret_cast< char* >( &data.open_price ), sizeof( double ) ) )
 		return;
@@ -89,7 +95,8 @@ void minute_market_data::stop_work()
 {
 	while( !processor_.datafeed_queue.empty() )
 	{
-		market_data_processor::datafeed data = processor_.datafeed_queue.front();
+		market_data_processor::datafeed data;
+		data = processor_.datafeed_queue.front();
 		processor_.datafeed_queue.pop();
 		write_datafeed( data );
 	}

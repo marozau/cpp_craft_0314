@@ -19,7 +19,9 @@ void minute_calculator::calculating( const market_data_processor::union_message&
 		{
 			minute_datafeed_[tm.security_symbol()].minute = tm.minute();
 			minute_datafeed_[tm.security_symbol()].seconds = tm.minute() * 60;
-			minute_datafeed_[tm.security_symbol()].stock_name = tm.security_symbol();
+			memcpy( minute_datafeed_[tm.security_symbol()].stock_name, tm.security_symbol().c_str(), tm.security_symbol().size() );
+			minute_datafeed_[tm.security_symbol()].stock_name[tm.security_symbol().size()] = '\0';
+			minute_datafeed_[tm.security_symbol()].length = tm.security_symbol().size();
 			minute_datafeed_[tm.security_symbol()].open_price = tm.price();
 			minute_datafeed_[tm.security_symbol()].close_price = tm.price();
 			minute_datafeed_[tm.security_symbol()].low_price = tm.price();
@@ -62,7 +64,9 @@ void minute_calculator::calculating( const market_data_processor::union_message&
 		{
 			minute_datafeed_[qm.security_symbol()].minute = qm.minute();
 			minute_datafeed_[qm.security_symbol()].seconds = qm.minute() * 60;
-			minute_datafeed_[qm.security_symbol()].stock_name = qm.security_symbol();
+			memcpy( minute_datafeed_[qm.security_symbol()].stock_name, qm.security_symbol().c_str(), qm.security_symbol().size() );
+			minute_datafeed_[qm.security_symbol()].stock_name[qm.security_symbol().size()] = '\0';
+			minute_datafeed_[qm.security_symbol()].length = qm.security_symbol().size();
 			minute_datafeed_[qm.security_symbol()].bid = qm.bid_volume();
 			minute_datafeed_[qm.security_symbol()].ask = qm.offer_volume();
 			return;

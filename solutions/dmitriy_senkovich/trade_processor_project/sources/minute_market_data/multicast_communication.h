@@ -41,14 +41,14 @@ namespace trade_processor_project
 	private:
 		boost::mutex lock_output_;
 	
-		std::vector< address > trade_ports_;
-		std::vector< address > quote_ports_;
+		const std::vector< address > trade_ports_;
+		const std::vector< address > quote_ports_;
 
-		size_t trade_thread_size_;
-		size_t quote_thread_size_;
+		const size_t trade_thread_size_;
+		const size_t quote_thread_size_;
 
-		size_t trade_ports_amount_;
-		size_t quote_ports_amount_;
+		const size_t trade_ports_amount_;
+		const size_t quote_ports_amount_;
 
 
 	public:
