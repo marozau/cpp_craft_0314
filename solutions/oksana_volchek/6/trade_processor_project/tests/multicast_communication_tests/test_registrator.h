@@ -6,7 +6,6 @@ namespace multicast_communication
 	{
 		void quote_message_tests();
 		void trade_message_tests();
-
 		void market_data_processor_tests();
 	}
 }
