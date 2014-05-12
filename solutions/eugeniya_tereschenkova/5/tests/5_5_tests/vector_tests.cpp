@@ -7,6 +7,15 @@
 
 void task5_5::tests_::vector_tests()
 {
+  	{
+    		struct A
+    		{
+      			int x;
+    		};
+    		vector< A > v;
+    		v.resize(100);
+		BOOST_CHECK_EQUAL( v.size(), 100 );
+  	}
 	{
 		vector< int > int_vector;
 		BOOST_CHECK_EQUAL( int_vector.size(), 0ul );
