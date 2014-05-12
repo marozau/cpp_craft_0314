@@ -19,6 +19,8 @@ namespace multicast_communication
 
     class market_data_processor : protected virtual boost::noncopyable
     {
+	private:
+	    boost::mutex mtx_out_;
         public:
             explicit market_data_processor();
             virtual ~market_data_processor(){}
@@ -28,26 +30,26 @@ namespace multicast_communication
             void save_quote(const quote_message_ptr m);
 
             typedef std::map<char, int> denom_type;
-			typedef std::vector<message_type> types_messages_;
+	    typedef std::vector<message_type> types_messages_;
         protected:
             friend class market_data_receiver;
             static denom_type denom_map; 
-			static int get_denominator(const char c); 
-			virtual void new_trade( const  trade_message_ptr message );
-			virtual void new_quote(const  quote_message_ptr message ); 
+	    static int get_denominator(const char c); 
+	    virtual void new_trade( const  trade_message_ptr message );
+	    virtual void new_quote(const  quote_message_ptr message ); 
 
             thread_safe_queue< trade_message_ptr > trades_;
             thread_safe_queue< quote_message_ptr > quotes_;
 
-			static void split_block(const message_type & m, types_messages_& v);
+	    static void split_block(const message_type & m, types_messages_& v);
 
             template <typename T>
                 static void parse_quote( quote_message_ptr quote_message )
                 {
                     if (!quote_message)
-					{
-						return;
-					}
+	            {
+		        return;
+		    }
 
                     if(!is_valid_type<short_quote_message>(quote_message->raw_) && !is_valid_type<long_quote_message>(quote_message->raw_) )
                         throw std::logic_error("Invalid quote type");
@@ -68,10 +70,10 @@ namespace multicast_communication
             template <typename T>
                 static void parse_trade( trade_message_ptr trade_message )
                 {
-					if (!trade_message)
-					{
-						return;
-					}
+		    if (!trade_message)
+		    {
+		        return;
+		    }
                     if(!is_valid_type<short_trade_message>(trade_message->raw_) && !is_valid_type<long_trade_message>(trade_message->raw_) )
                         throw std::logic_error("Invalid trade type");
                     const message_type& raw = trade_message->raw_;
