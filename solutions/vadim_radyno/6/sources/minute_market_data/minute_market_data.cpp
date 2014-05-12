@@ -53,8 +53,8 @@ void save_minute_datafeed( const map_datafeeds_type& data )
 void minute_market_data::solution::start()
 {
 	static const char* config_file = BINARY_DIR "/config.ini";
-    config::reader reader(config_file);
-    if(!reader.opened())
+    	config::reader reader(config_file);
+    	if(!reader.opened())
 	{ 
 		return;
 	}
@@ -69,23 +69,21 @@ void minute_market_data::solution::start()
 	const_vector_addr_port& quotes = reader.quotes();
 
 	multicast_communication::market_data_processor processor;
-    multicast_communication::market_data_receiver receiver( trade_threads_size, quote_threads_size, 
+    	multicast_communication::market_data_receiver receiver( trade_threads_size, quote_threads_size, 
 								   trades, quotes, processor );
 
-    receiver.start();
+    	receiver.start();
 
 	minute_calculator::calculator calc(processor.trades(), processor.quotes());
-    calc.start();
+    	calc.start();
 
 	boost::mutex mutex_press_ctrl_c; 
-    boost::mutex::scoped_lock lock(mutex_press_ctrl_c);
-    cond_var_press_ctrl_c.wait(lock); 
+    	boost::mutex::scoped_lock lock(mutex_press_ctrl_c);
+    	cond_var_press_ctrl_c.wait(lock); 
 
 	receiver.stop();
 	calc.stop();
-	static const char* market_data_file = BINARY_DIR "/market_data.dat";
-	processor.save(market_data_file);
-    map_datafeeds_type data = calc.get_minute_datafeed();
+    	map_datafeeds_type data = calc.get_minute_datafeed();
 
 	save_minute_datafeed(data);
 }
