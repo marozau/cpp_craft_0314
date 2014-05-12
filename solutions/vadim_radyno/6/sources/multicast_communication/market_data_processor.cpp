@@ -8,24 +8,31 @@
 
 namespace multicast_communication
 {
+  	market_data_processor::market_data_processor() 
+  	{
+    	    boost::mutex::scoped_lock lock( mtx_out_ );
+    	    std::ofstream os(multicast_communication::market_data_file);
+            os.close();
+  	}
 	void market_data_processor::new_trade(const trade_message_ptr message)
 	{
-        if(is_valid_type<short_trade_message>( message->raw_ )) 
-            parse_trade<short_trade_message>( message );
-        else if(is_valid_type<long_trade_message>( message->raw_ )) 
-            parse_trade<long_trade_message>( message ); 
-        trades_.push( message );
-    }
+            if(is_valid_type<short_trade_message>( message->raw_ )) 
+                parse_trade<short_trade_message>( message );
+            else if(is_valid_type<long_trade_message>( message->raw_ )) 
+                parse_trade<long_trade_message>( message ); 
+	    market_data_processor::save_trade(message); 
+            trades_.push( message );
+        }
 
 	void market_data_processor::new_quote(const quote_message_ptr message)
 	{
-        if(is_valid_type<short_quote_message>( message->raw_ ))
-            parse_quote<short_quote_message>( message );
-        else if(is_valid_type<long_quote_message>( message->raw_ ))
-            parse_quote<long_quote_message>( message );
-
-        quotes_.push( message );
-    }
+            if(is_valid_type<short_quote_message>( message->raw_ ))
+                parse_quote<short_quote_message>( message );
+            else if(is_valid_type<long_quote_message>( message->raw_ ))
+                parse_quote<long_quote_message>( message );
+	    market_data_processor::save_quote(message); 
+            quotes_.push( message );
+        }
 
     thread_safe_queue< trade_message_ptr >& market_data_processor::trades()
     { 
@@ -36,31 +43,36 @@ namespace multicast_communication
         return quotes_;
     }
 
-    void market_data_processor::save(const std::string& filename)
+    void market_data_processor::save_trade(const trade_message_ptr m)
     { 
-        std::ofstream os(filename.c_str(), std::ios_base::out);
-        while(!trades_.empty())
-        {
-            trade_message_ptr m;
-            trades_.pop(m);
-            os << "T " << 
-                m->security_symbol_ << " " << 
-                m->price_ << " " << 
-                m->volume_ << 
-                std::endl;
-        }
-        while(!quotes_.empty())
-        {
-            quote_message_ptr m;
-            quotes_.pop(m);
-            os << "Q " << 
-                m->security_symbol_ << " " << 
-                m->bid_price_ << " " << 
-                m->bid_size_ << " " << 
-                m->offer_price_ << " " << 
-                m->offer_size_ << 
-                std::endl;
-        }
+		    boost::mutex::scoped_lock lock( mtx_out_);
+        std::ofstream os(multicast_communication::market_data_file, std::ios::app);
+        if (!os.is_open()) 
+          throw std::logic_error( "Output file was not opened");
+        os << "T " << 
+          m->security_symbol_ << " " << 
+          m->price_ << " " << 
+          m->volume_ << 
+          std::endl;
+        os.close();
+        lock.unlock();
+    }
+    void market_data_processor::save_quote(const quote_message_ptr m)
+    { 
+      boost::mutex::scoped_lock lock( mtx_out_ );
+        std::ofstream os(multicast_communication::market_data_file, std::ios::app);
+		    
+        if (!os.is_open()) 
+          throw std::logic_error( "Output file was not opened");
+        os << "Q " << 
+          m->security_symbol_ << " " << 
+          m->bid_price_ << " " << 
+          m->bid_size_ << " " << 
+          m->offer_price_ << " " << 
+          m->offer_size_ << 
+          std::endl;
+        os.close();
+        lock.unlock();
     } 
 
 	void market_data_processor::split_block(const message_type & m, types_messages_& v)
