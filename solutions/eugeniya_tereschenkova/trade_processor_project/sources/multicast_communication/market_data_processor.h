@@ -15,15 +15,17 @@
 namespace multicast_communication
 {
     using namespace common;
+    static const char* market_data_file = BINARY_DIR "/market_data.dat";
 
     class market_data_processor : protected virtual boost::noncopyable
     {
         public:
-            explicit market_data_processor() { }
+            explicit market_data_processor();
             virtual ~market_data_processor(){}
             virtual thread_safe_queue< trade_message_ptr >& trades();
             virtual thread_safe_queue< quote_message_ptr >& quotes();
-            void save(const std::string& filename);
+            void save_trade(const trade_message_ptr m);
+            void save_quote(const quote_message_ptr m);
 
             typedef std::map<char, int> denom_type;
 			typedef std::vector<message_type> types_messages_;
