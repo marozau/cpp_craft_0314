@@ -70,18 +70,14 @@ namespace task5_5
 	template< typename T >
 	vector< T >& vector< T >::operator=( const vector< T >& v )
 	{
-		if (mBegin)
-			delete [] mBegin;
-
-		size_t size_loc = v.size();
-
+		if ( &v == this )
+			return *this;
+		delete [] mBegin;
 		mBegin = new T[v.capacity()];
 		mLast = mBegin + v.capacity();
+		const size_t size_loc = v.size();
 		mEnd = mBegin + size_loc;
-
-		for (size_t i = 0; i < size_loc ; ++i)
-			*(mBegin + i) = v[i];
-
+		std:: copy(v.begin(), v.end(), mBegin);
 		return *this;
 	}
 
@@ -100,7 +96,7 @@ namespace task5_5
 	template< typename T >
 	void vector< T >::insert( const size_t index, const T& value )
 	{
-		size_t size_loc = size();
+		const size_t size_loc = size();
 
 		if (index >= capacity())
 			reserve(size_loc * 2);
@@ -136,19 +132,16 @@ namespace task5_5
 	template< typename T >
 	void vector< T >::resize( const size_t count )
 	{
-		size_t capasityLoc = capacity();
-
+		const size_t capasityLoc = capacity();
 		reserve(count);
 
 		T* begin = new T[count];
+    
+		const size_t size_loc = count < size() ? count : size();
+    
+		std::copy(mBegin, mBegin + size_loc, begin);
 
-		size_t size_loc = count < size() ? count : size();
-
-		for (size_t i = 0; i < size_loc ; ++i)
-			*(begin + i) = *(mBegin + i);
-
-		for (size_t i = size_loc; i < count ; ++i)
-			*(begin + i) = 0;
+		std::fill(begin + size_loc, begin + count, T());
 
 		delete [] mBegin;
 
@@ -163,12 +156,10 @@ namespace task5_5
 			return;
 
 		T* begin = new T[count];
-		size_t size_loc = size();
+		const size_t size_loc = size();
 
-		for (size_t i = 0; i < size_loc ; ++i)
-		{
-			*(begin + i) = *(mBegin + i);
-		}
+		
+		std:: copy(mBegin, mBegin + size_loc, begin);
 
 		delete [] mBegin;
 
