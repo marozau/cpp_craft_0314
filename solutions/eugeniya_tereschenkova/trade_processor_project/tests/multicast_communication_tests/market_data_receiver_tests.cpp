@@ -42,13 +42,11 @@ namespace multicast_communication
                 t_addr.push_back( std::make_pair("233.200.79.134", 62134) );
                 t_addr.push_back( std::make_pair("233.200.79.135", 62135) );
 
-				market_data_processor processor;
-				static const char* market_data_file = BINARY_DIR "/market_data.dat";
+		market_data_processor processor;
                 BOOST_CHECK_NO_THROW(
 					market_data_receiver receiver(2, 2, t_addr, q_addr, processor ); 
 					receiver.start(); 
 					receiver.stop();
-					processor.save(market_data_file);
 					); 
             }
         }
