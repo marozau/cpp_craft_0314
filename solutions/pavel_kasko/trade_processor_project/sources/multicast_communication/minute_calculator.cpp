@@ -68,16 +68,34 @@ namespace multicast_communication
 			std::uint32_t s_1990 = Get1990Seconds((*trade).timestamp());
 
 			data_feed* _data_feed = new data_feed(s_1990, sec_symbol);
-			(*_data_feed).IncreaseVolume((*trade).volume());
 			(*_data_feed).SetOpenPrice((*trade).price());
 			(*_data_feed).SetHighPrice((*trade).price());
 			(*_data_feed).SetLowPrice((*trade).price());
-			(*_data_feed).SetClosePrice((*trade).price());
 			(*_data_feed).SetTradeMinute(minute);
 
 			d_feeds[sec_symbol] = _data_feed;
 		}
-		else if((*d_feeds[sec_symbol]).tradeMinute() == minute)
+		else if((*d_feeds[sec_symbol]).tradeMinute() != minute)
+		{
+			(*d_feeds[sec_symbol]).SetTradeMinute(minute);
+
+			(*d_feeds[sec_symbol]).PrintTradePart(quote_flushed);
+			trade_flushed = true;
+			
+			(*d_feeds[sec_symbol]).ResetTradePart();
+
+			(*d_feeds[sec_symbol]).SetOpenPrice((*trade).price());
+			
+			std::uint32_t s_1990 = Get1990Seconds((*trade).timestamp());
+			(*d_feeds[sec_symbol]).SetMinute(s_1990);
+			
+			if(quote_flushed)
+			{
+				quote_flushed = trade_flushed =  false;
+			}				
+		}
+
+		if((*d_feeds[sec_symbol]).tradeMinute() == minute)
 		{
 			(*d_feeds[sec_symbol]).IncreaseVolume((*trade).volume());
 			
@@ -86,21 +104,8 @@ namespace multicast_communication
 
 			else if((*d_feeds[sec_symbol]).lowPrice() > (*trade).price())
 				(*d_feeds[sec_symbol]).SetLowPrice((*trade).price());
-		}
-		else
-		{
-			(*d_feeds[sec_symbol]).SetTradeMinute(minute);
 
-			(*d_feeds[sec_symbol]).PrintTradePart(quote_flushed);
-			trade_flushed = true;
-			
-			(*d_feeds[sec_symbol]).ResetTradePart();
-			if(quote_flushed)
-			{
-				std::uint32_t s_1990 = Get1990Seconds((*trade).timestamp());
-				(*d_feeds[sec_symbol]).SetMinute(s_1990);
-				quote_flushed = trade_flushed =  false;
-			}				
+			(*d_feeds[sec_symbol]).SetClosePrice((*trade).price());
 		}
 	}
 
@@ -116,18 +121,11 @@ namespace multicast_communication
 			std::uint32_t s_1990 = Get1990Seconds((*quote).timestamp());
 			
 			data_feed* _data_feed = new data_feed(s_1990, sec_symbol);
-			(*_data_feed).IncreaseAsk((*quote).offer_price());
-			(*_data_feed).IncreaseBid((*quote).bid_price());
 			(*_data_feed).SetQuoteMinute(minute);
 
 			d_feeds[sec_symbol] = _data_feed;
 		}
-		else if((*d_feeds[sec_symbol]).quoteMinure() == minute)
-		{
-			(*d_feeds[sec_symbol]).IncreaseAsk((*quote).offer_price());
-			(*d_feeds[sec_symbol]).IncreaseBid((*quote).bid_price());
-		}
-		else
+		else if((*d_feeds[sec_symbol]).quoteMinure() != minute)
 		{
 			(*d_feeds[sec_symbol]).SetQuoteMinute(minute);
 			
@@ -135,10 +133,17 @@ namespace multicast_communication
 			quote_flushed = true;
 			
 			(*d_feeds[sec_symbol]).ResetQuotePart();
+
 			if(trade_flushed)
 			{
 				quote_flushed = trade_flushed =  false;
 			}
+		}
+
+		if((*d_feeds[sec_symbol]).quoteMinure() == minute)
+		{
+			(*d_feeds[sec_symbol]).IncreaseAsk((*quote).offer_price());
+			(*d_feeds[sec_symbol]).IncreaseBid((*quote).bid_price());
 		}
 	}
 
