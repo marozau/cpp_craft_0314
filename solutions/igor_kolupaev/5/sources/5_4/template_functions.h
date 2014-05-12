@@ -10,12 +10,7 @@
 namespace task5_4
 {
 	template< bool delete_first, typename Container >
-	void clear_container( Container& )
-	{
-	}
-
-	template<bool delete_first, typename T>
-	void clear_container( std::vector<T>& c )
+	void clear_container( Container& c )
 	{
 		c.clear();
 	}
@@ -36,12 +31,6 @@ namespace task5_4
 	}
 
 	template<bool delete_first, typename T>
-	void clear_container( std::list<T>& c )
-	{
-		c.clear();
-	}
-
-	template<bool delete_first, typename T>
 	void clear_container( std::list<T*>& c )
 	{
 		if( delete_first )
@@ -53,12 +42,6 @@ namespace task5_4
 			}
 		}
 
-		c.clear();
-	}
-
-	template<bool delete_first, typename T>
-	void clear_container( std::set<T>& c )
-	{
 		c.clear();
 	}
 
@@ -78,14 +61,9 @@ namespace task5_4
 	}
 
 	template< bool delete_first, bool delete_second, typename Container >
-	void clear_container( Container& )
+	void clear_container( Container& c )
 	{
-	}
-
-	template< bool delete_first, bool delete_second, typename K, typename T >
-	void clear_container( std::map<K,T>& m )
-	{
-		m.clear();
+		c.clear();
 	}
 
 	template< bool delete_first, bool delete_second, typename K, typename T >
