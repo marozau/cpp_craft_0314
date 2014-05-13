@@ -126,7 +126,7 @@ namespace task5_5
 		if(size>capacity_)
 			change_capacity(size);
 		for(size_t i=size_; i<size; ++i)
-			vec[i]=T(0);
+			vec[i]=T();
 		size_=size;
 
 	}
