@@ -1,11 +1,12 @@
 #ifndef _MINUTE_CALCULATOR_MINUTE_CALCULATOR_H_
 #define _MINUTE_CALCULATOR_MINUTE_CALCULATOR_H_
 
-#include "boost/cstdint.hpp"
+#include <boost/cstdint.hpp>
 #include <map>
 #include <string>
 #include <fstream>
 #include <boost/noncopyable.hpp>
+#include <boost/thread.hpp>
 
 #include "thread_safe_queue.h"
 #include "trade_message.h"
@@ -38,19 +39,23 @@ namespace minute_calculator {
 		std::map<std::string, minute_datafeed> datafeed_;
 		boost::uint32_t current_time_;
 		bool is_active_;
-		boost::mutex mtx_;
+		boost::mutex q_mtx_;
+		boost::mutex t_mtx_;
+		boost::thread_group threads_;
 
-		void start();
 		void process_trade_msg();
 		void process_quote_msg();
 		void init_stockname(std::string s);
 		void print_datafeed();
 		void clear_datafeed();
+		void start();
 
 		public:
-			explicit minute_calculator(tr_queue & main_trade_queue, qt_queue & main_quote_queue);
+			explicit minute_calculator(trade_queue_ptr & main_trade_queue, quote_queue_ptr & main_quote_queue);
 			~minute_calculator();
+			const boost::uint32_t get_current_time() const;
 			void stop();
+
 	};
 }
 #endif // _MINUTE_CALCULATOR_MINUTE_CALCULATOR_H_

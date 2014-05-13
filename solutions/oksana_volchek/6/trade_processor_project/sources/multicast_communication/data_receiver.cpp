@@ -6,10 +6,10 @@
 
 
 multicast_communication::data_receiver::data_receiver(size_t trade_thread_size, size_t quote_thread_size, std::vector< multicast_pair > & trade_ports, 
-				std::vector< multicast_pair > & quote_ports, tr_queue & main_trade_queue, qt_queue & main_quote_queue) : 
+				std::vector< multicast_pair > & quote_ports, trade_queue_ptr & main_trade_queue, quote_queue_ptr & main_quote_queue) : 
 						trade_thread_size_ (trade_thread_size), quote_thread_size_ (quote_thread_size), 
 						trade_ports_ (trade_ports), quote_ports_ (quote_ports), processing_ (new market_data_writer(output_)),
-						t_pointer_ (&main_trade_queue), q_pointer_ (&main_quote_queue)
+						t_pointer_ (main_trade_queue), q_pointer_ (main_quote_queue)
 {
 	output_.open(BINARY_DIR + consts::file_path::output_path, std::fstream::app);
 
@@ -34,7 +34,7 @@ multicast_communication::data_receiver::data_receiver(size_t trade_thread_size, 
 }
 
 multicast_communication::data_receiver::~data_receiver(){
-
+	stop();
 }
 
 void multicast_communication::data_receiver::stop(){

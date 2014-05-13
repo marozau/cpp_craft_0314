@@ -6,14 +6,13 @@
 
 market_data_receiver::multicast_processor::multicast_processor() :
 				trade_thread_size_ (0), quote_thread_size_ (0), 
-				trade_ports_ (NULL), quote_ports_ (NULL)
+				trade_ports_ (NULL), quote_ports_ (NULL), trade_queue_ (new tr_queue), quote_queue_ (new qt_queue)
 {
 
 }
 
 market_data_receiver::multicast_processor::~multicast_processor() {
-	data_receiver_obj_->stop();
-	minute_calculator_obj_->stop();	
+
 }
 
 void market_data_receiver::multicast_processor::start(){

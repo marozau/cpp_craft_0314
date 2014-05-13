@@ -6,6 +6,6 @@ find_package( Boost ${SEARCH_PARAMETERS} COMPONENTS
 
 link_directories(${Boost_LIBRARY_DIRS})
 
-compile_project( ${tests_name} "*.cpp" "*.h" BINARY tests ${module_name} Boost )
+compile_project( ${tests_name} "*.cpp" "*.h" BINARY tests ${module_name} multicast_communication Boost )
 register_test( ${tests_name} 5 4 )
 
