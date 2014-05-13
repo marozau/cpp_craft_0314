@@ -31,6 +31,8 @@ namespace trade_processor_project
 		std::string multicast_address_;
 
 	public:
+		static bool to_stop;
+		static boost::mutex lock_to_stop;
 		static boost::mutex lock_trade_queue_;
 		static boost::mutex lock_quote_queue_;
 		static boost::condition_variable trade_cond_var_;

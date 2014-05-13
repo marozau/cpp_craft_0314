@@ -61,12 +61,8 @@ void minute_market_data::create_data()
 void minute_market_data::write_datafeed( market_data_processor::datafeed& data )
 {
 	std::string output_name = SOURCE_DIR"/minute_market_data_output/";
-	char* stock = new char[data.length + 1];
-	memcpy( stock, data.stock_name, data.length );
-	stock[data.length] = '\0';
-	output_name += stock;
+	output_name += data.stock_name;
 	output_name += ".dat";
-	delete []stock;
 	files_to_delete.insert( data.stock_name );
 	std::ofstream output( output_name.c_str(), std::ios_base::binary|std::ios_base::app );
 	if( !output.is_open() )

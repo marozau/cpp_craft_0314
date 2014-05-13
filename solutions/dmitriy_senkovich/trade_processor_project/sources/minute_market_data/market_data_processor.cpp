@@ -11,7 +11,6 @@ market_data_processor::datafeed::datafeed()
 	:seconds( -1 )
 	,minute( -1 )
 	,stock_name( new char[16] )
-	,length( 0 )
 	,open_price( 0 )
 	,high_price( 0 )
 	,low_price( 0 )
@@ -35,7 +34,6 @@ market_data_processor::datafeed::datafeed( const datafeed& d )
 	for( ; d.stock_name[i] != '\0'; i++ )
 		stock_name[i] = d.stock_name[i];
 	stock_name[i] = '\0';
-	length = d.length;
 	open_price = d.open_price;
 	high_price = d.high_price;
 	low_price = d.low_price;
@@ -56,7 +54,6 @@ const market_data_processor::datafeed& market_data_processor::datafeed::operator
 	for( ; d.stock_name[i] != '\0'; i++ )
 		stock_name[i] = d.stock_name[i];
 	stock_name[i] = '\0';
-	length = d.length;
 	open_price = d.open_price;
 	high_price = d.high_price;
 	low_price = d.low_price;

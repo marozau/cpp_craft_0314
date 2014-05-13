@@ -27,7 +27,7 @@ void tests_::minute_market_data_tests()
 		std::vector< std::pair< std::string, unsigned short > > trade_ports, quote_ports;
 		quote_ports.push_back( std::make_pair( "224.0.0.0", 50000 ));
 		trade_ports.push_back( std::make_pair( "224.0.0.1", 50001 ));
-		minute_market_data application( 1, 1, 1, 1, trade_ports, quote_ports, processor );
+		minute_market_data application( 1, 1, 4, 4, trade_ports, quote_ports, processor );
 		boost::thread application_thread( boost::bind( &minute_market_data::start, &application ) );
 
 		boost::asio::io_service service;
@@ -55,7 +55,7 @@ void tests_::minute_market_data_tests()
 				boost::this_thread::sleep_for( boost::chrono::milliseconds( 5 ) );
 			}
 		}
-		boost::this_thread::sleep_for( boost::chrono::milliseconds( 1 ) );
+		boost::this_thread::sleep_for( boost::chrono::seconds( 2 ) );
 		quote_input.close();
 		trade_input.close();
 		service.stop();

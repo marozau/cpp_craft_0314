@@ -27,7 +27,7 @@ void tests_::multicast_communication_tests()
 		std::vector< std::pair< std::string, unsigned short > > trade_ports, quote_ports;
 		quote_ports.push_back( std::make_pair( "224.0.0.0", 50000 ));
 		trade_ports.push_back( std::make_pair( "224.0.0.1", 50001 ));
-		multicast_communication udp_controller( 1, 1, 16, 16, trade_ports, quote_ports, processor );
+		multicast_communication udp_controller( 1, 1, 4, 4, trade_ports, quote_ports, processor );
 		boost::thread udp_controller_thread( boost::bind( &multicast_communication::start, &udp_controller ) );
 
 		boost::asio::io_service service;
@@ -64,7 +64,7 @@ void tests_::multicast_communication_tests()
 		udp_controller_thread.join();
 
 		std::ifstream data( SOURCE_DIR"/multicast_communication_output/market_data.dat" );
-		std::fstream data_to_compare( SOURCE_DIR"/tests/data/market_data_to_compare.dat" );
+		std::ifstream data_to_compare( SOURCE_DIR"/tests/data/market_data_to_compare.dat" );
 		size_t data_lines_amount = 0;
 		size_t data_to_compare_lines_amount = 0;
 		data_map data_lines;

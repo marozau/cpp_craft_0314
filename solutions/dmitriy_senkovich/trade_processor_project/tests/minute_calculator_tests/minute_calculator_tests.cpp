@@ -25,7 +25,7 @@ void tests_::minute_calculator_tests()
 		std::vector< std::pair< std::string, unsigned short > > trade_ports, quote_ports;
 		quote_ports.push_back( std::make_pair( "224.0.0.0", 50000 ));
 		trade_ports.push_back( std::make_pair( "224.0.0.1", 50001 ));
-		multicast_communication udp_controller( 1, 1, 16, 16, trade_ports, quote_ports, processor );
+		multicast_communication udp_controller( 1, 1, 4, 4, trade_ports, quote_ports, processor );
 		minute_calculator calculator( processor );
 		boost::thread udp_controller_thread( boost::bind( &multicast_communication::start, &udp_controller ) );
 		boost::thread calculator_thread( boost::bind( &minute_calculator::start, &calculator ) );
@@ -55,7 +55,7 @@ void tests_::minute_calculator_tests()
 				boost::this_thread::sleep_for( boost::chrono::milliseconds( 5 ) );
 			}
 		}
-		boost::this_thread::sleep_for( boost::chrono::milliseconds( 1 ) );
+		boost::this_thread::sleep_for( boost::chrono::milliseconds( 500 ) );
 		quote_input.close();
 		trade_input.close();
 		service.stop();

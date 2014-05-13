@@ -27,7 +27,6 @@ namespace trade_processor_project
 			boost::uint32_t seconds;
 			boost::uint32_t minute;
 			char* stock_name;
-			size_t length;
 			double open_price;
 			double high_price;
 			double low_price;

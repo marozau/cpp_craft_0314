@@ -28,8 +28,13 @@ multicast_communication::multicast_communication( const size_t trade_ports_amoun
 }
 void multicast_communication::stop()
 {
+	{
+		boost::mutex::scoped_lock lock( udp_listener::lock_to_stop );
+		udp_listener::to_stop = true;
+	}
 	for( int i = 0; i < listeners_storage_.size(); i++ )
 		listeners_storage_[i].first->stop();
+	listening_threads_.join_all();
 	{
 		boost::mutex::scoped_lock lock( multicast_communication::lock_to_stop );
 		multicast_communication::to_stop = true;
@@ -80,7 +85,7 @@ void multicast_communication::read_double( double& dest, std::stringstream& str_
 	str_stream.read( buff_str, amount );
 	std::string buff;
 	size_t i = 0;
-	for( i = 0; ( i < amount ) && ( buff_str[i] ) && ( buff_str[i] != ' ' ); i++ )
+	for( i = 0; ( i < amount ) && ( isdigit( buff_str[i] ) ) ; i++ )
 		buff += buff_str[i];
 	delete []buff_str;
 	dest = boost::lexical_cast<double> ( buff );
@@ -91,7 +96,7 @@ void multicast_communication::read_string( std::string& dest, std::stringstream&
 	char* buff_str =  new char[amount+1];
 	str_stream.read( buff_str, amount );
 	size_t i = 0;
-	for( i = 0; ( i < amount ) && ( buff_str[i] ) && ( buff_str[i] != ' ' ); i++ )
+	for( i = 0; ( i < amount ); i++ )
 		dest += buff_str[i];
 	delete []buff_str;
 	move_pos( str_stream, amount - i );
@@ -151,7 +156,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - 48 ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - 48 );
+						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - '\0' ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - '\0' );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(), buff_stream, 3 );
 						move_pos( buff_stream, 1 );
@@ -176,7 +181,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - 48 ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - 48 );
+						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - '\0' ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - '\0' );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(), buff_stream, 11 );
 						move_pos( buff_stream, 21 );
@@ -202,7 +207,15 @@ void multicast_communication::make_new_message( const bool trade )
 				{
 					{
 						boost::mutex::scoped_lock lock( lock_output_ );
-						output_ << "T " << std::fixed << buff_msg_vector[i].security_symbol().c_str() << " " << std::setprecision( 2 ) << buff_msg_vector[i].price() << " " << std::setprecision( 1 ) << buff_msg_vector[i].volume() << "\n";
+						output_ << "T " << std::fixed;
+						size_t j = 0;
+						size_t curr_size = buff_msg_vector[i].security_symbol().size();
+						while( ( j != curr_size ) && ( buff_msg_vector[i].security_symbol()[j] != (char)32 ) )
+						{
+							output_ << buff_msg_vector[i].security_symbol()[j];
+							j++;
+						}
+						output_ << " " << std::setprecision( 2 ) << buff_msg_vector[i].price() << " " << std::setprecision( 1 ) << buff_msg_vector[i].volume() << "\n";
 					}
 					trade_message_ptr tr_msg( new trade_message( buff_msg_vector[i] ) );
 					quote_message_ptr qu_msg( new quote_message() );
@@ -228,7 +241,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - 48 ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - 48 );
+						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - '\0' ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - '\0' );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(), buff_stream, 3 );
 						move_pos( buff_stream, 3 );
@@ -258,7 +271,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast< boost::uint32_t >( hours ) - 48 ) * 60 + ( static_cast< boost::uint32_t >( minutes ) - 48 );
+						buff_msg.set_minute() = ( static_cast< boost::uint32_t >( hours ) - '\0' ) * 60 + ( static_cast< boost::uint32_t >( minutes ) - '\0' );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(),buff_stream, 11 );
 						move_pos( buff_stream, 16 );
@@ -287,7 +300,15 @@ void multicast_communication::make_new_message( const bool trade )
 				{
 					{
 						boost::mutex::scoped_lock lock( lock_output_ );
-						output_ << std::fixed << "Q " << buff_msg_vector[i].security_symbol().c_str() << " " << std::setprecision( 2 ) << buff_msg_vector[i].bid_price() << " " << std::setprecision( 1 ) << buff_msg_vector[i].bid_volume() << " " << std::setprecision( 2 ) << buff_msg_vector[i].offer_price() << " " << std::setprecision ( 1 ) << buff_msg_vector[i].offer_volume() <<"\n";
+						output_ << "Q " << std::fixed;
+						size_t j = 0;
+						size_t curr_size = buff_msg_vector[i].security_symbol().size();
+						while( ( j != curr_size ) && ( buff_msg_vector[i].security_symbol()[j] != (char)32 ) )
+						{
+							output_ << buff_msg_vector[i].security_symbol()[j];
+							j++;
+						}
+						output_ << " " << std::setprecision( 2 ) << buff_msg_vector[i].bid_price() << " " << std::setprecision( 1 ) << buff_msg_vector[i].bid_volume() << " " << std::setprecision( 2 ) << buff_msg_vector[i].offer_price() << " " << std::setprecision ( 1 ) << buff_msg_vector[i].offer_volume() <<"\n";
 					}
 					trade_message_ptr tr_msg( new trade_message() );
 					quote_message_ptr qu_msg( new quote_message( buff_msg_vector[i] ) );

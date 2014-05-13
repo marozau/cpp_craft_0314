@@ -3,6 +3,8 @@
 
 using namespace trade_processor_project;
 
+bool udp_listener::to_stop = false;
+boost::mutex udp_listener::lock_to_stop;
 boost::mutex udp_listener::lock_trade_queue_;
 boost::mutex udp_listener::lock_quote_queue_;
 boost::condition_variable udp_listener::trade_cond_var_;
@@ -65,6 +67,11 @@ void udp_listener::listen_handler_( buffer_type bt, const boost::system::error_c
 		if( trade_ )
 		{
 			boost::unique_lock< boost::mutex > lock( lock_trade_queue_ );
+			{
+				boost::mutex::scoped_lock lock( udp_listener::lock_to_stop );
+				if( udp_listener::to_stop )
+					return;
+			}
 			block_message_queue_.push( buffer_type( new std::string( bt->c_str(), bytes_received ) ) );
 			trade_cond_var_.notify_one();
 			lock.unlock();
@@ -72,6 +79,11 @@ void udp_listener::listen_handler_( buffer_type bt, const boost::system::error_c
 		else
 		{
 			boost::unique_lock< boost::mutex > lock( lock_quote_queue_ );
+			{
+				boost::mutex::scoped_lock lock( udp_listener::lock_to_stop );
+				if( udp_listener::to_stop )
+					return;
+			}
 			block_message_queue_.push( buffer_type( new std::string( bt->c_str(), bytes_received ) ) );
 			quote_cond_var_.notify_one();
 			lock.unlock();
