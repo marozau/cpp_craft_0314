@@ -14,8 +14,8 @@ namespace task5_5
 		T* vec;
 		void change_capacity(size_t size);
 	public:
-		typedef T* iterator ; // you could change this
-		typedef const T* const_iterator; // you could change this
+		typedef T* iterator ; 
+		typedef const T* const_iterator; 
 		explicit vector();
 		vector(const vector& copy);
 		vector& operator=(const vector& copy_from);
@@ -40,20 +40,16 @@ namespace task5_5
 
 		~vector();
 	};
-	// TODO, please realise the rest methods according to the tests
 	template< typename T >
 	void vector<T>::change_capacity(size_t size)
 	{
 		const size_t tmp_size=std::min(size, size_);
-		T *tmp=new T[size_];
+		T *tmp=new T[size];
 		for(size_t i=0; i<tmp_size; ++i)
 			tmp[i]=vec[i];
 		delete[] vec;
-		vec=new T[size];
-		for(size_t i=0; i<tmp_size; ++i)
-			vec[i]=tmp[i];
+		vec=tmp;
 		capacity_=size;
-		delete[] tmp;
 	}
 
 	template< typename T >
@@ -68,13 +64,13 @@ namespace task5_5
 		capacity_=copy.capacity_;
 		size_=copy.size_;
 		vec=new int[capacity_];
-		for(size_t i=0; i<size_; ++i)
-			vec[i]=copy.vec[i];		
+		std::copy(vec,vec+size_,copy.vec);
 	}
 
 	template< typename T >
 	vector< T >& vector< T >::operator=(const vector< T >& copy_from)
 	{
+		if (&copy_from==this) return *this;
 		delete [] vec;
 		capacity_=copy_from.capacity_;
 		size_=copy_from.size_;
@@ -130,17 +126,17 @@ namespace task5_5
 		if(size>capacity_)
 			change_capacity(size);
 		for(size_t i=size_; i<size; ++i)
-			vec[i]=static_cast<T>(0);
+			vec[i]=T(0);
 		size_=size;
 
 	}
 
 	template< typename T >
-	void vector< T >::reserve(const size_t size_)
+	void vector< T >::reserve(const size_t size)
 	{
-		if(size_>capacity_)
+		if(size>capacity_)
 		{
-			change_capacity(size_);
+			change_capacity(size);
 		}
 
 	}
