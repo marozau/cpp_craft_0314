@@ -156,7 +156,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - '\0' ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - '\0' );
+						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - 48 ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - 48 );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(), buff_stream, 3 );
 						move_pos( buff_stream, 1 );
@@ -181,7 +181,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - '\0' ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - '\0' );
+						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - 48 ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - 48 );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(), buff_stream, 11 );
 						move_pos( buff_stream, 21 );
@@ -241,7 +241,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - '\0' ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - '\0' );
+						buff_msg.set_minute() = ( static_cast<boost::uint32_t>( hours ) - 48 ) * 60 + ( static_cast<boost::uint32_t>( minutes ) - 48 );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(), buff_stream, 3 );
 						move_pos( buff_stream, 3 );
@@ -271,7 +271,7 @@ void multicast_communication::make_new_message( const bool trade )
 						move_pos( buff_stream, 16 );
 						char hours = static_cast<char>( buff_stream.get() );
 						char minutes = static_cast<char>( buff_stream.get() );
-						buff_msg.set_minute() = ( static_cast< boost::uint32_t >( hours ) - '\0' ) * 60 + ( static_cast< boost::uint32_t >( minutes ) - '\0' );
+						buff_msg.set_minute() = ( static_cast< boost::uint32_t >( hours ) - 48 ) * 60 + ( static_cast< boost::uint32_t >( minutes ) - 48 );
 						move_pos( buff_stream, 4 );
 						read_string( buff_msg.set_security_symbol(),buff_stream, 11 );
 						move_pos( buff_stream, 16 );

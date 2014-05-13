@@ -58,8 +58,6 @@ void tests_::multicast_communication_tests()
 		boost::this_thread::sleep_for( boost::chrono::seconds( 1 ) );
 		quote_input.close();
 		trade_input.close();
-		service.stop();
-		receive_messages.join();
 		multicast_communication::stop();
 		udp_controller_thread.join();
 
