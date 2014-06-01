@@ -125,7 +125,7 @@ int main()
 
 	counter.merge( curr_time_messages_by_types );
 
-	std::ofstream out( BINARY_DIR "/output.txt", std::ios::out | std::ios::binary );
+	std::ofstream out( BINARY_DIR "/output.txt", std::ios::binary );
 
 	try
 	{
