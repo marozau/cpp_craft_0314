@@ -12,45 +12,45 @@ public:
 
 	int X() const
 	{
-		return _x;
+		return x_;
 	}
 
 	int Y() const
 	{
-		return _y;
+		return y_;
 	}
 
-	map_point_t(): _x( 0 ), _y( 0 )
+	map_point_t(): x_( 0 ), y_( 0 )
 	{
 	}
 
-	map_point_t( const int x, const int y ): _x( x ), _y( y )
+	map_point_t( const int x, const int y ): x_( x ), y_( y )
 	{
 	}
 
 	map_point_t up()
 	{
-		return map_point_t( _x, _y - 1 );
+		return map_point_t( x_, y_ - 1 );
 	}
 
 	map_point_t down()
 	{
-		return map_point_t( _x, _y + 1 );
+		return map_point_t( x_, y_ + 1 );
 	}
 
 	map_point_t right()
 	{
-		return map_point_t( _x + 1, _y );
+		return map_point_t( x_ + 1, y_ );
 	}
 
 	map_point_t left()
 	{
-		return map_point_t( _x - 1, _y );
+		return map_point_t( x_ - 1, y_ );
 	}
 
 private:
-	int _x;
-	int _y;
+	int x_;
+	int y_;
 };
 
 class map_t
@@ -62,21 +62,21 @@ public:
 		string s;
 		while( getline( is, s ) )
 		{
-			_map.push_back( s );
+			map_.push_back( s );
 		}
 
-		_height = static_cast<int>( _map.size() );
-		_width = static_cast<int>( _map[ 0 ].length() );
+		height_ = static_cast<int>( map_.size() );
+		width_ = static_cast<int>( map_[ 0 ].length() );
 	}
 
 	int width() const
 	{
-		return _width;
+		return width_;
 	}
 
 	int height() const
 	{
-		return _height;
+		return height_;
 	}
 
 	bool is_earth( int x, int y ) const
@@ -86,12 +86,12 @@ public:
 
 	bool is_earth( map_point_t p ) const
 	{
-		return !( is_outside( p ) || _map[ p.Y() ][ p.X() ] != earth );
+		return !( is_outside( p ) || map_[ p.Y() ][ p.X() ] != earth );
 	}
 
 	void set_visited( map_point_t p )
 	{
-		_map[ p.Y() ][ p.X() ] = visited;
+		map_[ p.Y() ][ p.X() ] = visited;
 	}
 
 private:
@@ -100,10 +100,10 @@ private:
 	const char earth = 'o';
 	const char visited = '.';
 
-	vector<string> _map;
+	vector<string> map_;
 
-	int _width;
-	int _height;
+	int width_;
+	int height_;
 
 	bool is_outside( map_point_t p ) const
 	{

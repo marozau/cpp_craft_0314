@@ -16,7 +16,7 @@ void normalize(string& str)
 	transform(str.begin(), str.end(), str.begin(), ::toupper);
 }
 
-int main(int argc, char* argv[])
+int main()
 {
 	ifstream instream(BINARY_DIR "/input.txt");
 
@@ -45,14 +45,7 @@ int main(int argc, char* argv[])
 
 		const size_t i = text.find(key);
 
-		if (i != string::npos)
-		{
-			outstream << "YES" << endl;
-		}
-		else
-		{
-			outstream << "NO" << endl;
-		}
+		outstream << ( i != string::npos ? "YES" : "NO" ) << endl;
 	}
 
 	outstream.close();
